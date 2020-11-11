@@ -1,1 +1,73 @@
-HOLA VISIT REASON cambio
+<ng-template class="modal fade" #exampleModalContent let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss()"
+                #modalWindow>
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="card">
+                <h4 class="card-title">Nuevo Motivo Visita</h4>
+                <div class="card-body">
+                    <form [formGroup]="reasonForm" (ngSubmit)="submit()">
+                        <div>
+                            <label>Motivo</label>
+                            <input type="text" class="form-control" placeholder="Motivo" formControlName="name" />
+                        </div>
+                        <div>
+                            <label>Descripción</label>
+                            <input type="text" class="form-control" placeholder="Descripción"
+                                formControlName="description" />
+                        </div>
+                        <div>
+                            <label>Asociado A</label>
+                            <input type="text" class="form-control" placeholder="Asociado a"
+                                formControlName="association" readonly />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="submit()">Guardar</button>
+            <button type="button" class="btn btn-light" data-dismiss="modal" (click)="modal.close()">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <infini-alert></infini-alert>
+        <div class="card-body">
+            <h4 class="card-title">Listado motivos de visita</h4>
+            <div style="float:right;">
+                <button type="button" class="btn btn-primary btn-sm" (click)="openModal(exampleModalContent)">Nuevo<i
+                        class="mdi mdi-plus ml-1"></i></button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>
+                                Motivo
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Asociado A
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let reason of reasonList">
+                            <td>{{reason.name}}</td>
+                            <td>{{reason.description}}</td>
+                            <td>Por hacer</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

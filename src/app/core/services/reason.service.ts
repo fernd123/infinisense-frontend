@@ -15,7 +15,7 @@ export class ReasonService {
     urlEndPoint: string = BASEURL_DEV_REASON;
 
     constructor(private http: HttpClient, private router: Router) {
-        
+
     }
 
     saveReason(reason: Reason, tenantId: string) {
@@ -25,7 +25,8 @@ export class ReasonService {
             'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
         let body = new URLSearchParams();
-        body.set('reason', JSON.stringify(reason));
+        body.set('name', reason.name);
+        body.set('description', reason.description);
 
         if (tenantId) {
             body.set('tenantId', tenantId);
@@ -33,9 +34,7 @@ export class ReasonService {
 
         let options = { headers: headers };
 
-        return this.http.post(this.urlEndPoint, body.toString(), options)
-            .pipe(map((res: any) => {
-            }));
+        return this.http.post(this.urlEndPoint, body.toString(), options);
     }
 
     getReasons(tenantId: string) {
@@ -54,5 +53,5 @@ export class ReasonService {
         return this.http.get(this.urlEndPoint, options);
     }
 
-       
+
 }

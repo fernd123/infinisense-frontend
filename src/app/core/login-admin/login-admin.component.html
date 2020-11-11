@@ -7,12 +7,14 @@
       <div class="animate form login_form">
         <section class="login_content">
           <form [formGroup]="loginForm" (ngSubmit)="login()">
-            <h1>Login Form</h1>
+            <h1>Admin Form</h1>
             <div>
-              <input type="text" class="form-control" placeholder="Username" formControlName="username" autocomplete="username"/>
+              <input type="text" class="form-control" placeholder="Username" formControlName="username"
+                autocomplete="username" />
             </div>
             <div>
-              <input type="password" class="form-control" placeholder="Password" formControlName="password" autocomplete="current-password" />
+              <input type="password" class="form-control" placeholder="Password" formControlName="password"
+                autocomplete="current-password" />
             </div>
             <div>
               <input type="text" class="form-control" placeholder="Tenant ID" formControlName="tenantId" />

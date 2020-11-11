@@ -1,0 +1,82 @@
+<div class="d-flex align-items-center auth px-0">
+  <div class="row w-100 mx-0">
+    <div class="brand-logo">
+      <img src="assets/images/masingenieroslogo.png" alt="logo">
+    </div>
+    <div class="col-10 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <infini-alert></infini-alert>
+          <h4 class="card-title">Registro visita</h4>
+          <p class="card-description">
+            Por favor, regístrese antes de entrar en planta
+          </p>
+          <form class="form-inline" [formGroup]="registerForm" (ngSubmit)="submit()">
+            <label class="sr-only" for="dniname">DNI</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="dni" placeholder="DNI" formControlName="dni"
+              (change)="getUserByDni()" [ngClass]="{'alert-danger' : hasFormError('dni') }">
+
+            <label class="sr-only" for="firstname">Name</label>
+            <div class="input-group mb-2 mr-sm-2">
+              <input type="text" class="form-control" id="firstname" placeholder="Firstname"
+                formControlName="firstname" [ngClass]="{'alert-danger' : hasFormError('firstname') }">
+            </div>
+
+            <label class="sr-only" for="lastname">Lastname</label>
+            <div class="input-group mb-2 mr-sm-2">
+              <input type="text" class="form-control" id="lastname" placeholder="Lastname" formControlName="lastname"
+              [ngClass]="{'alert-danger' : hasFormError('lastname') }">
+            </div>
+
+            <label class="sr-only" for="lastname">Email</label>
+            <div class="input-group mb-2 mr-sm-2">
+              <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email"
+              [ngClass]="{'alert-danger' : hasFormError('email') }">
+            </div>
+
+            <label class="sr-only" for="company">Company</label>
+            <div class="input-group mb-2 mr-sm-2">
+              <input type="text" class="form-control has-danger" id="company" placeholder="Company" formControlName="company"
+              [ngClass]="{'alert-danger' : hasFormError('company') }">
+            </div>
+
+            <label class="sr-only" for="reason">Reason</label>
+            <div class="input-group mb-2 mr-sm-2">
+              <select class="form-control" id="reason" placeholder="Reason" formControlName="reason" 
+              [ngClass]="{'alert-danger' : hasFormError('reason') }">
+                <option [value]="reason.uuid" *ngFor="let reason of reasonList">{{reason.name}}</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-gradient-primary mb-2" [disabled]="!registerForm.valid">Submit</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div style="width: 300px; height: 300px; top:0; bottom: 10px; left: 0; right: 0;margin: auto;">
+              <h4 class="card-title">Firma</h4>
+              <div style="border-style: dashed; border-color: #f2edf3;" *ngIf="loadSignature" #signatureDiv>
+                <signature-pad #signaturePadC [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
+                  (onEndEvent)="drawComplete()"></signature-pad>
+              </div>
+
+              <div *ngIf="!loadSignature">
+                <img [src]="userSignature.src" [height]="userSignature.height" width="userSignature.width">
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div style="top:0;left: 0;right: 0;margin-top: 20px !important;margin-bottom: 20px !important;margin: auto;">
+          <button type="button" class="btn btn-lg btn-light btn-icon-text" (click)="clearSignature()"
+            *ngIf="loadSignature">
+            <i class="mdi mdi-reload btn-icon-prepend"></i>
+            Borrar firma
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

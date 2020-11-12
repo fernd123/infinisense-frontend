@@ -36,8 +36,43 @@ export class VisitService {
 
         return this.http.post(this.urlEndPoint, body.toString(), options)
             .pipe(map((res: any) => {
-                debugger;
             }));
+    }
+
+    updateVisit(visit: Visit, tenantId: string){
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        let body = new URLSearchParams();
+        body.set('visit', JSON.stringify(visit));
+
+        if (tenantId) {
+            body.set('tenantId', tenantId);
+        }
+
+        let options = { headers: headers };
+        return this.http.put(this.urlEndPoint, visit)
+            .pipe(map((res: any) => {
+            }));
+    }
+
+    getVisits(tenantId: string, filter: string){
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        let body = new URLSearchParams();
+        body.set("filter", filter);
+
+        if (tenantId) {
+            body.set('tenantId', tenantId);
+        }
+
+        let options = { headers: headers };
+        return this.http.get(this.urlEndPoint, options);
     }
 
        

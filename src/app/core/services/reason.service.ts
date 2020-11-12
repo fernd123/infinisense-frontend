@@ -37,6 +37,25 @@ export class ReasonService {
         return this.http.post(this.urlEndPoint, body.toString(), options);
     }
 
+    updateReason(reason: Reason, tenantId: string) {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        let body = new URLSearchParams();
+
+
+        if (tenantId) {
+            body.set('tenantId', tenantId);
+        }
+
+        let options = { headers: headers };
+
+        return this.http.put(this.urlEndPoint, reason);
+    }
+
+
     getReasons(tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',

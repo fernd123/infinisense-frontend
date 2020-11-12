@@ -52,7 +52,7 @@ export class RegisterVisitComponent implements OnInit {
       firstname: [null, Validators.required],
       lastname: [null, Validators.required],
       company: [null, Validators.required],
-      email: [null, Validators.required],
+      email: [null, Validators.required, Validators.email],
       reason: [null, Validators.required]
     });
   }
@@ -133,7 +133,7 @@ export class RegisterVisitComponent implements OnInit {
     user.lastname = this.registerForm.get('lastname').value;
     user.email = this.registerForm.get('email').value;
     user.company = this.registerForm.get('company').value;
-    user.roles = "visitor";
+    user.roles = "VISITOR";
     user.signature = this.signaturePad != null ? this.signaturePad.toDataURL() : null;
 
     let visit : Visit = new Visit();

@@ -19,6 +19,7 @@ import { TodoListComponent } from './apps/todo-list/todo-list.component';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { SignaturePadModule } from 'angular2-signaturepad';
+import {TranslateModule} from '@ngx-translate/core';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { SignaturePadModule } from 'angular2-signaturepad';
     ChartsModule,
     CoreModule,
     SignaturePadModule,
-    SharedModule.forRoot()
+    SharedModule.forRoot(),
+    TranslateModule.forRoot()
   ],
   providers: [ThemeService],
   bootstrap: [AppComponent]

@@ -17,13 +17,14 @@ export class VisitReasonComponent implements OnInit {
   @ViewChild('modalWindow') modalWindow: any;
   editionMode: boolean = false;
   reasonEditUuid: string;
+  titleModal: string;
+
   constructor(private formBuilder: FormBuilder,
     private reasonService: ReasonService,
     private alertService: AlertService,
     private modalService: NgbModal) { }
 
   ngOnInit() {
-
     this.refreshList();
     this.reasonForm = this.formBuilder.group({
       name: [null, Validators.required],
@@ -39,15 +40,23 @@ export class VisitReasonComponent implements OnInit {
     });
   }
 
-  openModal(exampleModalContent, reason?: Reason) {
+  openModal(reasonModalContent, reason?: Reason) {
+    this.titleModal = "Nuevo Motivo Visita";
+    this.reasonForm.reset();
     if (reason != null) {
       this.editionMode = true;
       this.reasonEditUuid = reason.uuid;
       this.reasonForm.get('name').setValue(reason.name);
       this.reasonForm.get('description').setValue(reason.description);
       this.reasonForm.get('active').setValue(reason.active);
+      this.titleModal = "Editar Motivo Visita";
     }
-    this.modalService.open(exampleModalContent); //{ size: 'lg' }
+    this.modalService.open(reasonModalContent); //{ size: 'lg' }
+  }
+
+  closeModal(){
+    this.modalService.dismissAll();
+    this.reasonForm.reset();
   }
 
   submit() {
@@ -55,35 +64,19 @@ export class VisitReasonComponent implements OnInit {
     reason.name = this.reasonForm.get('name').value;
     reason.description = this.reasonForm.get('description').value;
     reason.active = this.reasonForm.get('active').value;
+    reason.uuid = this.reasonEditUuid;
 
-    if(!this.editionMode){
-      this.reasonService.saveReason(reason, "").subscribe(res => {
-        this.refreshList();
-        this.modalService.dismissAll();
-        this.reasonForm.reset();
-        let options = {
-          autoClose: true,
-          keepAfterRouteChange: true
-        };
-        this.alertService.success("¡Éxito!, motivo añadido correctamente", options);
-      });
-    }else{
-      reason.uuid = this.reasonEditUuid;
-      this.reasonService.updateReason(reason, "").subscribe(res => {
-        this.refreshList();
-        this.modalService.dismissAll();
-        this.reasonForm.reset();
-        let options = {
-          autoClose: true,
-          keepAfterRouteChange: true
-        };
-        this.reasonEditUuid = null;
-        this.editionMode = false;
-        this.alertService.success("¡Éxito!, motivo actualizado correctamente", options);
-      });
-    }
+    this.reasonService.saveReason(reason, "").subscribe(res => {
+      this.refreshList();
+      this.modalService.dismissAll();
+      this.reasonForm.reset();
+      let options = {
+        autoClose: true,
+        keepAfterRouteChange: true
+      };
+      this.alertService.success(`¡Éxito!, motivo ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
+      this.reasonEditUuid = null;
+      this.editionMode = false;
+    });
   }
-
-
-
 }

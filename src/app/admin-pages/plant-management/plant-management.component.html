@@ -1,0 +1,97 @@
+<ng-template class="modal fade" #plantModalContent let-modal>
+  <div class="modal-content">
+    <div class="card">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()" #modalWindow>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 class="card-title">{{titleModal}}</h4>
+        <div class="card-body">
+          <form [formGroup]="plantForm" (ngSubmit)="submit()">
+            <div class="input-group mb-2 mr-sm-2" >
+              <!--<label>Motivo</label>-->
+              <input type="text" class="form-control" placeholder="Nombre de la planta" formControlName="name" [ngClass]="{'alert-danger' : hasFormError('name') }" />
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+              <!--<label>Descripción</label>-->
+              <input type="text" class="form-control" placeholder="Dirección" formControlName="location" [ngClass]="{'alert-danger' : hasFormError('location') }"/>
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+              <!--<label>Asociado A</label>-->
+              <input type="text" class="form-control" placeholder="Tlf" formControlName="phone" [ngClass]="{'alert-danger' : hasFormError('phone') }"/>
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+              <input type="text" class="form-control" placeholder="Tlf Alternativo"
+                formControlName="alternativePhone" />
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+              <input type="number" class="form-control" placeholder="Aforo máx." formControlName="maximumCapacity" [ngClass]="{'alert-danger' : hasFormError('maximumCapacity') }"/>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="submit()" [disabled]="!plantForm.valid">Guardar</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal" (click)="closeModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="row">
+  <div class="col-lg grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between">
+          <h4 class="card-title">Configurar una nueva planta</h4>
+          <button type="button" class="btn btn-gradient-primary btn-lg btn-block"
+            (click)="openModal(plantModalContent)">
+            <i class="mdi mdi-plus"></i>
+            Nueva Planta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<infini-alert></infini-alert>
+<div class="row" *ngFor="let plant of plantList">
+  <div class="col-lg grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="">
+          <h4 class="card-title">{{plant.name}}</h4>
+          <div class="container">
+            <div class="row">
+              <div class="col-4">
+                {{plant.location}}
+              </div>
+              <div class="col-2">
+                <strong>Tlf:</strong>{{plant.phone}} {{plant.alternativePhone}}
+              </div>
+              <div class="col-2">
+                <strong>Aforo Max:</strong>{{plant.maximumCapacity}}
+              </div>
+              <div class="col-2">
+                <button type="button" class="btn btn-gradient-primary btn-sm"
+                  (click)="openModal(plantModalContent, plant)">
+                  <i class="mdi mdi-pen"></i>
+                  Editar Planta
+                </button>
+              </div>
+              <div class="col-2">
+                <button type="button" class="btn btn-gradient-info btn-sm" (click)="navigateToPlane(plant.uuid)">
+                  <i class="mdi mdi-home-map-marker"></i>
+                  Plano
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

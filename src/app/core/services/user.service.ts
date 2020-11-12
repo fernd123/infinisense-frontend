@@ -43,4 +43,20 @@ export class UserService {
         // Execute the request
         return this.http.get(loginURL, {responseType : 'text' });
       }
+
+      getExternalUsers(tenantId: string){
+          // Generate headers
+        const tokenHeaders = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic YW5ndWxhcjphbmd1bGFy`
+        });
+
+        // Save petition options into a variable
+        const options = { headers: tokenHeaders };
+
+        const loginURL = this.urlEndPoint;
+
+        // Execute the request
+        return this.http.get(loginURL, options);
+      }
 }

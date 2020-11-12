@@ -22,6 +22,7 @@
     "@angular/router": "~10.1.6",
     "@mdi/font": "^5.7.55",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
+    "@ngx-translate/core": "^13.0.0",
     "angular-signature-pad": "0.0.14",
     "angular2-signaturepad": "^2.11.0",
     "bootstrap": "^4.5.3",

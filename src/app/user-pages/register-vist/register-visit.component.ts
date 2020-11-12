@@ -52,7 +52,7 @@ export class RegisterVisitComponent implements OnInit {
       firstname: [null, Validators.required],
       lastname: [null, Validators.required],
       company: [null, Validators.required],
-      email: [null, Validators.required, Validators.email],
+      email: [null, [Validators.required, Validators.email]],
       reason: [null, Validators.required]
     });
   }
@@ -83,7 +83,7 @@ export class RegisterVisitComponent implements OnInit {
 
   hasFormError(formName : string){
     let element = this.registerForm.get(formName);
-    return element.touched && element.invalid && (element.value == null || element.value == '');
+    return element.touched && element.invalid; //&& (element.value == null || element.value == '');
   }
 
   getUserByDni(){
@@ -93,8 +93,9 @@ export class RegisterVisitComponent implements OnInit {
          if(res != null){
            this.registerForm.get('firstname').setValue(res.firstname);
            this.registerForm.get('lastname').setValue(res.lastname);
+           this.registerForm.get('email').setValue(res.email);
            this.registerForm.get('company').setValue(res.company);
-           this.registerForm.get('firstname').disable();
+
            this.registerForm.get('firstname').disable();
            this.registerForm.get('lastname').disable();
            this.registerForm.get('email').disable();

@@ -15,9 +15,10 @@ export const BASEURL_DEV_MASTER_DATA = BASEURL_PROXY + '/masterdata/api/';
 export const BASEURL_DEV_CLIENT_DATA = BASEURL_PROXY + '/tenant/public/api/clients/';
 export const BASEURL_DEV_LOGIN = BASEURL_PROXY + '/api/user/authenticate';
 
+export const BASEURL_DEV_USER = BASEURL_PROXY + '/api/public/user';
 export const BASEURL_DEV_VISIT = BASEURL_PROXY + '/api/visit';
 export const BASEURL_DEV_REASON = BASEURL_PROXY + '/api/reason';
-export const BASEURL_DEV_USER = BASEURL_PROXY + '/api/public/user';
+export const BASEURL_DEV_PLANT = BASEURL_PROXY + '/api/plant';
 
 
 

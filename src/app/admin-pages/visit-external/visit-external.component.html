@@ -6,8 +6,8 @@
       <div class="row" style="float:right; margin-bottom: 1em;">
         <div class="col">
           <select class="form-control" id="reason" placeholder="Opciones" #optionFilter (change)="refreshList()">
-                <option [value]="option.value" *ngFor="let option of optionList">{{option.name}}</option>
-              </select>
+            <option [value]="option.value" *ngFor="let option of optionList">{{option.name}}</option>
+          </select>
         </div>
         <div class="col">
           <button type="button" class="btn btn-primary btn-sm" (click)="refreshList()">Refrescar<i
@@ -16,8 +16,8 @@
       </div>
       <div class="table-responsive">
         <table class="table table-bordered">
-            <thead class="thead-dark">
-                <tr>
+          <thead class="thead-dark">
+            <tr>
               <th>
                 Persona
               </th>
@@ -40,9 +40,10 @@
               <td>{{visit.startDate | date: 'dd/MM/yyyy HH:mm'}}</td>
               <td>{{visit.endDate | date: 'dd/MM/yyyy HH:mm'}}</td>
               <td>
-                <button type="button" class="btn btn-info btn-sm btn-icon-text" (click)="updateVisit(visit)" *ngIf="visit.endDate == null">
-                    <i class="mdi mdi-exit-to-app btn-icon-append"></i>Marcar Salida                       
-                  </button>
+                <button type="button" class="btn btn-info btn-sm btn-icon-text" (click)="updateVisit(visit)"
+                  *ngIf="visit.endDate == null">
+                  <i class="mdi mdi-exit-to-app btn-icon-append"></i>Marcar Salida
+                </button>
               </td>
             <tr>
           </tbody>

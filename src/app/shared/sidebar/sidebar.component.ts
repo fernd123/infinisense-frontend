@@ -9,6 +9,7 @@ export class SidebarComponent implements OnInit {
   public uiBasicCollapsed = false;
   public samplePagesCollapsed = false;
   public masterDataCollapsed = false;
+  public plantDataCollapsed = false;
 
   constructor() { }
 

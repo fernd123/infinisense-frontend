@@ -15,7 +15,7 @@ export class AuthenticationService {
     urlEndPoint: string = BASEURL_DEV_LOGIN;
 
     constructor(private http: HttpClient, private router: Router) {
-        this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
+        this.currentUserSubject = new BehaviorSubject<any>(localStorage.getItem('currentUser'));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
@@ -92,7 +92,7 @@ export class AuthenticationService {
                 // login successful if there's a jwt token in the response
                 if (token && token.jwt) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify(token.jwt));
+                    localStorage.setItem('currentUser', token.jwt);
                 }
             }));
     }

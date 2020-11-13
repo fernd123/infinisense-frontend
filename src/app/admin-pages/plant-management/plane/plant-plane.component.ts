@@ -4,12 +4,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { VisitService } from 'src/app/core/services/visit.service';
 import { Plant } from 'src/app/shared/models/plant.model';
+import { PlantPlane } from 'src/app/shared/models/plantPlane.model';
 import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
 
@@ -29,6 +30,8 @@ export class PlanPlaneComponent implements OnInit {
 
   fileInfos: Observable<any>;
 
+  plantImgList: any;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,6 +41,28 @@ export class PlanPlaneComponent implements OnInit {
     private route: Router) {
     this.plantId = this.route.getCurrentNavigation().extras.queryParams.plantId;
     this.tenantId = this.route.getCurrentNavigation().extras.queryParams.tenantId;
+    this.plantService.getPlant(this.plantId, this.tenantId).subscribe((res: Plant) => {
+      if (res != undefined) {
+        this.plantService.getPlantPlaneByPlant(this.plantId, this.tenantId).subscribe((resPp: PlantPlane[]) => {
+          debugger;
+          let plantPlaneList: PlantPlane[] = resPp;
+          let plantRequest: any[] = [];
+          for (let i = 0; i < plantPlaneList.length; i++) {
+            plantRequest.push(this.plantService.getPlantPlanes(plantPlaneList[i].name, 'tenantId'));
+          }
+          if (plantRequest.length > 0) {
+            forkJoin(plantRequest).subscribe((res: any) => {
+              debugger;
+              var headers = res.headers;
+              console.log(headers); //<--- Check log for content disposition
+              var contentDisposition = headers.get('content-disposition');
+              debugger;
+            });
+          }
+        })
+      }
+      //this.plantService.getPlantPlanes(plantId, tenantId).subscribe(res=>{
+    });
   }
 
   ngOnInit() {

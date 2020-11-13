@@ -13,6 +13,7 @@ import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantPlane } from 'src/app/shared/models/plantPlane.model';
 import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
+import { imageMapCreator } from "image-map-creator";
 
 @Component({
   selector: 'infini-plant-plane',
@@ -27,6 +28,7 @@ export class PlanPlaneComponent implements OnInit {
   currentFile: File;
   progress = 0;
   message = '';
+  iMap: any;
 
   fileInfos: Observable<any>;
 
@@ -66,6 +68,40 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.iMap = new imageMapCreator("div-1");
+  }
+
+  ngAfterViewInit() {
+    let ff = function storeGuess(event) {
+      var x = event.offsetX;
+      var y = event.offsetY;
+      var guessX = x;
+      var guessY = y;
+      console.log("x coords: " + guessX + ", y coords: " + guessY);
+    }
+
+    let canvas = document.getElementById('div-1').children[0];
+    canvas.addEventListener('mousedown', ff);
+    canvas.addEventListener('mouseup', ff);
+
+    let div = document.getElementById('div-1');
+    div.children[1].children[1].children[1].children[1];
+    let title : any = div.children[1].children[0];
+    title.innerText = 'Virtualización de zonas'; //title
+
+    debugger;
+    let generateSvn : any = div.children[1].children[1].children[6];
+    let generateHtml : any = div.children[1].children[1].children[7];
+    let save : any = div.children[1].children[1].children[9];
+    let output : any = div.children[1].children[1].children[8];
+
+    output.hidden = true;
+    generateSvn.hidden = true;
+    generateHtml.hidden = true;
+    save.hidden = true;
+    output.hidden = true;
+
+
   }
 
   selectFile(event) {

@@ -28,9 +28,11 @@
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.3",
     "compass-mixins": "^0.12.10",
+    "image-map-creator": "^1.1.9",
     "jquery": "^3.5.1",
     "ng2-charts": "^2.4.2",
     "node-sass": "^4.14.1",
+    "p5": "^1.1.9",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.3",
     "zone.js": "~0.11.1"

@@ -9,6 +9,8 @@ import { VisitExternalComponent } from './visit-external/visit-external.componen
 import { UserExternalComponent } from './user-external/user-external.component';
 import { PlantManagementComponent } from './plant-management/plant-management.component';
 import { PlanPlaneComponent } from './plant-management/plane/plant-plane.component';
+import { VirtualizationComponent } from '../shared/virtualization/virtualization.component';
+import { SharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
   { path: 'visit-reason', component: VisitReasonComponent, canActivate: [AuthGuard] },
@@ -21,6 +23,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [VisitReasonComponent, VisitExternalComponent, UserExternalComponent, PlantManagementComponent, PlanPlaneComponent],
   imports: [
+    SharedModule,
     CommonModule,
     ReactiveFormsModule,
     AlertModule,

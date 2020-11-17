@@ -4,10 +4,11 @@ import { ModuleWithProviders } from '@angular/compiler/src/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AlertModule } from './alert/alert.module';
+import { VirtualizationComponent } from './virtualization/virtualization.component';
 
 @NgModule({
   declarations: [
-
+    VirtualizationComponent
   ],
   imports: [
     CommonModule,
@@ -16,6 +17,7 @@ import { AlertModule } from './alert/alert.module';
   ],
   exports: [
     CommonModule,
+    VirtualizationComponent,
     ReactiveFormsModule
   ],
   entryComponents: [

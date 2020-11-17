@@ -68,7 +68,7 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.iMap = new imageMapCreator("div-1");
+    //this.iMap = new imageMapCreator("div-1");
   }
 
   ngAfterViewInit() {

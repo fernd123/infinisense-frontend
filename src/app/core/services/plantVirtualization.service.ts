@@ -54,6 +54,16 @@ export class PlantCoordsService {
         return this.http.get(this.urlEndPoint + "/" + plantId + "/coordinates/" + uuid, options);
     }
 
+    getPlantCoordinates(plantId: string, uuid: string) {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        let options = { headers: headers };
+        return this.http.get(this.urlEndPoint + "/" + plantId + "/coordinates", options);
+    }
+
     savePlantVirtual(plantVirtual: PlantVirtualization, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',

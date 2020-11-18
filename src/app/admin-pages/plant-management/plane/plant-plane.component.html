@@ -10,6 +10,14 @@
 <!--<div class="alert alert-light" role="alert">{{ message }}</div>
 -->
 <div class="container-fluid">
+
+  <nav aria-label="breadcrumb" role="navigation">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:;">Plantas</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Configuración Planta</li>
+    </ol>
+  </nav>
+
   <h4 class="card-title">Configuración de planta</h4>
   <div class="row">
     <div class="col-sm-2" style="background-color: white;">
@@ -24,7 +32,7 @@
           <tbody>
             <tr *ngFor="let virt of virtualizationList">
               <td (click)="openEditModal(virt.uuid)" (mouseover)="searchCoordinates(virt.uuid)"
-                style="cursor: pointer;">{{virt.name}}</td>
+                (mouseout)="searchCoordinates(null)" style=" cursor: pointer;">{{virt.name}}</td>
               <!--<td><button type="button" class="btn btn-danger btn-sm" (click)="deleteVirtualZone(virt.uuid)">
                   <i class="mdi mdi-home-map-marker"></i>
                   Borrar

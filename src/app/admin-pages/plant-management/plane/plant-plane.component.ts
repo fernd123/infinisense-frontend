@@ -187,6 +187,8 @@ export class PlanPlaneComponent implements OnInit {
       (res) => {
         this.refreshVirtualZones();
         this.imageMapCreatorService.getImageMapCreator().editionMode = false;
+        this.imageMapCreatorService.getImageMapCreator().selectedAreaId = null;
+        this.imageMapCreatorService.getImageMapCreator().clearSelection();
         if (res != "success") {
           //const mapCreator: imageMapCreator = this.imageMapCreatorService.getImageMapCreator();
           //mapCreator.deleteArea(mapCreator.map.getAreas()[0]); // first position
@@ -210,6 +212,7 @@ export class PlanPlaneComponent implements OnInit {
           areasStr += ", ";
         }
       }
+
       if (areasStr.length != 0) {
         let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${areasStr}],"name":"${this.plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;
         imageCreator.importMap(mapFake);

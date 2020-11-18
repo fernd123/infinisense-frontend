@@ -13,6 +13,7 @@ import { SensorType } from 'src/app/shared/models/sensorType.model';
 @Injectable({ providedIn: 'root' })
 export class SensorTypeService {
 
+
     urlEndPoint: string = BASEURL_DEV_SENSORTYPE;
 
     constructor(private http: HttpClient, private router: Router) {
@@ -75,5 +76,20 @@ export class SensorTypeService {
         return this.http.get(this.urlEndPoint + "/" + uuid, options);
     }
 
+    deleteSensorType(uuid: string, tenantId: string) {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        let body = new URLSearchParams();
+
+        if (tenantId) {
+            body.set('tenantId', tenantId);
+        }
+
+        let options = { headers: headers };
+        return this.http.delete(this.urlEndPoint + "/" + uuid, options);
+    }
 
 }

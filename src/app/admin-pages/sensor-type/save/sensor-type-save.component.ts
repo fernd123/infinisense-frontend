@@ -30,7 +30,7 @@ export class SensorTypeSaveComponent implements OnInit {
 
   ngOnInit() {
     this.sensorTypeForm = this.formBuilder.group({
-      uuid: [""],
+      uuid: [null],
       name: ["", Validators.required],
       description: [null, Validators.required],
       active: [true]
@@ -60,6 +60,19 @@ export class SensorTypeSaveComponent implements OnInit {
         keepAfterRouteChange: true
       };
       this.alertService.success(`¡Éxito!, Tipo de sensor ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
+      this.editionMode = false;
+    });
+  }
+
+  delete() {
+    let uuid = this.sensorTypeForm.get('uuid').value;
+    this.sensorTypeService.deleteSensorType(uuid, "").subscribe(res => {
+      this.modalService.dismissAll("success");
+      let options = {
+        autoClose: true,
+        keepAfterRouteChange: true
+      };
+      this.alertService.success(`¡Éxito!, Tipo de sensor eliminado correctamente`, options);
       this.editionMode = false;
     });
   }

@@ -28,6 +28,7 @@ export class ReasonService {
         body.set('name', reason.name);
         body.set('description', reason.description);
         body.set('active', `${reason.active}`);
+        body.set('plantZone', reason.plantZone);
 
         if (tenantId) {
             body.set('tenantId', tenantId);
@@ -72,6 +73,22 @@ export class ReasonService {
 
         let options = { headers: headers };
         return this.http.get(this.urlEndPoint + "/" + uuid, options);
+    }
+
+    deleteReason(uuid: string, tenantId: string) {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        let body = new URLSearchParams();
+
+        if (tenantId) {
+            body.set('tenantId', tenantId);
+        }
+
+        let options = { headers: headers };
+        return this.http.delete(this.urlEndPoint + "/" + uuid, options);
     }
 
 }

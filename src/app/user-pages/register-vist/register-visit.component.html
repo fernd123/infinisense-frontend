@@ -14,41 +14,42 @@
           <form class="form-inline" [formGroup]="registerForm" (ngSubmit)="submit()">
             <label class="sr-only" for="dniname">DNI</label>
             <input type="text" class="form-control mb-2 mr-sm-2" id="dni" placeholder="DNI" formControlName="dni"
-              (change)="getUserByDni()" [ngClass]="{'alert-danger' : hasFormError('dni') }">
+              (change)="getUserByDni()" [ngClass]="{'alert-danger' : hasFormError('dni') }" autocomplete="off">
 
             <label class="sr-only" for="firstname">Name</label>
             <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control" id="firstname" placeholder="Firstname"
-                formControlName="firstname" [ngClass]="{'alert-danger' : hasFormError('firstname') }">
+              <input type="text" class="form-control" id="firstname" placeholder="Firstname" formControlName="firstname"
+                [ngClass]="{'alert-danger' : hasFormError('firstname') }" autocomplete="off">
             </div>
 
             <label class="sr-only" for="lastname">Lastname</label>
             <div class="input-group mb-2 mr-sm-2">
               <input type="text" class="form-control" id="lastname" placeholder="Lastname" formControlName="lastname"
-              [ngClass]="{'alert-danger' : hasFormError('lastname') }">
+                [ngClass]="{'alert-danger' : hasFormError('lastname') }" autocomplete="off">
             </div>
 
             <label class="sr-only" for="lastname">Email</label>
             <div class="input-group mb-2 mr-sm-2">
               <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email"
-              [ngClass]="{'alert-danger' : hasFormError('email') }">
+                [ngClass]="{'alert-danger' : hasFormError('email') }" autocomplete="off">
             </div>
 
             <label class="sr-only" for="company">Company</label>
             <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control has-danger" id="company" placeholder="Company" formControlName="company"
-              [ngClass]="{'alert-danger' : hasFormError('company') }">
+              <input type="text" class="form-control has-danger" id="company" placeholder="Company"
+                formControlName="company" [ngClass]="{'alert-danger' : hasFormError('company') }" autocomplete="off">
             </div>
 
             <label class="sr-only" for="reason">Reason</label>
             <div class="input-group mb-2 mr-sm-2">
-              <select class="form-control" id="reason" placeholder="Reason" formControlName="reason" 
-              [ngClass]="{'alert-danger' : hasFormError('reason') }">
+              <select class="form-control" id="reason" placeholder="Reason" formControlName="reason"
+                [ngClass]="{'alert-danger' : hasFormError('reason') }" autocomplete="off">
                 <option [value]="reason.uuid" *ngFor="let reason of reasonList">{{reason.name}}</option>
               </select>
             </div>
 
-            <button type="submit" class="btn btn-gradient-primary mb-2" [disabled]="!registerForm.valid">Registrar</button>
+            <button type="submit" class="btn btn-gradient-primary mb-2"
+              [disabled]="!registerForm.valid">Registrar</button>
           </form>
         </div>
 

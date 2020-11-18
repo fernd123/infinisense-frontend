@@ -7,6 +7,7 @@ import { AlertModule } from './alert/alert.module';
 import { VirtualizationComponent } from './virtualization/virtualization.component';
 import { ModalComponent } from './modal/modal.component';
 
+
 @NgModule({
   declarations: [
     VirtualizationComponent,
@@ -19,6 +20,7 @@ import { ModalComponent } from './modal/modal.component';
   ],
   exports: [
     CommonModule,
+    NgbModule,
     VirtualizationComponent,
     ModalComponent,
     ReactiveFormsModule

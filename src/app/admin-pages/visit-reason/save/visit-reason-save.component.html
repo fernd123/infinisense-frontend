@@ -17,6 +17,36 @@
         <i class="input-helper"></i>
       </label>
     </div>
+
+    <div class="mt-4">
+      <ngb-accordion [closeOthers]="true">
+        <!--activeIds="collapse-1"-->
+        <ngb-panel id="collapse-1" title="Asociar un motivo de visita a una zona">
+          <ng-template ngbPanelContent>
+            <div class="form-group">
+              <button type="button" class="btn btn-warning btn-sm"
+                (click)="this.reasonForm.get('plant').setValue(null); this.reasonForm.get('plantZone').setValue(null);">Limpiar
+                valores</button>
+            </div>
+            <div class="form-group">
+              <label for="name">Planta</label>
+              <select class="form-control" id="plant" formControlName="plant" (change)="loadPlantZone(true)">
+                <option [value]="plant.uuid" *ngFor="let plant of plantList">{{plant.name}}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="name">Zona</label>
+              <select class="form-control" id="plantZone" formControlName="plantZone">
+                <option [value]="plantZone.uuid" *ngFor="let plantZone of plantZoneList">{{plantZone.name}}</option>
+              </select>
+            </div>
+
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+    </div>
+
   </form>
 
   <div class="modal-footer">

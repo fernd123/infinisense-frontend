@@ -612,11 +612,12 @@ export class imageMapCreator {
 	}
 
 	setAreaStyle(area: Area): void {
-		let color = this.p5.color(233, 236, 19, 178);
-		if (area.getType() == 'zv') {
-			color = this.p5.color(19, 236, 226, 178);
+		let color = this.p5.color(19, 236, 226, 178);
+		if (area.getType() == 'zv') { // zona virtual
+			color = this.p5.color(233, 236, 19, 178);
 		}
-		if (area.getType() == 'pe') {
+		if (area.getType() == 'pe') { // punto encuentro
+			debugger;
 			color = this.p5.color(255, 0, 0, 178);
 		}
 		if (((this.tool == "eliminar" || this.tool == "seleccionar") &&
@@ -786,6 +787,10 @@ export class imageMapCreator {
 		return this.selection;
 	}
 
+	public clearSelection() {
+		this.selection = new Selection();
+	}
+
 	public getImage() {
 		return this.img;
 	}
@@ -795,11 +800,14 @@ export class imageMapCreator {
 	}
 
 	public searchArea(id) {
-		if (id === 0) {
-			this.settings.setValue("Default Area", false);
+		if (id == null) {
+			this.clearSelection();
 		} else {
 			let areaIndex = this.map.findAreaByUuid(id);
 			let area = this.map.getAreas()[areaIndex];
+
+			this.selection.addArea(area);
+
 			/*TODOlet color = this.p5.color(255, 200, 200, 178); // highlight (set color red)
 			this.p5.fill(color);
 			this.p5.strokeWeight(1 / this.view.scale);

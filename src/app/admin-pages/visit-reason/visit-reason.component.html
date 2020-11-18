@@ -27,7 +27,7 @@
             <tr *ngFor="let reason of reasonList">
               <td>{{reason.name}}</td>
               <td>{{reason.description}}</td>
-              <td>Por hacer</td>
+              <td>{{reason.plantZone?.plant?.name}} - {{reason.plantZone?.name}}</td>
               <td>
                 <button type="button" class="btn btn-warning btn-sm btn-icon-text" (click)="openSaveModal(reason.uuid)">
                   <i class="mdi mdi-grease-pencil btn-icon-append"></i>

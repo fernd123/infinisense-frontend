@@ -3,7 +3,7 @@ import { Coord } from "./class.coord";
 import { ImageMap } from "./class.image-map";
 import * as p5 from "p5";
 
-export type Shape = "empty" | "rect" | "circle" | "poly" | "default";
+export type Shape = "empty" | "rect" | "circulo" | "poly" | "default";
 
 export abstract class Area {
 
@@ -18,20 +18,22 @@ export abstract class Area {
 		protected coords: Coord[] = [],
 		protected href: string = "",
 		protected title: string = "",
-		public id: number = 0) {
+		public id: number = 0,
+		public idCoordenate: string = "",
+		public type: string = "") {
 	}
 
 	static fromObject(o: Object): Area {
 		switch ((<Area>o).shape) {
 			case 'rect':
 				const r = o as AreaRect;
-				return new AreaRect(r.coords.map(Coord.fromObject), r.href, r.title, r.id);
-			case 'circle':
+				return new AreaRect(r.coords.map(Coord.fromObject), r.href, r.title, r.id, r.idCoordenate, r.type);
+			case 'circulo':
 				const c = o as AreaCircle
-				return new AreaCircle(c.coords.map(Coord.fromObject), c.radius, c.href, c.title, c.id);
+				return new AreaCircle(c.coords.map(Coord.fromObject), c.radius, c.href, c.title, c.id, c.idCoordenate, c.type);
 			case 'poly':
 				const p = o as AreaPoly
-				return new AreaPoly(p.coords.map(Coord.fromObject), p.href, p.title, p.id, p.closed);
+				return new AreaPoly(p.coords.map(Coord.fromObject), p.href, p.title, p.id, p.idCoordenate, p.type, p.closed);
 			case 'default':
 				const d = o as AreaDefault
 				return new AreaDefault(d.iMap, d.href, d.title);
@@ -42,6 +44,14 @@ export abstract class Area {
 
 	getId(): number {
 		return this.id;
+	}
+
+	getIdCoordenate(): string {
+		return this.idCoordenate;
+	}
+
+	getType(): string {
+		return this.type;
 	}
 
 	setShape(shape: Shape): this {
@@ -228,9 +238,11 @@ export class AreaCircle extends Area {
 		public radius: number = 0,
 		href: string = "",
 		title: string = "",
-		id: number = 0
+		id: number = 0,
+		idCoordenate: string = "",
+		type: string = ""
 	) {
-		super("circle", coords, href, title, id);
+		super("circulo", coords, href, title, id, idCoordenate, type);
 	}
 
 	getCenter(): Coord {
@@ -276,6 +288,9 @@ export class AreaCircle extends Area {
 	}
 }
 export class AreaPoly extends Area {
+	idCoordenate: string;
+	type: string;
+
 	/**
 	 * @param {Coord[]} coords the list of coordinates
 	 * @param {string} href the link this area is going to point to
@@ -286,9 +301,11 @@ export class AreaPoly extends Area {
 		href: string = "",
 		title: string = "",
 		id: number = 0,
+		idCoordenate: string = "",
+		type: string = "",
 		public closed = false
 	) {
-		super("poly", coords, href, title, id);
+		super("poly", coords, href, title, id, idCoordenate, type);
 	}
 
 	isDrawable(): boolean {
@@ -372,9 +389,11 @@ export class AreaRect extends AreaPoly {
 		coords: Coord[] = [],
 		href: string = "",
 		title: string = "",
-		id: number = 0
+		id: number = 0,
+		idCoordenate: string = "",
+		type: string = ""
 	) {
-		super(coords, href, title, id, true);
+		super(coords, href, title, id, idCoordenate, type, true);
 		if (this.coords.length > 0 && this.coords.length < 4) {
 			let coord = this.firstCoord();
 			this.coords = [

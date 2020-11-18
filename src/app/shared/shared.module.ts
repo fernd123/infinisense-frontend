@@ -5,10 +5,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AlertModule } from './alert/alert.module';
 import { VirtualizationComponent } from './virtualization/virtualization.component';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   declarations: [
-    VirtualizationComponent
+    VirtualizationComponent,
+    ModalComponent
   ],
   imports: [
     CommonModule,
@@ -18,6 +20,7 @@ import { VirtualizationComponent } from './virtualization/virtualization.compone
   exports: [
     CommonModule,
     VirtualizationComponent,
+    ModalComponent,
     ReactiveFormsModule
   ],
   entryComponents: [

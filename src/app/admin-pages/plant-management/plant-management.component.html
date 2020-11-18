@@ -10,24 +10,28 @@
         <h4 class="card-title">{{titleModal}}</h4>
         <div class="card-body">
           <form [formGroup]="plantForm" (ngSubmit)="submit()">
-            <div class="input-group mb-2 mr-sm-2" >
+            <div class="input-group mb-2 mr-sm-2">
               <!--<label>Motivo</label>-->
-              <input type="text" class="form-control" placeholder="Nombre de la planta" formControlName="name" [ngClass]="{'alert-danger' : hasFormError('name') }" />
+              <input type="text" class="form-control" placeholder="Nombre de la planta" formControlName="name"
+                [ngClass]="{'alert-danger' : hasFormError('name') }" />
             </div>
             <div class="input-group mb-2 mr-sm-2">
               <!--<label>Descripción</label>-->
-              <input type="text" class="form-control" placeholder="Dirección" formControlName="location" [ngClass]="{'alert-danger' : hasFormError('location') }"/>
+              <input type="text" class="form-control" placeholder="Dirección" formControlName="location"
+                [ngClass]="{'alert-danger' : hasFormError('location') }" />
             </div>
             <div class="input-group mb-2 mr-sm-2">
               <!--<label>Asociado A</label>-->
-              <input type="text" class="form-control" placeholder="Tlf" formControlName="phone" [ngClass]="{'alert-danger' : hasFormError('phone') }"/>
+              <input type="text" class="form-control" placeholder="Tlf" formControlName="phone"
+                [ngClass]="{'alert-danger' : hasFormError('phone') }" />
             </div>
             <div class="input-group mb-2 mr-sm-2">
               <input type="text" class="form-control" placeholder="Tlf Alternativo"
                 formControlName="alternativePhone" />
             </div>
             <div class="input-group mb-2 mr-sm-2">
-              <input type="number" class="form-control" placeholder="Aforo máx." formControlName="maximumCapacity" [ngClass]="{'alert-danger' : hasFormError('maximumCapacity') }"/>
+              <input type="number" class="form-control" placeholder="Aforo máx." formControlName="maximumCapacity"
+                [ngClass]="{'alert-danger' : hasFormError('maximumCapacity') }" />
             </div>
           </form>
         </div>
@@ -40,57 +44,47 @@
   </div>
 </ng-template>
 
-<div class="row">
-  <div class="col-lg grid-margin stretch-card">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex flex-wrap justify-content-between">
-          <h4 class="card-title">Configurar una nueva planta</h4>
-          <button type="button" class="btn btn-gradient-primary btn-lg btn-block"
-            (click)="openModal(plantModalContent)">
-            <i class="mdi mdi-plus"></i>
-            Nueva Planta
-          </button>
-        </div>
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <infini-alert></infini-alert>
+    <div class="card-body">
+      <h4 class="card-title">Listado de plantas</h4>
+      <div style="float:right; margin-bottom: 1em;">
+        <button type="button" class="btn btn-primary btn-sm" (click)="openModal(plantModalContent)">Nuevo<i
+            class="mdi mdi-plus ml-1"></i></button>
       </div>
-    </div>
-  </div>
-</div>
-
-<infini-alert></infini-alert>
-<div class="row" *ngFor="let plant of plantList">
-  <div class="col-lg grid-margin stretch-card">
-    <div class="card">
-      <div class="card-body">
-        <div class="">
-          <h4 class="card-title">{{plant.name}}</h4>
-          <div class="container">
-            <div class="row">
-              <div class="col-4">
-                {{plant.location}}
-              </div>
-              <div class="col-2">
-                <strong>Tlf:</strong>{{plant.phone}} {{plant.alternativePhone}}
-              </div>
-              <div class="col-2">
-                <strong>Aforo Max:</strong>{{plant.maximumCapacity}}
-              </div>
-              <div class="col-2">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th>Planta</th>
+              <th>Dirección</th>
+              <th>Teléfono</th>
+              <th>Aforo máx</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let plant of plantList">
+              <td>{{plant.name}}</td>
+              <td>{{plant.location}}</td>
+              <td>{{plant.phone}} / {{plant.alternativePhone}}</td>
+              <td>{{plant.maximumCapacity}}</td>
+              <td>
                 <button type="button" class="btn btn-gradient-primary btn-sm"
                   (click)="openModal(plantModalContent, plant)">
                   <i class="mdi mdi-pen"></i>
                   Editar Planta
                 </button>
-              </div>
-              <div class="col-2">
+
                 <button type="button" class="btn btn-gradient-info btn-sm" (click)="navigateToPlane(plant.uuid)">
                   <i class="mdi mdi-home-map-marker"></i>
                   Plano
                 </button>
-              </div>
-            </div>
-          </div>
-        </div>
+              </td>
+            <tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

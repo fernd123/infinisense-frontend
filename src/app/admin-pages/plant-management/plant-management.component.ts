@@ -43,17 +43,17 @@ export class PlantManagementComponent implements OnInit {
   }
 
   refreshList() {
-    this.plantService.getPlants("").subscribe( (res: Plant[]) =>{
+    this.plantService.getPlants("").subscribe((res: Plant[]) => {
       this.plantList = res;
     });
   }
 
-  hasFormError(formName : string){
+  hasFormError(formName: string) {
     let element = this.plantForm.get(formName);
     return element.touched && element.invalid; //&& (element.value == null || element.value == '');
   }
-  
-  closeModal(){
+
+  closeModal() {
     this.modalService.dismissAll();
     this.plantForm.reset();
     this.plantEditUuid = null;
@@ -75,7 +75,7 @@ export class PlantManagementComponent implements OnInit {
     this.modalService.open(reasonModalContent, { size: 'md' });
   }
 
-  submit(){
+  submit() {
     let plant: Plant = new Plant();
     plant.name = this.plantForm.get('name').value;
     plant.location = this.plantForm.get('location').value;
@@ -84,7 +84,7 @@ export class PlantManagementComponent implements OnInit {
     plant.maximumCapacity = this.plantForm.get('maximumCapacity').value;
     plant.uuid = this.plantEditUuid;
 
-    this.plantService.savePlant(plant, "").subscribe(res =>{
+    this.plantService.savePlant(plant, "").subscribe(res => {
       this.refreshList();
       let options = {
         autoClose: true,
@@ -97,8 +97,8 @@ export class PlantManagementComponent implements OnInit {
     });
   }
 
-  navigateToPlane(uuid: string){
-    this.router.navigateByUrl("/admin-pages/plant-plane", { skipLocationChange: true, queryParams: {plantId: uuid, tenantId: ""} });
+  navigateToPlane(uuid: string) {
+    this.router.navigateByUrl("/admin-pages/plant-plane", { skipLocationChange: true, queryParams: { plantId: uuid, tenantId: "" } });
 
   }
 }

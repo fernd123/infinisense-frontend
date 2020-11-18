@@ -13,7 +13,7 @@ export class BgLayer {
 		protected speed = 15,
 		protected alpha = 0,
 		protected over = false
-	) { debugger; }
+	) { }
 
 	appear() {
 		this.over = true;

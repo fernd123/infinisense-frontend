@@ -1,0 +1,34 @@
+<app-modal title="{{modalTitle}}">
+  <form [formGroup]="plantCoordsForm" (ngSubmit)="submit()">
+    <div class="input-group mb-2 mr-sm-2">
+      <!--<label>Motivo</label>-->
+      <input type="text" class="form-control" placeholder="Nombre de la zona" formControlName="name" />
+    </div>
+
+
+
+    <div class="input-group mb-2 mr-sm-2">
+      <!--<label>Descripción</label>-->
+      <select class="form-control" id="reason" placeholder="Tipo de zona" #zoneTypeHtml
+        formControlName="virtualZoneType">
+        <option [value]="zone.value" *ngFor="let zone of zoneTypeList">{{zone.name}}</option>
+      </select>
+    </div>
+    <div class="input-group mb-2 mr-sm-2" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
+      <!--<label>Asociado A</label>-->
+      <input type="text" class="form-control" placeholder="Tipo de sensor" formControlName="sensorType" />
+    </div>
+    <div class="input-group mb-2 mr-sm-2" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
+      <input type="text" class="form-control" placeholder="Id del sensor" formControlName="sensorId">
+    </div>
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
+      *ngIf="this.plantCoordsForm.get('uuid').value != null">Eliminar</button>
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()"
+      [disabled]="this.plantCoordsForm.invalid">Guardar</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">Cancelar</button>
+  </div>
+
+</app-modal>

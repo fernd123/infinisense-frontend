@@ -17,7 +17,7 @@ export class ImageMap {
 		protected areas: Area[] = [],
 		protected name: string = "",
 		public hasDefaultArea: boolean = false
-	) {}
+	) { }
 
 	setFromObject(obj: Object): this {
 		const iMap = obj as ImageMap;
@@ -90,7 +90,7 @@ export class ImageMap {
 	 * @param {number} id 
 	 * @param {number} direction 
 	 */
-	moveArea(id: number, direction: number): number|false {
+	moveArea(id: number, direction: number): number | false {
 		let index = this.areaIndex(id);
 		let area = this.areas[index];
 		let nextIndex = index + direction;
@@ -101,11 +101,11 @@ export class ImageMap {
 		return nextIndex;
 	}
 
-	shiftArea(): Area|undefined {
+	shiftArea(): Area | undefined {
 		return this.areas.shift();
 	}
 
-	popArea(): Area|undefined {
+	popArea(): Area | undefined {
 		return this.areas.pop();
 	}
 
@@ -117,6 +117,12 @@ export class ImageMap {
 	areaIndex(id: number): number {
 		return this.areas.findIndex(a => {
 			return a.id == id;
+		});
+	}
+
+	findAreaByUuid(id: string) {
+		return this.areas.findIndex(a => {
+			return a.getIdCoordenate() == id;
 		});
 	}
 

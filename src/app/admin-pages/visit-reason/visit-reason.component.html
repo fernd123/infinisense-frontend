@@ -1,58 +1,16 @@
-<ng-template class="modal fade" #reasonModalContent let-modal>
-  <div class="modal-content">
-    <div class="card">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()"
-          #modalWindow>
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <h4 class="card-title">{{titleModal}}</h4>
-        <div class="card-body">
-          <form [formGroup]="reasonForm" (ngSubmit)="submit()">
-            <div class="input-group mb-2 mr-sm-2">
-                <!--<label>Motivo</label>-->
-              <input type="text" class="form-control" placeholder="Motivo" formControlName="name" />
-            </div>
-            <div class="input-group mb-2 mr-sm-2">
-                <!--<label>Descripción</label>-->
-              <input type="text" class="form-control" placeholder="Descripción" formControlName="description" />
-            </div>
-            <div class="input-group mb-2 mr-sm-2">
-                <!--<label>Asociado A</label>-->
-              <input type="text" class="form-control" placeholder="Asociado a" formControlName="association" readonly />
-            </div>
-            <div class="form-check form-check-flat form-check-primary">
-              <label class="form-check-label">
-                <input type="checkbox" class="form-check-input" formControlName="active">
-                Activo
-                <i class="input-helper"></i>
-              </label>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="submit()">Guardar</button>
-        <button type="button" class="btn btn-light" data-dismiss="modal" (click)="closeModal()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-</ng-template>
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
     <infini-alert></infini-alert>
     <div class="card-body">
       <h4 class="card-title">Listado motivos de visita</h4>
       <div style="float:right; margin-bottom: 1em;">
-        <button type="button" class="btn btn-primary btn-sm" (click)="openModal(reasonModalContent)">Nuevo<i
+        <button type="button" class="btn btn-primary btn-sm" (click)="openSaveModal(null)">Nuevo<i
             class="mdi mdi-plus ml-1"></i></button>
       </div>
       <div class="table-responsive">
         <table class="table table-bordered">
-            <thead class="thead-dark">
-                <tr>
+          <thead class="thead-dark">
+            <tr>
               <th>
                 Motivo
               </th>
@@ -71,9 +29,9 @@
               <td>{{reason.description}}</td>
               <td>Por hacer</td>
               <td>
-                <button type="button" class="btn btn-warning btn-sm btn-icon-text" (click)="openModal(reasonModalContent, reason)">
-                    <i class="mdi mdi-grease-pencil btn-icon-append"></i>                          
-                  </button>
+                <button type="button" class="btn btn-warning btn-sm btn-icon-text" (click)="openSaveModal(reason.uuid)">
+                  <i class="mdi mdi-grease-pencil btn-icon-append"></i>
+                </button>
               </td>
             <tr>
           </tbody>

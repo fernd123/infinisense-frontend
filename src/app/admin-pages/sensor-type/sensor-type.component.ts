@@ -3,48 +3,43 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { ReasonService } from 'src/app/core/services/reason.service';
+import { SensorTypeService } from 'src/app/core/services/sensorType.service';
 import { Reason } from 'src/app/shared/models/reason.model';
-import { VisitReasonSaveComponent } from './save/visit-reason-save.component';
+import { SensorType } from 'src/app/shared/models/sensorType.model';
+import { SensorTypeSaveComponent } from './save/sensor-type-save.component';
 
 @Component({
-  selector: 'infini-visit-reason',
-  templateUrl: './visit-reason.component.html',
-  styleUrls: ['./visit-reason.component.scss']
+  selector: 'infini-sensor-type',
+  templateUrl: './sensor-type.component.html',
+  styleUrls: ['./sensor-type.component.scss']
 })
-export class VisitReasonComponent implements OnInit {
+export class SensorTypeComponent implements OnInit {
 
   reasonForm: FormGroup;
-  reasonList: Reason[];
+  sensorTypeList: SensorType[];
   @ViewChild('modalWindow') modalWindow: any;
   editionMode: boolean = false;
   reasonEditUuid: string;
   titleModal: string;
 
   constructor(private formBuilder: FormBuilder,
-    private reasonService: ReasonService,
+    private sensorTypeService: SensorTypeService,
     private alertService: AlertService,
     private modalService: NgbModal) { }
 
   ngOnInit() {
     this.refreshList();
-    this.reasonForm = this.formBuilder.group({
-      name: [null, Validators.required],
-      description: [null, Validators.required],
-      active: [true],
-      association: [null]
-    });
   }
 
   refreshList() {
-    this.reasonService.getReasons("").subscribe((res: Reason[]) => {
-      this.reasonList = res;
+    this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
+      this.sensorTypeList = res;
     });
   }
 
-  public openSaveModal(uuid: string, size?: string): void {
-    if (!size || size === undefined) { size = 'modal-lg'; }
-    const modalRef = this.modalService.open(VisitReasonSaveComponent);
-    modalRef.componentInstance.visitReasonId = uuid;
+  public openSaveModal(sensor: any): void {
+    const modalRef = this.modalService.open(SensorTypeSaveComponent);
+    modalRef.componentInstance.sensorTypeId = sensor;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {

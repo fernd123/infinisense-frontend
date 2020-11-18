@@ -9,7 +9,6 @@ import { map, mergeMap } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class PlantService {
 
-
     urlEndPoint: string = BASEURL_DEV_PLANT;
 
     constructor(private http: HttpClient, private router: Router) { }
@@ -30,7 +29,7 @@ export class PlantService {
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getPlant(plantId: string, tenantId: string) {
+    getPlantByUuid(plantId: string, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',

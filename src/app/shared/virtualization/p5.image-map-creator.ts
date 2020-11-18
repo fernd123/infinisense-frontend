@@ -152,19 +152,19 @@ export class imageMapCreator {
 		let canvas = this.p5.createCanvas(this.width, this.height);
 		canvas.drop(this.handeFile.bind(this)).dragLeave(this.onLeave.bind(this)).dragOver(this.onOver.bind(this)).doubleClicked(this.doubleClicked.bind(this));
 		//@ts-ignore p5 types does not specify the canvas attribute
-		this.settings = QuickSettings.create(this.p5.width + 5, 0, "Image-map Creator", this.p5.canvas.parentElement)
+		this.settings = QuickSettings.create(this.p5.width + 5, 0, "Virtualizador", this.p5.canvas.parentElement)
 			.setDraggable(false)
 			.addText("Nombre del plano", "", (v: string) => { this.map.setName(v) })
-			.addDropDown("Tipo de selección", ["rectangulo", "circulo", "poligono", "seleccionar", "eliminar"/*, "test"*/], (v: ToolLabel) => { this.setTool(v.value) })
+			.addDropDown("Tipo de selección", ["rectangulo", "circulo", "poligono", "seleccionar"]/*, "eliminar", "test"]*/, (v: ToolLabel) => { this.setTool(v.value) })
 			//.addBoolean("Default Area", this.map.hasDefaultArea, (v: boolean) => { this.setDefaultArea(v) })
 			.addButton("Deshacer", this.undoManager.undo)
 			.addButton("Rehacer", this.undoManager.redo)
-			.addButton("Borrar todo", this.clearAreas.bind(this))
-			.addButton("Cargar Zonas", () => { this.loadCoordenates(this.externalCoordenates); })
-			//.addButton("Generate Html", () => { this.settings.setValue("Output", this.map.toHtml()) })
-			//.addButton("Generate Svg", () => { this.settings.setValue("Output", this.map.toSvg()) })
-			//.addTextArea("Output")
-			.addButton("Guardar", this.save.bind(this));
+		//.addButton("Borrar todo", this.clearAreas.bind(this))
+		//.addButton("Cargar Zonas", () => { this.loadCoordenates(this.externalCoordenates); })
+		//.addButton("Generate Html", () => { this.settings.setValue("Output", this.map.toHtml()) })
+		//.addButton("Generate Svg", () => { this.settings.setValue("Output", this.map.toSvg()) })
+		//.addTextArea("Output")
+		//.addButton("Guardar", this.save.bind(this));
 		//@ts-ignore Fix for oncontextmenu
 		this.p5.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); });
 		//@ts-ignore Fix for middle click mouse down triggers scroll on windows

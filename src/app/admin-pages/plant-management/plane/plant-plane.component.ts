@@ -59,7 +59,7 @@ export class PlanPlaneComponent implements OnInit {
     this.plantId = this.route.getCurrentNavigation().extras.queryParams.plantId;
     this.tenantId = this.route.getCurrentNavigation().extras.queryParams.tenantId;
 
-    this.plantService.getPlant(this.plantId, this.tenantId).subscribe((res: Plant) => {
+    this.plantService.getPlantByUuid(this.plantId, this.tenantId).subscribe((res: Plant) => {
       if (res != undefined) {
         this.plantService.getPlantPlaneByPlant(this.plantId, this.tenantId).subscribe((resPp: PlantPlane) => {
           if (resPp != undefined) {

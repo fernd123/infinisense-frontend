@@ -5,7 +5,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { PlantCoordsService } from 'src/app/core/services/plantVirtualization.service';
+import { SensorTypeService } from 'src/app/core/services/sensorType.service';
 import { PlantVirtualization } from 'src/app/shared/models/plantvirtualization.model';
+import { SensorType } from 'src/app/shared/models/sensorType.model';
 
 
 @Component({
@@ -22,7 +24,10 @@ export class PlantCoordsSaveComponent implements OnInit {
     { value: "zv", name: "Zona" },
     { value: "se", name: "Sensor" },
     { value: "pe", name: "Punto encuentro" }
-  ]
+  ];
+
+  sensorTypeList: SensorType[];
+
   @Input() public selectedAreaId;
   @Input() public plantId;
   @Input() public coordinates;
@@ -30,6 +35,7 @@ export class PlantCoordsSaveComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private plantCoordService: PlantCoordsService,
+    private sensorTypeService: SensorTypeService,
     private alertService: AlertService,
     private modalService: NgbModal,
     private route: Router) { }
@@ -42,6 +48,10 @@ export class PlantCoordsSaveComponent implements OnInit {
       sensorType: ["", null],
       coordinates: [""],
       sensorId: [""]
+    });
+
+    this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
+      this.sensorTypeList = res;
     });
 
     if (this.selectedAreaId != null && this.selectedAreaId != "") {

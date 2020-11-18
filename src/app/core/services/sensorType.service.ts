@@ -6,28 +6,29 @@ import jwt_decode from "jwt-decode";
 import { Router } from '@angular/router';
 import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
-import { BASEURL_DEV_REASON } from 'src/app/shared/constants/app.constants';
+import { BASEURL_DEV_SENSORTYPE } from 'src/app/shared/constants/app.constants';
 import { Reason } from 'src/app/shared/models/reason.model';
+import { SensorType } from 'src/app/shared/models/sensorType.model';
 
 @Injectable({ providedIn: 'root' })
-export class ReasonService {
+export class SensorTypeService {
 
-    urlEndPoint: string = BASEURL_DEV_REASON;
+    urlEndPoint: string = BASEURL_DEV_SENSORTYPE;
 
     constructor(private http: HttpClient, private router: Router) {
 
     }
 
-    saveReason(reason: Reason, tenantId: string) {
+    saveSensorType(sensorType: SensorType, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
             'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
         let body = new URLSearchParams();
-        body.set('name', reason.name);
-        body.set('description', reason.description);
-        body.set('active', `${reason.active}`);
+        body.set('name', sensorType.name);
+        body.set('description', sensorType.description);
+        body.set('active', `${sensorType.active}`);
 
         if (tenantId) {
             body.set('tenantId', tenantId);
@@ -35,14 +36,14 @@ export class ReasonService {
 
         let options = { headers: headers };
 
-        if (reason.uuid == null) {
+        if (sensorType.uuid == null) {
             return this.http.post(this.urlEndPoint, body.toString(), options);
         } else {
-            return this.http.put(this.urlEndPoint + "/" + reason.uuid, body.toString(), options);
+            return this.http.put(this.urlEndPoint + "/" + sensorType.uuid, body.toString(), options);
         }
     }
 
-    getReasons(tenantId: string) {
+    getSensorTypeList(tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
@@ -58,7 +59,7 @@ export class ReasonService {
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getReasonByUuid(uuid: string, tenantId: string) {
+    getSensorTypeByUuid(uuid: string, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
@@ -73,5 +74,6 @@ export class ReasonService {
         let options = { headers: headers };
         return this.http.get(this.urlEndPoint + "/" + uuid, options);
     }
+
 
 }

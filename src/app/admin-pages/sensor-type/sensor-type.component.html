@@ -2,7 +2,7 @@
   <div class="card">
     <infini-alert></infini-alert>
     <div class="card-body">
-      <h4 class="card-title">Tipos de sensores</h4>
+      <h4 class="card-title">{{ 'sensortype.sensorlisttitle'  | translate }}</h4>
       <div style="float:right; margin-bottom: 1em;">
         <button type="button" class="btn btn-primary btn-sm" (click)="openSaveModal(null)">Nuevo<i
             class="mdi mdi-plus ml-1"></i></button>
@@ -12,12 +12,12 @@
           <thead class="thead-dark">
             <tr>
               <th>
-                Nombre
+                {{ 'name'  | translate }}
               </th>
               <th>
-                Description
+                {{ 'description'  | translate }}
               </th>
-              <th>Acciones</th>
+              <th>{{ 'actions'  | translate }}</th>
             </tr>
           </thead>
           <tbody>

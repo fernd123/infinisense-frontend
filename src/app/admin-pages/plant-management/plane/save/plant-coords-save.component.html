@@ -1,39 +1,39 @@
 <app-modal title="{{modalTitle}}">
   <form [formGroup]="plantCoordsForm" (ngSubmit)="submit()">
     <div class="form-group">
-      <label for="name">Nombre</label>
-      <input type="text" class="form-control" id="name" placeholder="Nombre" formControlName="name">
+      <label for="name">{{ 'name'  | translate }}</label>
+      <input type="text" class="form-control" id="name" placeholder="{{ 'name'  | translate }}" formControlName="name">
     </div>
 
     <div class="form-group">
-      <label for="zoneType">Tipo de zona</label>
-      <select class="form-control" id="zoneType" placeholder="Tipo de zona" #zoneTypeHtml
-        formControlName="virtualZoneType">
+      <label for="zoneType">{{ 'plant.zonetype'  | translate }}</label>
+      <select class="form-control" id="zoneType" #zoneTypeHtml formControlName="virtualZoneType">
         <option [value]="zone.value" *ngFor="let zone of zoneTypeList">{{zone.name}}</option>
       </select>
     </div>
 
     <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
-      <label for="sensorType">Tipo de sensor</label>
-      <select class="form-control" id="sensorType" placeholder="Tipo de Sensor" #sensorTypeHtml
-        formControlName="sensorType">
+      <label for="sensorType">{{ 'plant.sensortype'  | translate }}</label>
+      <select class="form-control" id="sensorType" #sensorTypeHtml formControlName="sensorType">
         <option [value]="sensor.uuid" *ngFor="let sensor of sensorTypeList">{{sensor.name}}</option>
       </select>
     </div>
 
     <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
-      <label for="sensorId">Id del sensor</label>
-      <input type="text" class="form-control" id="idsensor" placeholder="Id sensor" formControlName="sensorId">
+      <label for="sensorId">{{ 'plant.sensorid'  | translate }}</label>
+      <input type="text" class="form-control" id="idsensor" placeholder="{{ 'plant.sensorid'  | translate }}"
+        formControlName="sensorId">
     </div>
 
   </form>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
-      *ngIf="this.plantCoordsForm.get('uuid').value != null">Eliminar</button>
+      *ngIf="this.plantCoordsForm.get('uuid').value != null">{{ 'delete'  | translate }}</button>
     <button type="button" class="btn btn-success btn-sm" (click)="submit()"
-      [disabled]="this.plantCoordsForm.invalid">Guardar</button>
-    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">Cancelar</button>
+      [disabled]="this.plantCoordsForm.invalid">{{ 'save'  | translate }}</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal"
+      (click)="closeModal()">{{ 'cancel'  | translate }}</button>
   </div>
 
 </app-modal>

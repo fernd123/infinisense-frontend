@@ -1,0 +1,77 @@
+{
+  "en": "Inglés",
+  "es": "Español",
+  "name": "Nombre",
+  "description": "Descripción",
+  "active": "Activo",
+  "delete": "Eliminar",
+  "save": "Guardar",
+  "cancel": "Cancelar",
+  "refresh": "Refrescar",
+  "clear": "Limpiar valores",
+  "actions": "Acciones",
+  "new": "Nuevo",
+  "register": "Registrar",
+  "plant": {
+    "title": "Planta",
+    "configuration": "Configuración de Planta",
+    "configuratedzones": "Zonas configuradas",
+    "zonetype": "Tipo de zona",
+    "sensortype": "Tipo de sensor",
+    "sensorid": "Id del sensor",
+    "location": "Dirección",
+    "phone": "Teléfono",
+    "alternativephone": "Teléfono alternativo",
+    "maximumcapacity": "Aforo máx.",
+    "saveplantinfotitle": "Guardar Info. Planta",
+    "plantlisttitle": "Listado de plantas",
+    "plant": "Planta",
+    "plane": "Plano"
+  },
+  "sensortype": {
+    "savesensortypetitle": "Guardar Tipo de Sensor",
+    "sensorlisttitle": "Tipos de sensor"
+  },
+  "user": {
+    "userexternallisttitle": "Listado de plantas",
+    "firstname": "Nombre",
+    "lastname": "Apellidos",
+    "dni": "DNI",
+    "username": "Usuario",
+    "password": "Contraseña",
+    "tenantid": "ID cliente",
+    "signature": "Firma",
+    "removesignature": "Borrar firma",
+    "email": "Email",
+    "company": "Empresa"
+  },
+  "visit": {
+    "visitlisttitle": "Visitas",
+    "person": "Persona",
+    "reason": "Motivo",
+    "startdate": "Hora Entrada",
+    "enddate": "Hora Salida",
+    "checkexit": "Marcar Salida",
+    "plant": "Planta",
+    "zone": "Zona"
+  },
+  "reason": {
+    "reasonlisttitle": "Motivos de visita",
+    "reason": "Motivo",
+    "relatedto": "Asociado con",
+    "associatetozone": "Asociar un motivo de visita a una zona"
+  },
+  "registervisit": {
+    "title": "Registro visita",
+    "description": "Por favor, regístrese antes de entrar en planta"
+  },
+  "login": {
+    "admintitle": "Acceso administrador",
+    "login": "Entrar",
+    "lostpassword": "Recuperar contraseña",
+    "therms": "@2020 All Rights Reserved. Mas Ingenieros. Privacy and Terms",
+    "error": {
+      "invalidcredentials": "The user name or password is incorrect. Try again"
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { PlantCoordsService } from 'src/app/core/services/plantVirtualization.service';
@@ -22,6 +23,7 @@ export class VisitReasonSaveComponent implements OnInit {
   modalTitle: string = "Guardar Motivo Visita";
   editionMode: boolean = false;
   @Input() public visitReasonId;
+  associationtitle: string = this.translateService.instant('reason.associatetozone');
 
   plantList: Plant[];
   plantZoneList: PlantVirtualization[];
@@ -33,6 +35,7 @@ export class VisitReasonSaveComponent implements OnInit {
     private plantZoneService: PlantCoordsService,
     private alertService: AlertService,
     private modalService: NgbModal,
+    private translateService: TranslateService,
     private route: Router) { }
 
   ngOnInit() {
@@ -52,7 +55,6 @@ export class VisitReasonSaveComponent implements OnInit {
     if (this.visitReasonId != null) {
       this.editionMode = true;
       this.reasonService.getReasonByUuid(this.visitReasonId, "").subscribe((res: Reason) => {
-        debugger;
         this.reasonForm.get('uuid').setValue(res.uuid);
         this.reasonForm.get('name').setValue(res.name);
         this.reasonForm.get('description').setValue(res.description);
@@ -71,7 +73,6 @@ export class VisitReasonSaveComponent implements OnInit {
   loadData() {
     this.plantService.getPlants("").subscribe((res: Plant[]) => {
       this.plantList = res;
-      debugger;
     });
   }
 

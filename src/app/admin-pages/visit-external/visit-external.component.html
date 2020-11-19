@@ -2,15 +2,15 @@
   <div class="card">
     <div class="card-body">
       <infini-alert></infini-alert>
-      <h4 class="card-title">Visitas</h4>
+      <h4 class="card-title">{{ 'visit.visitlisttitle' | translate }}</h4>
       <div class="row" style="float:right; margin-bottom: 1em;">
         <div class="col">
-          <select class="form-control" id="reason" placeholder="Opciones" #optionFilter (change)="refreshList()">
+          <select class="form-control" id="reason" #optionFilter (change)="refreshList()">
             <option [value]="option.value" *ngFor="let option of optionList">{{option.name}}</option>
           </select>
         </div>
         <div class="col">
-          <button type="button" class="btn btn-primary btn-sm" (click)="refreshList()">Refrescar<i
+          <button type="button" class="btn btn-primary btn-sm" (click)="refreshList()">{{ 'refresh' | translate }}<i
               class="mdi mdi-refresh-circle ml-1"></i></button>
         </div>
       </div>
@@ -19,18 +19,19 @@
           <thead class="thead-dark">
             <tr>
               <th>
-                Persona
+                {{ 'visit.person' | translate }}
               </th>
               <th>
-                Motivo
+                {{ 'visit.reason' | translate }}
               </th>
               <th>
-                Hora Entrada
+                {{ 'visit.startdate' | translate }}
               </th>
               <th>
-                Hora Salida
+                {{ 'visit.enddate' | translate }}
               </th>
-              <th>Acciones</th>
+              <th> {{ 'actions' | translate }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -42,7 +43,7 @@
               <td>
                 <button type="button" class="btn btn-info btn-sm btn-icon-text" (click)="updateVisit(visit)"
                   *ngIf="visit.endDate == null">
-                  <i class="mdi mdi-exit-to-app btn-icon-append"></i>Marcar Salida
+                  <i class="mdi mdi-exit-to-app btn-icon-append"></i> {{ 'visit.checkexit' | translate }}
                 </button>
               </td>
             <tr>

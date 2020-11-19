@@ -7,56 +7,59 @@
       <div class="card">
         <div class="card-body">
           <infini-alert></infini-alert>
-          <h4 class="card-title">Registro visita</h4>
+          <h4 class="card-title">{{ 'registervisit.title' | translate }}</h4>
           <p class="card-description">
-            Por favor, regístrese antes de entrar en planta
+            {{ 'registervisit.description' | translate }}
           </p>
           <form class="form-inline" [formGroup]="registerForm" (ngSubmit)="submit()">
-            <label class="sr-only" for="dniname">DNI</label>
-            <input type="text" class="form-control mb-2 mr-sm-2" id="dni" placeholder="DNI" formControlName="dni"
-              (change)="getUserByDni()" [ngClass]="{'alert-danger' : hasFormError('dni') }" autocomplete="off">
+            <label class="sr-only" for="dniname">{{ 'user.dni' | translate }}</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="dni" placeholder="{{ 'user.dni' | translate }}"
+              formControlName="dni" (change)="getUserByDni()" [ngClass]="{'alert-danger' : hasFormError('dni') }"
+              autocomplete="off">
 
-            <label class="sr-only" for="firstname">Name</label>
+            <label class="sr-only" for="firstname">{{ 'user.firstname' | translate }}</label>
             <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control" id="firstname" placeholder="Firstname" formControlName="firstname"
-                [ngClass]="{'alert-danger' : hasFormError('firstname') }" autocomplete="off">
+              <input type="text" class="form-control" id="firstname" placeholder="{{ 'user.firstname' | translate }}"
+                formControlName="firstname" [ngClass]="{'alert-danger' : hasFormError('firstname') }"
+                autocomplete="off">
             </div>
 
-            <label class="sr-only" for="lastname">Lastname</label>
+            <label class="sr-only" for="lastname">{{ 'user.lastname' | translate }}</label>
             <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control" id="lastname" placeholder="Lastname" formControlName="lastname"
-                [ngClass]="{'alert-danger' : hasFormError('lastname') }" autocomplete="off">
+              <input type="text" class="form-control" id="lastname" placeholder="{{ 'user.lastname' | translate }}"
+                formControlName="lastname" [ngClass]="{'alert-danger' : hasFormError('lastname') }" autocomplete="off">
             </div>
 
-            <label class="sr-only" for="lastname">Email</label>
+            <label class="sr-only" for="lastname">{{ 'user.email' | translate }}</label>
             <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email"
-                [ngClass]="{'alert-danger' : hasFormError('email') }" autocomplete="off">
+              <input type="text" class="form-control" id="email" placeholder="{{ 'user.email' | translate }}"
+                formControlName="email" [ngClass]="{'alert-danger' : hasFormError('email') }" autocomplete="off">
             </div>
 
-            <label class="sr-only" for="company">Company</label>
+            <label class="sr-only" for="company">{{ 'user.company' | translate }}</label>
             <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control has-danger" id="company" placeholder="Company"
-                formControlName="company" [ngClass]="{'alert-danger' : hasFormError('company') }" autocomplete="off">
+              <input type="text" class="form-control has-danger" id="company"
+                placeholder="{{ 'user.company' | translate }}" formControlName="company"
+                [ngClass]="{'alert-danger' : hasFormError('company') }" autocomplete="off">
             </div>
 
-            <label class="sr-only" for="reason">Reason</label>
+            <label class="sr-only" for="reason">{{ 'visit.reason' | translate }}</label>
             <div class="input-group mb-2 mr-sm-2">
-              <select class="form-control" id="reason" placeholder="Reason" formControlName="reason"
+              <select class="form-control" id="reason" formControlName="reason"
                 [ngClass]="{'alert-danger' : hasFormError('reason') }" autocomplete="off">
                 <option [value]="reason.uuid" *ngFor="let reason of reasonList">{{reason.name}}</option>
               </select>
             </div>
 
             <button type="submit" class="btn btn-gradient-primary mb-2"
-              [disabled]="!registerForm.valid">Registrar</button>
+              [disabled]="!registerForm.valid">{{ 'register' | translate }}</button>
           </form>
         </div>
 
         <div class="card">
           <div class="card-body">
             <div style="width: 300px; height: 300px; top:0; bottom: 10px; left: 0; right: 0;margin: auto;">
-              <h4 class="card-title">Firma</h4>
+              <h4 class="card-title">{{ 'user.signature' | translate }}</h4>
               <div style="border-style: dashed; border-color: #f2edf3;" *ngIf="loadSignature" #signatureDiv>
                 <signature-pad #signaturePadC [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
                   (onEndEvent)="drawComplete()"></signature-pad>
@@ -73,7 +76,7 @@
           <button type="button" class="btn btn-lg btn-light btn-icon-text" (click)="clearSignature()"
             *ngIf="loadSignature">
             <i class="mdi mdi-reload btn-icon-prepend"></i>
-            Borrar firma
+            {{ 'user.removesignature' | translate }}
           </button>
         </div>
 

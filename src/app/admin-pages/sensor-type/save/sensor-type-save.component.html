@@ -1,19 +1,20 @@
 <app-modal title="{{modalTitle}}">
   <form [formGroup]="sensorTypeForm" (ngSubmit)="submit()">
     <div class="form-group">
-      <label for="name">Nombre</label>
-      <input type="text" class="form-control" id="name" placeholder="Nombre" formControlName="name">
+      <label for="name">{{ 'name'  | translate }}</label>
+      <input type="text" class="form-control" id="name" placeholder="{{ 'name'  | translate }}" formControlName="name">
     </div>
 
     <div class="form-group">
-      <label for="name">Descripción</label>
-      <input type="text" class="form-control" id="description" placeholder="Descripción" formControlName="description">
+      <label for="name">{{ 'description'  | translate }}</label>
+      <input type="text" class="form-control" id="description" placeholder="{{ 'description'  | translate }}"
+        formControlName="description">
     </div>
 
     <div class="form-check form-check-flat form-check-primary">
       <label class="form-check-label">
         <input type="checkbox" class="form-check-input" formControlName="active">
-        Activo
+        {{ 'active'  | translate }}
         <i class="input-helper"></i>
       </label>
     </div>
@@ -21,10 +22,11 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
-      *ngIf="this.sensorTypeForm.get('uuid').value != null">Eliminar</button>
+      *ngIf="this.sensorTypeForm.get('uuid').value != null">{{ 'delete'  | translate }}</button>
     <button type="button" class="btn btn-success btn-sm" (click)="submit()"
-      [disabled]="this.sensorTypeForm.invalid">Guardar</button>
-    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">Cancelar</button>
+      [disabled]="this.sensorTypeForm.invalid">{{ 'save'  | translate }}</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal"
+      (click)="closeModal()">{{ 'cancel'  | translate }}</button>
   </div>
 
 </app-modal>

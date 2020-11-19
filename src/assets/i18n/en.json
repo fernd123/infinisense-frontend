@@ -1,0 +1,16 @@
+{
+    "en": "English",
+    "es": "Spanish",
+    "name": "Name",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "plant": {
+        "title": "Plant",
+        "configuration": "Plant Configuration",
+        "configuratedzones": "Configurated Zones",
+        "zonetype": "Zone type",
+        "sensortype": "Sensor Type",
+        "sensorid": "Sensor Id"
+    }
+}

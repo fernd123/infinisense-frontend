@@ -10,6 +10,7 @@ import { Reason } from 'src/app/shared/models/reason.model';
 import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'infini-register-visit',
@@ -19,7 +20,7 @@ import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 export class RegisterVisitComponent implements OnInit {
 
   registerForm: FormGroup;
-  loading : boolean;
+  loading: boolean;
   reasonList: Reason[];
   @ViewChild('signaturePadC') signaturePad: any;
   @ViewChild('signatureDiv') signatureDiv: any;
@@ -39,12 +40,18 @@ export class RegisterVisitComponent implements OnInit {
     private reasonService: ReasonService,
     private visitService: VisitService,
     private userService: UserService,
+    private translate: TranslateService,
     protected alertService: AlertService
-      ) { }
+  ) { }
 
   ngOnInit() {
-    this.reasonService.getReasons("").subscribe( (res: any) =>{
-        this.reasonList = res;
+
+    this.translate.setDefaultLang('es');
+    this.translate.addLangs(['es', 'en']);
+    this.translate.use('es');
+
+    this.reasonService.getReasons("").subscribe((res: any) => {
+      this.reasonList = res;
     });
 
     this.registerForm = this.formBuilder.group({
@@ -59,76 +66,76 @@ export class RegisterVisitComponent implements OnInit {
 
   ngAfterViewInit() {
     // this.signaturePad is now available
-    if(this.signaturePad != undefined){
+    if (this.signaturePad != undefined) {
       this.signaturePad.set('canvasHeight', this.signaturePad.elementRef.nativeElement.parentElement.offsetHeight);
       this.signaturePad.set('canvasWidth', this.signaturePad.elementRef.nativeElement.parentElement.offsetWidth);
-      
+
       //this.signaturePad.set('minWidth', 1); // set szimek/signature_pad options at runtime
       this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
     }
   }
- 
+
   drawComplete() {
     //console.log(this.signaturePad.toDataURL());
   }
- 
+
   drawStart() {
     // will be notified of szimek/signature_pad's onBegin event
     console.log('begin drawing');
   }
 
-  clearSignature(){
+  clearSignature() {
     this.signaturePad.clear();
   }
 
-  hasFormError(formName : string){
+  hasFormError(formName: string) {
     let element = this.registerForm.get(formName);
     return element.touched && element.invalid; //&& (element.value == null || element.value == '');
   }
 
-  getUserByDni(){
+  getUserByDni() {
     let value = this.registerForm.get('dni').value;
-    if(value.length >= 5){
-      this.userService.getUserByDni(value).subscribe( (res:User)=>{
-         if(res != null){
-           this.registerForm.get('firstname').setValue(res.firstname);
-           this.registerForm.get('lastname').setValue(res.lastname);
-           this.registerForm.get('email').setValue(res.email);
-           this.registerForm.get('company').setValue(res.company);
+    if (value.length >= 5) {
+      this.userService.getUserByDni(value).subscribe((res: User) => {
+        if (res != null) {
+          this.registerForm.get('firstname').setValue(res.firstname);
+          this.registerForm.get('lastname').setValue(res.lastname);
+          this.registerForm.get('email').setValue(res.email);
+          this.registerForm.get('company').setValue(res.company);
 
-           this.registerForm.get('firstname').disable();
-           this.registerForm.get('lastname').disable();
-           this.registerForm.get('email').disable();
-           this.registerForm.get('company').disable();
+          this.registerForm.get('firstname').disable();
+          this.registerForm.get('lastname').disable();
+          this.registerForm.get('email').disable();
+          this.registerForm.get('company').disable();
 
-           this.userService.getUserSignature(res.uuid).subscribe( (res:any) => {
-            if(res == null){
+          this.userService.getUserSignature(res.uuid).subscribe((res: any) => {
+            if (res == null) {
               this.loadSignature = true;
               this.signaturePad != undefined ? this.signaturePad.clear() : "";
               this.userSignature = new Image();
-            }else{
+            } else {
               this.loadSignature = false;
             }
             this.userSignature.src = res;
             this.userSignature.width = 200;
             this.userSignature.height = 200;
-           });
-         }else{
-            this.clearAndEnableForm();
-         }
+          });
+        } else {
+          this.clearAndEnableForm();
+        }
       });
-    }else{
+    } else {
       this.clearAndEnableForm();
     }
   }
 
   submit() {
-    if(this.signaturePad != undefined && this.signaturePad.isEmpty()){
+    if (this.signaturePad != undefined && this.signaturePad.isEmpty()) {
       this.signatureDiv.nativeElement.style["border-color"] = "red";
       return;
     }
 
-    let user : User = new User();
+    let user: User = new User();
     user.dni = this.registerForm.get('dni').value;
     user.firstname = this.registerForm.get('firstname').value;
     user.lastname = this.registerForm.get('lastname').value;
@@ -137,12 +144,12 @@ export class RegisterVisitComponent implements OnInit {
     user.roles = "VISITOR";
     user.signature = this.signaturePad != null ? this.signaturePad.toDataURL() : null;
 
-    let visit : Visit = new Visit();
+    let visit: Visit = new Visit();
     visit.reason = this.registerForm.get('reason').value;
     visit.userUuid = "";
 
     this.visitService.saveVisit(visit, user, "").subscribe(
-      res =>{
+      res => {
         this.registerForm.get('dni').setValue(null);
         this.clearAndEnableForm();
         this.registerForm.reset();
@@ -150,16 +157,16 @@ export class RegisterVisitComponent implements OnInit {
         let options = {
           autoClose: true,
           keepAfterRouteChange: false
-      };
-      this.alertService.success('¡Éxito! Registro registrado correctamente', options);
+        };
+        this.alertService.success('¡Éxito! Registro registrado correctamente', options);
       },
-      error =>{
+      error => {
         this.alertService.error(`Error ${error.error}`);
       }
     )
   }
 
-  private clearAndEnableForm(){
+  private clearAndEnableForm() {
     this.registerForm.get('firstname').setValue(null);
     this.registerForm.get('lastname').setValue(null);
     this.registerForm.get('company').setValue(null);
@@ -170,7 +177,7 @@ export class RegisterVisitComponent implements OnInit {
     this.userSignature = new Image();
     this.loadSignature = true;
     this.signatureDiv != undefined ?
-    this.signatureDiv.nativeElement.style["border-color"] = "#f2edf3" : "";
+      this.signatureDiv.nativeElement.style["border-color"] = "#f2edf3" : "";
   }
 
 }

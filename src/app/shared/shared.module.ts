@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AlertModule } from './alert/alert.module';
 import { VirtualizationComponent } from './virtualization/virtualization.component';
 import { ModalComponent } from './modal/modal.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { ModalComponent } from './modal/modal.component';
   exports: [
     CommonModule,
     NgbModule,
+    TranslateModule,
     VirtualizationComponent,
     ModalComponent,
     ReactiveFormsModule

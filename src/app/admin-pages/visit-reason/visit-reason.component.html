@@ -2,25 +2,19 @@
   <div class="card">
     <infini-alert></infini-alert>
     <div class="card-body">
-      <h4 class="card-title">Listado motivos de visita</h4>
+      <h4 class="card-title"> {{ 'reason.reasonlisttitle' | translate }}</h4>
       <div style="float:right; margin-bottom: 1em;">
-        <button type="button" class="btn btn-primary btn-sm" (click)="openSaveModal(null)">Nuevo<i
+        <button type="button" class="btn btn-primary btn-sm" (click)="openSaveModal(null)"> {{ 'new' | translate }}<i
             class="mdi mdi-plus ml-1"></i></button>
       </div>
       <div class="table-responsive">
         <table class="table table-bordered">
           <thead class="thead-dark">
             <tr>
-              <th>
-                Motivo
-              </th>
-              <th>
-                Description
-              </th>
-              <th>
-                Asociado A
-              </th>
-              <th>Acciones</th>
+              <th>{{ 'reason.reason' | translate }}</th>
+              <th>{{ 'description' | translate }}</th>
+              <th>{{ 'reason.relatedto' | translate }}</th>
+              <th>{{ 'actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>

@@ -617,7 +617,6 @@ export class imageMapCreator {
 			color = this.p5.color(233, 236, 19, 178);
 		}
 		if (area.getType() == 'pe') { // punto encuentro
-			debugger;
 			color = this.p5.color(255, 0, 0, 178);
 		}
 		if (((this.tool == "eliminar" || this.tool == "seleccionar") &&

@@ -7,31 +7,31 @@
       <div class="animate form login_form">
         <section class="login_content">
           <form [formGroup]="loginForm" (ngSubmit)="login()">
-            <h1>Admin Form</h1>
+            <h1>{{ 'login.admintitle' | translate }}</h1>
             <div>
-              <input type="text" class="form-control" placeholder="Username" formControlName="username"
-                autocomplete="off" />
+              <input type="text" class="form-control" placeholder="{{ 'user.username' | translate }}"
+                formControlName="username" autocomplete="off" />
             </div>
             <div>
-              <input type="password" class="form-control" placeholder="Password" formControlName="password"
-                autocomplete="off" />
+              <input type="password" class="form-control" placeholder="{{ 'user.password' | translate }}"
+                formControlName="password" autocomplete="off" />
             </div>
             <div>
-              <input type="text" class="form-control" placeholder="Tenant ID" formControlName="tenantId"
-                autocomplete="off" />
+              <input type="text" class="form-control" placeholder="{{ 'user.tenantid' | translate }}"
+                formControlName="tenantId" autocomplete="off" />
             </div>
-            <p *ngIf="error" id="error" class="form-text" style="color: red">The user name or password is incorrect. Try
-              again</p>
+            <p *ngIf="error" id="error" class="form-text" style="color: red">
+              {{ 'login.error.invalidcredentials' | translate }}</p>
             <div>
-              <button type="submit" class="btn btn-primary">Log in</button>
-              <a class="reset_pass" (click)="resetPassword()">Lost your password?</a>
+              <button type="submit" class="btn btn-primary">{{ 'login.login' | translate }}</button>
+              <a class="reset_pass" (click)="resetPassword()">{{ 'login.lostpassword' | translate }}</a>
             </div>
             <div class="clearfix"></div>
             <div class="separator">
               <div class="clearfix"></div>
               <br />
               <div>
-                <p>@2020 All Rights Reserved. Mas Ingenieros. Privacy and Terms</p>
+                <p>{{ 'login.therms' | translate }}</p>
               </div>
             </div>
           </form>

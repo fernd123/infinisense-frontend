@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { LoginAdminComponent } from './login-admin.component';
 import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     SharedModule,
     ReactiveFormsModule,
+    TranslateModule,
     LoginAdminRoutingModule
   ],
   exports: [LoginAdminComponent],

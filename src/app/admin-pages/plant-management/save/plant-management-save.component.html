@@ -1,41 +1,43 @@
 <app-modal title="{{modalTitle}}">
   <form [formGroup]="plantForm" (ngSubmit)="submit()">
     <div class="form-group">
-      <label for="name">Nombre</label>
-      <input type="text" class="form-control" id="name" placeholder="Nombre" formControlName="name">
+      <label for="name">{{ 'name'  | translate }}</label>
+      <input type="text" class="form-control" id="name" placeholder="{{ 'name'  | translate }}" formControlName="name">
     </div>
 
     <div class="form-group">
-      <label for="location">Dirección</label>
-      <input type="text" class="form-control" placeholder="Dirección" formControlName="location"
-        [ngClass]="{'alert-danger' : hasFormError('location') }" />
+      <label for="location">{{ 'plant.location'  | translate }}</label>
+      <input type="text" class="form-control" placeholder="{{ 'plant.location'  | translate }}"
+        formControlName="location" [ngClass]="{'alert-danger' : hasFormError('location') }" />
     </div>
 
     <div class="form-group">
-      <label for="tlf">Teléfono</label>
-      <input type="text" class="form-control" placeholder="Tlf" formControlName="phone"
+      <label for="tlf">{{ 'plant.phone'  | translate }}</label>
+      <input type="text" class="form-control" placeholder="{{ 'plant.phone'  | translate }}" formControlName="phone"
         [ngClass]="{'alert-danger' : hasFormError('phone') }" />
     </div>
 
     <div class="form-group">
-      <label for="alternativephone">Alternative Phone</label>
-      <input type="text" class="form-control" placeholder="Tlf Alternativo" formControlName="alternativePhone" />
+      <label for="alternativephone">{{ 'plant.alternativephone'  | translate }}</label>
+      <input type="text" class="form-control" placeholder="{{ 'plant.alternativephone'  | translate }}"
+        formControlName="alternativePhone" />
     </div>
 
     <div class="form-group">
-      <label for="maximumCapacity">Aforo máximo</label>
-      <input type="number" class="form-control" placeholder="Aforo máx." formControlName="maximumCapacity"
-        [ngClass]="{'alert-danger' : hasFormError('maximumCapacity') }" />
+      <label for="maximumCapacity">{{ 'plant.maximumcapacity'  | translate }}</label>
+      <input type="number" class="form-control" placeholder="{{ 'plant.maximumcapacity'  | translate }}"
+        formControlName="maximumCapacity" [ngClass]="{'alert-danger' : hasFormError('maximumCapacity') }" />
     </div>
 
   </form>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
-      *ngIf="this.plantForm.get('uuid').value != null">Eliminar</button>
+      *ngIf="this.plantForm.get('uuid').value != null">{{ 'delete'  | translate }}</button>
     <button type="button" class="btn btn-success btn-sm" (click)="submit()"
-      [disabled]="this.plantForm.invalid">Guardar</button>
-    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">Cancelar</button>
+      [disabled]="this.plantForm.invalid">{{ 'save'  | translate }}</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal"
+      (click)="closeModal()">{{ 'cancel'  | translate }}</button>
   </div>
 
 </app-modal>

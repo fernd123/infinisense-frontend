@@ -52,7 +52,7 @@ export class VirtualizationComponent implements OnInit {
     }
 
     if (this.imcreator != undefined && this.imcreator.imageDropped) {
-      this.imcreator.editionMode = true;
+      this.imcreator.editionMode = false;
       this.imcreator.imageDropped = false;
       this.propagar.emit(JSON.stringify({ "action": "uploadImage" }));
     }

@@ -9,12 +9,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from '../shared/alert/alert.module';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { AuthGuard } from '../core/guards/auth.guard';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpLoaderFactory } from '../app.module';
+import { HttpClient } from '@angular/common/http';
+import { SharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'register-visit', component: RegisterVisitComponent, canActivate: [AuthGuard]
-},
+  { path: 'register-visit', component: RegisterVisitComponent, canActivate: [AuthGuard] },
 
 ]
 
@@ -22,11 +25,18 @@ const routes: Routes = [
   declarations: [LoginComponent, RegisterComponent, RegisterVisitComponent],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    SharedModule,
     AlertModule,
     SignaturePadModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     RouterModule.forChild(routes)
   ],
-  providers:[AuthGuard]
+  providers: [AuthGuard]
 })
 export class UserPagesModule { }

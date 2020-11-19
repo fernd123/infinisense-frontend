@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { PlantCoordsService } from 'src/app/core/services/plantVirtualization.service';
@@ -18,7 +19,7 @@ import { SensorType } from 'src/app/shared/models/sensorType.model';
 export class PlantManagementSaveComponent implements OnInit {
 
   plantForm: FormGroup;
-  modalTitle: string = "Guardar Info. Planta";
+  modalTitle: string = this.translateService.instant('plant.saveplantinfotitle');
   editionMode: boolean = false;
   @Input() public plantId;
 
@@ -28,6 +29,7 @@ export class PlantManagementSaveComponent implements OnInit {
     private sensorTypeService: SensorTypeService,
     private alertService: AlertService,
     private modalService: NgbModal,
+    private translateService: TranslateService,
     private route: Router) { }
 
   ngOnInit() {

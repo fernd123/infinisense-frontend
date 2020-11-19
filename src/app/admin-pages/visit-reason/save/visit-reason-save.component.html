@@ -1,19 +1,21 @@
 <app-modal title="{{modalTitle}}">
   <form [formGroup]="reasonForm" (ngSubmit)="submit()">
     <div class="form-group">
-      <label for="name">Nombre</label>
-      <input type="text" class="form-control" id="name" placeholder="Nombre" formControlName="name">
+      <label for="name"> {{ 'name' | translate }}
+      </label>
+      <input type="text" class="form-control" id="name" placeholder=" {{ 'name' | translate }}" formControlName="name">
     </div>
 
     <div class="form-group">
-      <label for="name">Descripción</label>
-      <input type="text" class="form-control" id="description" placeholder="Descripción" formControlName="description">
+      <label for="name"> {{ 'description' | translate }}</label>
+      <input type="text" class="form-control" id="description" placeholder=" {{ 'description' | translate }}"
+        formControlName="description">
     </div>
 
     <div class="form-check form-check-flat form-check-primary">
       <label class="form-check-label">
         <input type="checkbox" class="form-check-input" formControlName="active">
-        Activo
+        {{ 'active' | translate }}
         <i class="input-helper"></i>
       </label>
     </div>
@@ -21,22 +23,22 @@
     <div class="mt-4">
       <ngb-accordion [closeOthers]="true">
         <!--activeIds="collapse-1"-->
-        <ngb-panel id="collapse-1" title="Asociar un motivo de visita a una zona">
+        <ngb-panel id="collapse-1" title="{{associationtitle}}">
           <ng-template ngbPanelContent>
             <div class="form-group">
               <button type="button" class="btn btn-warning btn-sm"
-                (click)="this.reasonForm.get('plant').setValue(null); this.reasonForm.get('plantZone').setValue(null);">Limpiar
-                valores</button>
+                (click)="this.reasonForm.get('plant').setValue(null); this.reasonForm.get('plantZone').setValue(null);">
+                {{ 'clear' | translate }}</button>
             </div>
             <div class="form-group">
-              <label for="name">Planta</label>
+              <label for="name"> {{ 'visit.plant' | translate }}</label>
               <select class="form-control" id="plant" formControlName="plant" (change)="loadPlantZone(true)">
                 <option [value]="plant.uuid" *ngFor="let plant of plantList">{{plant.name}}</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label for="name">Zona</label>
+              <label for="name"> {{ 'visit.zone' | translate }}</label>
               <select class="form-control" id="plantZone" formControlName="plantZone">
                 <option [value]="plantZone.uuid" *ngFor="let plantZone of plantZoneList">{{plantZone.name}}</option>
               </select>
@@ -51,10 +53,11 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
-      *ngIf="this.reasonForm.get('uuid').value != null">Eliminar</button>
-    <button type="button" class="btn btn-success btn-sm" (click)="submit()"
-      [disabled]="this.reasonForm.invalid">Guardar</button>
-    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">Cancelar</button>
+      *ngIf="this.reasonForm.get('uuid').value != null"> {{ 'delete' | translate }}</button>
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.reasonForm.invalid">
+      {{ 'save' | translate }}</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">
+      {{ 'cancel' | translate }}</button>
   </div>
 
 </app-modal>

@@ -19,8 +19,14 @@ import { TodoListComponent } from './apps/todo-list/todo-list.component';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import { SignaturePadModule } from 'angular2-signaturepad';
-import {TranslateModule} from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader'; import { HttpClient } from '@angular/common/http';
 
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient, "assets/i18n/", ".json");
+}
 
 @NgModule({
   declarations: [
@@ -45,7 +51,13 @@ import {TranslateModule} from '@ngx-translate/core';
     CoreModule,
     SignaturePadModule,
     SharedModule.forRoot(),
-    TranslateModule.forRoot()
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [ThemeService],
   bootstrap: [AppComponent]

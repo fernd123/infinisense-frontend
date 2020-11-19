@@ -2,20 +2,20 @@
   <div class="card">
     <infini-alert></infini-alert>
     <div class="card-body">
-      <h4 class="card-title">Listado de plantas</h4>
+      <h4 class="card-title">{{ 'plant.plantlisttitle'  | translate }}</h4>
       <div style="float:right; margin-bottom: 1em;">
-        <button type="button" class="btn btn-primary btn-sm" (click)="openSaveModal(null)">Nuevo<i
+        <button type="button" class="btn btn-primary btn-sm" (click)="openSaveModal(null)">{{ 'new'  | translate }}<i
             class="mdi mdi-plus ml-1"></i></button>
       </div>
       <div class="table-responsive">
         <table class="table table-bordered">
           <thead class="thead-dark">
             <tr>
-              <th>Planta</th>
-              <th>Dirección</th>
-              <th>Teléfono</th>
-              <th>Aforo máx</th>
-              <th>Acciones</th>
+              <th>{{ 'plant.plant'  | translate }}</th>
+              <th>{{ 'plant.location'  | translate }}</th>
+              <th>{{ 'plant.phone'  | translate }}</th>
+              <th>{{ 'plant.maximumcapacity'  | translate }}</th>
+              <th>{{ 'actions'  | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -31,7 +31,7 @@
 
                 <button type="button" class="btn btn-gradient-info btn-sm" (click)="navigateToPlane(plant.uuid)">
                   <i class="mdi mdi-home-map-marker"></i>
-                  Plano
+                  {{ 'plant.plane'  | translate }}
                 </button>
               </td>
             <tr>

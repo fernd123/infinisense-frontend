@@ -11,6 +11,8 @@ import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 import { TranslateService } from '@ngx-translate/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RegisterVisitMessageComponent } from './message/register-visit-message..component';
 
 @Component({
   selector: 'infini-register-visit',
@@ -41,6 +43,7 @@ export class RegisterVisitComponent implements OnInit {
     private visitService: VisitService,
     private userService: UserService,
     private translate: TranslateService,
+    private modalService: NgbModal,
     protected alertService: AlertService
   ) { }
 
@@ -149,16 +152,17 @@ export class RegisterVisitComponent implements OnInit {
     visit.userUuid = "";
 
     this.visitService.saveVisit(visit, user, "").subscribe(
-      res => {
+      (res: any) => {
         this.registerForm.get('dni').setValue(null);
-        this.clearAndEnableForm();
-        this.registerForm.reset();
+
         this.signaturePad != undefined ? this.signaturePad.clear() : "";
         let options = {
           autoClose: true,
           keepAfterRouteChange: false
         };
-        this.alertService.success('¡Éxito! Registro registrado correctamente', options);
+        //this.alertService.success('¡Éxito! Registro registrado correctamente', options);
+        this.openSaveModal(res);
+
       },
       error => {
         this.alertService.error(`Error ${error.error}`);
@@ -180,4 +184,18 @@ export class RegisterVisitComponent implements OnInit {
       this.signatureDiv.nativeElement.style["border-color"] = "#f2edf3" : "";
   }
 
+
+  public openSaveModal(visit: Visit): void {
+    const modalRef = this.modalService.open(RegisterVisitMessageComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.visit = visit;
+    modalRef.componentInstance.name = this.registerForm.get('firstname').value + " " + this.registerForm.get('lastname').value;
+
+    this.clearAndEnableForm();
+    this.registerForm.reset();
+
+    modalRef.result.then(() => { console.log('When user closes'); },
+      (res) => {
+
+      });
+  }
 }

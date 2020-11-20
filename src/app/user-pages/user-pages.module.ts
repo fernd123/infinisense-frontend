@@ -13,6 +13,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpLoaderFactory } from '../app.module';
 import { HttpClient } from '@angular/common/http';
 import { SharedModule } from '../shared/shared.module';
+import { RegisterVisitMessageComponent } from './register-vist/message/register-visit-message..component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,7 +23,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, RegisterVisitComponent],
+  declarations: [LoginComponent, RegisterComponent, RegisterVisitComponent, RegisterVisitMessageComponent],
   imports: [
     CommonModule,
     SharedModule,

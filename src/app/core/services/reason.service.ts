@@ -12,6 +12,7 @@ import { Reason } from 'src/app/shared/models/reason.model';
 @Injectable({ providedIn: 'root' })
 export class ReasonService {
 
+
     urlEndPoint: string = BASEURL_DEV_REASON;
 
     constructor(private http: HttpClient, private router: Router) {
@@ -73,6 +74,22 @@ export class ReasonService {
 
         let options = { headers: headers };
         return this.http.get(this.urlEndPoint + "/" + uuid, options);
+    }
+
+    getZoneReasonByUuid(uuid: any, tenantId: string) {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        let body = new URLSearchParams();
+
+        if (tenantId) {
+            body.set('tenantId', tenantId);
+        }
+
+        let options = { headers: headers };
+        return this.http.get(this.urlEndPoint + "/zone" + uuid, options);
     }
 
     deleteReason(uuid: string, tenantId: string) {

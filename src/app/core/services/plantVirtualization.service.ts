@@ -76,6 +76,7 @@ export class PlantCoordsService {
         body.set('sensorType', plantVirtual.sensorType);
         body.set('sensorId', plantVirtual.sensorId);
         body.set('coordinates', plantVirtual.coordinates);
+        body.set('epis', plantVirtual.epis);
 
         if (tenantId) {
             body.set('tenantId', tenantId);

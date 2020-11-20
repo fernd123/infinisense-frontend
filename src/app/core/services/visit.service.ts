@@ -15,7 +15,7 @@ export class VisitService {
     urlEndPoint: string = BASEURL_DEV_VISIT;
 
     constructor(private http: HttpClient, private router: Router) {
-        
+
     }
 
     saveVisit(visit: Visit, user: User, tenantId: string) {
@@ -34,12 +34,10 @@ export class VisitService {
 
         let options = { headers: headers };
 
-        return this.http.post(this.urlEndPoint, body.toString(), options)
-            .pipe(map((res: any) => {
-            }));
+        return this.http.post(this.urlEndPoint, body.toString(), options);
     }
 
-    updateVisit(visit: Visit, tenantId: string){
+    updateVisit(visit: Visit, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
@@ -58,7 +56,7 @@ export class VisitService {
             }));
     }
 
-    getVisits(tenantId: string, filter: string){
+    getVisits(tenantId: string, filter: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
@@ -75,5 +73,5 @@ export class VisitService {
         return this.http.get(this.urlEndPoint, options);
     }
 
-       
+
 }

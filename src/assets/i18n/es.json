@@ -11,6 +11,8 @@
   "clear": "Limpiar valores",
   "actions": "Acciones",
   "new": "Nuevo",
+  "accept": "Aceptar",
+  "close": "Cerrar",
   "register": "Registrar",
   "plant": {
     "title": "Planta",
@@ -26,7 +28,9 @@
     "saveplantinfotitle": "Guardar Info. Planta",
     "plantlisttitle": "Listado de plantas",
     "plant": "Planta",
-    "plane": "Plano"
+    "plane": "Plano",
+    "newcoordinatetitle": "Guardar zona virtual",
+    "epi": "Añadir EPI"
   },
   "sensortype": {
     "savesensortypetitle": "Guardar Tipo de Sensor",

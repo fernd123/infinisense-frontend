@@ -14,4 +14,5 @@ export class PlantVirtualization extends BaseModel implements IPlantVirtualizati
     sensorType: string;
     sensorId: string;
     plant?: Plant;
+    epis: string;
 }

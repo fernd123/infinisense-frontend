@@ -3,20 +3,21 @@
     <li class="nav-item nav-profile">
       <a href="javascript:;" class="nav-link">
         <div class="nav-profile-image">
-          <img src="assets/images/faces/face1.jpg" alt="profile">
+          <!--<img src="assets/images/faces/face1.jpg" alt="profile">-->
+          <div id="profileImage"></div>
           <span class="login-status online"></span>
           <!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text">
-          <span class="font-weight-bold mb-2">David Grey. H</span>
-          <span class="text-secondary text-small">Project Manager</span>
+          <span class="font-weight-bold mb-2">{{name}}</span>
+          <span class="text-secondary text-small"></span>
         </div>
         <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
       </a>
     </li>
     <li class="nav-item" [ngClass]="{ 'active': dashboard.isActive }">
       <a class="nav-link" routerLink="/dashboard" routerLinkActive #dashboard="routerLinkActive">
-        <span class="menu-title">Dashboard</span>
+        <span class="menu-title">{{ 'menu.dashboard' | translate }}</span>
         <i class="mdi mdi-home menu-icon"></i>
       </a>
     </li>
@@ -69,32 +70,48 @@
         <i class="mdi mdi-table-large menu-icon"></i>
       </a>
     </li>-->
-    <!--<li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
+    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
       <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
         <span class="menu-title">Icons</span>
         <i class="mdi mdi-contacts menu-icon"></i>
       </a>
-    </li>-->
+    </li>
+
+    <li class="nav-item" [ngClass]="{ 'active': user.isActive || userManagement.isActive }">
+      <a class="nav-link" (click)="userManagementCollapsed = !userManagementCollapsed"
+        [attr.aria-expanded]="userManagementCollapsed" aria-controls="ui-basic" routerLinkActive
+        #userManagement="routerLinkActive">
+        <span class="menu-title">{{'menu.usertitle' | translate }}</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-account menu-icon"></i>
+      </a>
+      <div class="collapse" id="ui-basic" [ngbCollapse]="!userManagementCollapsed">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-management" routerLinkActive="active"
+              #user="routerLinkActive">{{ 'menu.user' | translate }}</a></li>
+        </ul>
+      </div>
+    </li>
 
     <li class="nav-item"
       [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || visit.isActive || userExternal.isActive || sensorType.isActive  }">
       <a class="nav-link" (click)="masterDataCollapsed = !masterDataCollapsed"
         [attr.aria-expanded]="masterDataCollapsed" aria-controls="ui-basic" routerLinkActive
         #masterData="routerLinkActive">
-        <span class="menu-title">Masterdata</span>
+        <span class="menu-title">{{ 'menu.masterdata' | translate }}</span>
         <i class="menu-arrow"></i>
         <i class="mdi mdi-database menu-icon"></i>
       </a>
       <div class="collapse" id="ui-basic" [ngbCollapse]="!masterDataCollapsed">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/sensor-type" routerLinkActive="active"
-              #sensorType="routerLinkActive">Tipos de sensor</a></li>
+              #sensorType="routerLinkActive">{{ 'menu.sensortype' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/visit-reason" routerLinkActive="active"
-              #reasonVisit="routerLinkActive">Motivos visita</a></li>
+              #reasonVisit="routerLinkActive">{{ 'menu.reasonvisit' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/visit-external" routerLinkActive="active"
-              #visit="routerLinkActive">Visitas</a></li>
+              #visit="routerLinkActive">{{ 'menu.visits' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-external" routerLinkActive="active"
-              #userExternal="routerLinkActive">Usuarios externos</a></li>
+              #userExternal="routerLinkActive">{{ 'menu.externalusers' | translate }}</a></li>
         </ul>
       </div>
     </li>
@@ -102,14 +119,14 @@
     <li class="nav-item" [ngClass]="{ 'active': plant.isActive || plantManagement.isActive }">
       <a class="nav-link" (click)="plantDataCollapsed = !plantDataCollapsed" [attr.aria-expanded]="plantDataCollapsed"
         aria-controls="ui-basic" routerLinkActive #plant="routerLinkActive">
-        <span class="menu-title">Gestión de plantas</span>
+        <span class="menu-title">{{ 'menu.planttitle' | translate }}</span>
         <i class="menu-arrow"></i>
         <i class="mdi mdi-chemical-weapon"></i>
       </a>
       <div class="collapse" id="ui-basic" [ngbCollapse]="!plantDataCollapsed">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/plant-management" routerLinkActive="active"
-              #plantManagement="routerLinkActive">Plantas</a></li>
+              #plantManagement="routerLinkActive">{{ 'menu.plants' | translate }}</a></li>
         </ul>
       </div>
     </li>
@@ -119,16 +136,16 @@
       [ngClass]="{ 'active' : login.isActive || register.isActive || visitorPage.isActive || loginAdmin.isActive }">
       <a class="nav-link" (click)="samplePagesCollapsed = !samplePagesCollapsed"
         [attr.aria-expanded]="samplePagesCollapsed" aria-controls="auth">
-        <span class="menu-title">Funcionalidades</span>
+        <span class="menu-title">{{ 'menu.functionalities' | translate }}</span>
         <i class="menu-arrow"></i>
         <i class="mdi mdi-medical-bag menu-icon"></i>
       </a>
       <div class="collapse" id="auth" [ngbCollapse]="!samplePagesCollapsed">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" routerLink="admin" routerLinkActive="active"
-              #loginAdmin="routerLinkActive">Login admin</a></li>
+              #loginAdmin="routerLinkActive">{{ 'menu.loginadmin' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="user-pages/register-visit" routerLinkActive="active"
-              #visitorPage="routerLinkActive"> Visitors Page </a></li>
+              #visitorPage="routerLinkActive"> {{ 'menu.visitorsregister' | translate }} </a></li>
           <!--<li class="nav-item"> <a class="nav-link" routerLink="general-pages/blank-page" routerLinkActive="active" #blankPage="routerLinkActive"> Blank Page </a></li>-->
           <li class="nav-item"> <a class="nav-link" routerLink="user-pages/login" routerLinkActive="active"
               #login="routerLinkActive"> Login </a></li>
@@ -142,7 +159,7 @@
 
     <li class="nav-item" [ngClass]="{ 'active': charts.isActive }">
       <a class="nav-link" routerLink="charts/chartjs" routerLinkActive #charts="routerLinkActive">
-        <span class="menu-title">Gráficas</span>
+        <span class="menu-title">{{ 'menu.graphics' | translate }}</span>
         <i class="mdi mdi-chart-bar menu-icon"></i>
       </a>
     </li>

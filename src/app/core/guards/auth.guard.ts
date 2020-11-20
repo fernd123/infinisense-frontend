@@ -8,8 +8,8 @@ export class AuthGuard implements CanActivate {
     constructor(private router: Router) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        if (localStorage.getItem('currentUser')) {
-            let token = localStorage.getItem('currentUser');
+        if (localStorage.getItem('token')) {
+            let token = localStorage.getItem('token');
             if (this.isTokenExpired(token)) {
                 localStorage.clear();
                 this.router.navigate(['/admin']);

@@ -71,7 +71,6 @@ export class PlanPlaneComponent implements OnInit {
             //let plantPlaneList: PlantPlane[] = resPp;
             /*for (let i = 0; i < plantPlaneList.length; i++) { //TODO: Solo uno para la demo
               plantRequest.push(this.plantService.getPlantPlanes(plantPlaneList[i].name, 'tenantId'));
-              debugger;
               this.plantPlaneId = plantPlaneList[i].uuid;
             }*/
             /*if (plantRequest.length > 0) {
@@ -141,7 +140,6 @@ export class PlanPlaneComponent implements OnInit {
         }
       });
       this.plantCoordService.savePlantVirtual(plantCoords, "").subscribe(res => {
-        debugger;
 
       });*/
     }

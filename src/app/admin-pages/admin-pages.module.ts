@@ -15,8 +15,11 @@ import { PlantManagementSaveComponent } from './plant-management/save/plant-mana
 import { PlantCoordsSaveComponent } from './plant-management/plane/save/plant-coords-save.component';
 import { SensorTypeSaveComponent } from './sensor-type/save/sensor-type-save.component';
 import { VisitReasonSaveComponent } from './visit-reason/save/visit-reason-save.component';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { UserManagementSaveComponent } from './user-management/save/user-management-save.component';
 
 const routes: Routes = [
+  { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
   { path: 'visit-reason', component: VisitReasonComponent, canActivate: [AuthGuard] },
   { path: 'visit-external', component: VisitExternalComponent, canActivate: [AuthGuard] },
   { path: 'user-external', component: UserExternalComponent, canActivate: [AuthGuard] },
@@ -26,8 +29,8 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
-    UserExternalComponent,
+  declarations: [UserManagementComponent, UserManagementSaveComponent, UserExternalComponent,
+    VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
     PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent,
     SensorTypeComponent, SensorTypeSaveComponent],
   imports: [

@@ -12,5 +12,6 @@ export class User extends BaseModel implements IUser {
     dni: string;
     company: string;
     roles: string;
+    active: boolean;
     signature?: any;
 }

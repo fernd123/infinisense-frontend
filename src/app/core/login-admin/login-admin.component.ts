@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
+import { User } from 'src/app/shared/models/user.model';
 
 @Component({
   selector: 'inf-login-admin',
@@ -42,11 +43,10 @@ export class LoginAdminComponent {
     let password = this.loginForm.get('password').value;
     let tenantId = this.loginForm.get('tenantId').value;
     this.loading = true;
-
     this.authService.login(username, password, tenantId).subscribe(
-      res => {
+      (res: any) => {
         this.loading = false;
-        this.loggedIn = true
+        this.loggedIn = true;
         if (this.redirectURL) {
           this.router.navigateByUrl(this.redirectURL);
         } else {

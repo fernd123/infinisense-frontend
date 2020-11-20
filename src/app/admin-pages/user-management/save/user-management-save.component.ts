@@ -4,13 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
-import { PlantService } from 'src/app/core/services/plant.service';
-import { PlantCoordsService } from 'src/app/core/services/plantVirtualization.service';
-import { ReasonService } from 'src/app/core/services/reason.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { Plant } from 'src/app/shared/models/plant.model';
-import { PlantVirtualization } from 'src/app/shared/models/plantvirtualization.model';
-import { Reason } from 'src/app/shared/models/reason.model';
 import { User } from 'src/app/shared/models/user.model';
 
 

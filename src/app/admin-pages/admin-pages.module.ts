@@ -17,6 +17,8 @@ import { SensorTypeSaveComponent } from './sensor-type/save/sensor-type-save.com
 import { VisitReasonSaveComponent } from './visit-reason/save/visit-reason-save.component';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { UserManagementSaveComponent } from './user-management/save/user-management-save.component';
+import { PlantSensorComponent } from './plant-sensor/plant-sensor.component';
+import { PlantSensorSaveComponent } from './plant-sensor/save/plant-sensor-save.component';
 
 const routes: Routes = [
   { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
@@ -25,13 +27,14 @@ const routes: Routes = [
   { path: 'user-external', component: UserExternalComponent, canActivate: [AuthGuard] },
   { path: 'plant-management', component: PlantManagementComponent, canActivate: [AuthGuard] },
   { path: 'plant-plane', component: PlanPlaneComponent, canActivate: [AuthGuard] },
+  { path: 'plant-sensor', component: PlantSensorComponent, canActivate: [AuthGuard] },
   { path: 'sensor-type', component: SensorTypeComponent, canActivate: [AuthGuard] }
 ]
 
 @NgModule({
   declarations: [UserManagementComponent, UserManagementSaveComponent, UserExternalComponent,
     VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
-    PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent,
+    PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent, PlantSensorComponent, PlantSensorSaveComponent,
     SensorTypeComponent, SensorTypeSaveComponent],
   imports: [
     SharedModule,

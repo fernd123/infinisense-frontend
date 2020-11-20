@@ -4,10 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
-import { PlantService } from 'src/app/core/services/plant.service';
-import { PlantCoordsService } from 'src/app/core/services/plantVirtualization.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
-import { PlantVirtualization } from 'src/app/shared/models/plantvirtualization.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
 
 
@@ -27,8 +24,8 @@ export class SensorTypeSaveComponent implements OnInit {
     private sensorTypeService: SensorTypeService,
     private alertService: AlertService,
     private modalService: NgbModal,
-    private translateService: TranslateService,
-    private route: Router) { }
+    private translateService: TranslateService
+  ) { }
 
   ngOnInit() {
     this.sensorTypeForm = this.formBuilder.group({

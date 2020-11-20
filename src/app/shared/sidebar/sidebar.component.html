@@ -116,7 +116,7 @@
       </div>
     </li>
 
-    <li class="nav-item" [ngClass]="{ 'active': plant.isActive || plantManagement.isActive }">
+    <li class="nav-item" [ngClass]="{ 'active': plant.isActive || plantManagement.isActive || plantSensor.isActive }">
       <a class="nav-link" (click)="plantDataCollapsed = !plantDataCollapsed" [attr.aria-expanded]="plantDataCollapsed"
         aria-controls="ui-basic" routerLinkActive #plant="routerLinkActive">
         <span class="menu-title">{{ 'menu.planttitle' | translate }}</span>
@@ -127,6 +127,8 @@
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/plant-management" routerLinkActive="active"
               #plantManagement="routerLinkActive">{{ 'menu.plants' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/plant-sensor" routerLinkActive="active"
+              #plantSensor="routerLinkActive">{{ 'menu.plantsensor' | translate }}</a></li>
         </ul>
       </div>
     </li>

@@ -14,6 +14,7 @@
   "accept": "Aceptar",
   "close": "Cerrar",
   "register": "Registrar",
+  "status": "Estado",
   "menu": {
     "usertitle": "Gestión de Usuarios",
     "user": "Usuarios",
@@ -25,6 +26,7 @@
     "externalusers": "Usuarios externos",
     "planttitle": "Gestión de plantas",
     "plants": "Plantas",
+    "plantsensor": "Sensores por planta",
     "functionalities": "Funcionalidades",
     "loginadmin": "Login admin",
     "visitorsregister": "Registro externo",
@@ -46,7 +48,10 @@
     "plant": "Planta",
     "plane": "Plano",
     "newcoordinatetitle": "Guardar zona virtual",
-    "epi": "Añadir EPI"
+    "epi": "Añadir EPI",
+    "sensor": {
+      "title": "Sensores por planta"
+    }
   },
   "sensortype": {
     "savesensortypetitle": "Guardar Tipo de Sensor",

@@ -1,11 +1,8 @@
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { BASEURL_DEV_PLANT } from 'src/app/shared/constants/app.constants';
-import { Plant } from 'src/app/shared/models/plant.model';
-import { map } from 'rxjs/operators';
-import { PlantVirtualization } from 'src/app/shared/models/plantvirtualization.model';
+import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 
 @Injectable({ providedIn: 'root' })
 export class PlantCoordsService {
@@ -64,7 +61,7 @@ export class PlantCoordsService {
         return this.http.get(this.urlEndPoint + "/" + plantId + "/coordinates", options);
     }
 
-    savePlantVirtual(plantVirtual: PlantVirtualization, tenantId: string) {
+    savePlantVirtual(plantVirtual: PlantCoordinates, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
@@ -75,6 +72,7 @@ export class PlantCoordsService {
         body.set('virtualZoneType', plantVirtual.virtualZoneType);
         body.set('sensorType', plantVirtual.sensorType);
         body.set('sensorId', plantVirtual.sensorId);
+        body.set('status', plantVirtual.status);
         body.set('coordinates', plantVirtual.coordinates);
         body.set('epis', plantVirtual.epis);
 

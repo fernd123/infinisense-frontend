@@ -1,0 +1,47 @@
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <infini-alert></infini-alert>
+    <div class="card-body">
+      <h4 class="card-title">{{ 'plant.sensor.title'  | translate }}</h4>
+      <div clas="row" style="float:left; margin-bottom: 1em;">
+        <select class="form-control" id="plant" #optionFilter (change)="changePlant()">
+          <option [value]="plant.uuid" *ngFor="let plant of plantList">{{plant.name}}</option>
+        </select>
+
+        <!--<button type="button" class="btn btn-primary btn-sm" (click)="openSaveModal(null)">{{ 'new' | translate }}<i
+            class="mdi mdi-plus ml-1"></i></button>-->
+      </div>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th>{{ 'name'  | translate }}</th>
+              <th>{{ 'plant.sensortype'  | translate }}</th>
+              <th>{{ 'plant.sensorid'  | translate }}</th>
+              <th>{{ 'status'  | translate }}</th>
+              <th>{{ 'actions'  | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let plantCoords of plantCoordsList">
+              <td>{{plantCoords.name}}</td>
+              <td>{{plantCoords?.sensorType?.name}}</td>
+              <td>{{plantCoords.sensorId}}</td>
+              <td><i class="mdi mdi-album" style="color:green" *ngIf="plantCoords.status == 'Activo'"></i>
+                <i class="mdi mdi-alert" style="color:gold" *ngIf="plantCoords.status == 'Mantenimiento'"></i>
+                <i class="mdi mdi-clipboard-alert" style="color:red"
+                  *ngIf="plantCoords.status == 'Fuera de Servicio'"></i>{{plantCoords.status}}
+              </td>
+              <td>
+                <button type="button" class="btn btn-warning btn-sm btn-icon-text"
+                  (click)="openSaveModal(plantCoords.uuid)">
+                  <i class="mdi mdi-grease-pencil btn-icon-append"></i>
+                </button>
+              </td>
+            <tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

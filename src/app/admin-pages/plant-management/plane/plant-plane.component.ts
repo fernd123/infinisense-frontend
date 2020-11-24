@@ -7,19 +7,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, Observable } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantService } from 'src/app/core/services/plant.service';
-import { UserService } from 'src/app/core/services/user.service';
-import { VisitService } from 'src/app/core/services/visit.service';
 import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantPlane } from 'src/app/shared/models/plantPlane.model';
-import { User } from 'src/app/shared/models/user.model';
-import { Visit } from 'src/app/shared/models/visit.model';
-import { PlantVirtualization } from 'src/app/shared/models/plantvirtualization.model';
 import { PlantCoordsSaveComponent } from './save/plant-coords-save.component';
 import { ImageMapCreatorService } from 'src/app/core/services/imageMapCreator.service';
-import { imageMapCreator } from 'src/app/shared/virtualization/p5.image-map-creator';
-import { ImageMap } from 'src/app/shared/virtualization/class.image-map';
-import { Area } from 'src/app/shared/virtualization/class.area';
-import { PlantCoordsService } from 'src/app/core/services/plantVirtualization.service';
+import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
+import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 
 @Component({
   selector: 'infini-plant-plane',
@@ -44,7 +37,7 @@ export class PlanPlaneComponent implements OnInit {
   @ViewChild('virtualizationBody') virtualizationBody: any;
   height: number = 700;
   width: number = 500;
-  virtualizationList: PlantVirtualization[];
+  virtualizationList: PlantCoordinates[];
   img: any;
 
 
@@ -132,7 +125,7 @@ export class PlanPlaneComponent implements OnInit {
     else if (action != "select") {
       this.openSaveModal(dataJson);
     } else {
-      let plantCoords = new PlantVirtualization();
+      let plantCoords = new PlantCoordinates();
       // buscar por id en la lista y guardar los cambios
       /*this.imageMapCreatorService.getImageMapCreator().map.getAreas().forEach(area => {
         if (area.id == selectedIndex) {
@@ -198,7 +191,7 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   private refreshVirtualZones() {
-    this.plantCoordService.getPlantPlaneByPlant(this.plantId, this.tenantId).subscribe((resPp: PlantVirtualization[]) => {
+    this.plantCoordService.getPlantPlaneByPlant(this.plantId, this.tenantId).subscribe((resPp: PlantCoordinates[]) => {
       this.virtualizationList = resPp;
       let imageCreator = this.imageMapCreatorService.getImageMapCreator();
       imageCreator.clearAreas();

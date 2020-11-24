@@ -1,0 +1,64 @@
+<app-modal title="{{modalTitle}}">
+  <form [formGroup]="userForm" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="name"> {{ 'user.username' | translate }}
+      </label>
+      <input type="text" class="form-control" id="username" placeholder=" {{ 'user.username' | translate }}"
+        formControlName="username" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label for="firstname"> {{ 'user.firstname' | translate }}</label>
+      <input type="text" class="form-control" id="firstname" placeholder=" {{ 'user.firstname' | translate }}"
+        formControlName="firstname" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label for="lastname"> {{ 'user.lastname' | translate }}</label>
+      <input type="text" class="form-control" id="lastname" placeholder=" {{ 'user.lastname' | translate }}"
+        formControlName="lastname" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label for="password"> {{ 'user.password' | translate }}</label>
+      <input type="password" class="form-control" id="password" placeholder=" {{ 'user.password' | translate }}"
+        formControlName="password" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label for="dni"> {{ 'user.dni' | translate }}</label>
+      <input type="text" class="form-control" id="dni" placeholder=" {{ 'user.dni' | translate }}" formControlName="dni"
+        autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label for="email"> {{ 'user.email' | translate }}</label>
+      <input type="text" class="form-control" id="email" placeholder=" {{ 'user.email' | translate }}"
+        formControlName="email" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label for="roles"> {{ 'user.roles' | translate }}</label>
+      <select class="form-control" #selectrole id="role" formControlName="roles" multiple>
+        <option [value]="role.value" *ngFor="let role of roleList">{{role.value}}</option>
+      </select>
+    </div>
+
+    <div class="form-check form-check-flat form-check-primary">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" formControlName="active">
+        {{ 'active' | translate }}
+        <i class="input-helper"></i>
+      </label>
+    </div>
+
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.userForm.invalid">
+      {{ 'save' | translate }}</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">
+      {{ 'cancel' | translate }}</button>
+  </div>
+
+</app-modal>

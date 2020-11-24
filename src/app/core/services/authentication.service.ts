@@ -15,7 +15,7 @@ export class AuthenticationService {
     urlEndPoint: string = BASEURL_DEV_LOGIN;
 
     constructor(private http: HttpClient, private router: Router) {
-        this.currentUserSubject = new BehaviorSubject<any>(localStorage.getItem('currentUser'));
+        this.currentUserSubject = new BehaviorSubject<any>(localStorage.getItem('token'));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
@@ -28,8 +28,9 @@ export class AuthenticationService {
     }
 
     getTokenInfo() {
-        if (this.currentUserValue && this.currentUserValue.access_token) {
-            return jwt_decode(this.currentUserValue.access_token);
+        let token = localStorage.getItem('token');
+        if (token) {
+            return jwt_decode(token);
         }
         return null;
     }
@@ -65,7 +66,7 @@ export class AuthenticationService {
             // login successful if there's a jwt token in the response
             if (token && token.jwt) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes                
-                localStorage.setItem('currentUser', JSON.stringify(token.jwt));
+                localStorage.setItem('token', JSON.stringify(token.jwt));
             }
         }));
     }
@@ -92,14 +93,15 @@ export class AuthenticationService {
                 // login successful if there's a jwt token in the response
                 if (token && token.jwt) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', token.jwt);
+                    localStorage.setItem('token', token.jwt);
                 }
             }));
     }
 
     logout(doRedirect?: boolean) {
         // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
+        localStorage.removeItem('currentuser');
         // Redirect user to base login or portal login
         if (doRedirect) {
             this.router.navigate(['/admin']);

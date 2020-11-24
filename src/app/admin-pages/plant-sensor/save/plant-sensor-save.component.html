@@ -20,16 +20,16 @@
     </div>
 
     <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
+      <label for="sensorId">{{ 'plant.sensorid'  | translate }}</label>
+      <input type="text" class="form-control" id="idsensor" placeholder="{{ 'plant.sensorid'  | translate }}"
+        formControlName="sensorId">
+    </div>
+
+    <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
       <label for="status">{{ 'status'  | translate }}</label>
       <select class="form-control" id="status" #sensorTypeHtml formControlName="status">
         <option [value]="status.name" *ngFor="let status of statusList">{{status.name}}</option>
       </select>
-    </div>
-
-    <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
-      <label for="sensorId">{{ 'plant.sensorid'  | translate }}</label>
-      <input type="text" class="form-control" id="idsensor" placeholder="{{ 'plant.sensorid'  | translate }}"
-        formControlName="sensorId">
     </div>
 
     <div class="mt-4" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'zv'">

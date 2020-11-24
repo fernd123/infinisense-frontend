@@ -15,20 +15,26 @@ import { PlantManagementSaveComponent } from './plant-management/save/plant-mana
 import { PlantCoordsSaveComponent } from './plant-management/plane/save/plant-coords-save.component';
 import { SensorTypeSaveComponent } from './sensor-type/save/sensor-type-save.component';
 import { VisitReasonSaveComponent } from './visit-reason/save/visit-reason-save.component';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { UserManagementSaveComponent } from './user-management/save/user-management-save.component';
+import { PlantSensorComponent } from './plant-sensor/plant-sensor.component';
+import { PlantSensorSaveComponent } from './plant-sensor/save/plant-sensor-save.component';
 
 const routes: Routes = [
+  { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
   { path: 'visit-reason', component: VisitReasonComponent, canActivate: [AuthGuard] },
   { path: 'visit-external', component: VisitExternalComponent, canActivate: [AuthGuard] },
   { path: 'user-external', component: UserExternalComponent, canActivate: [AuthGuard] },
   { path: 'plant-management', component: PlantManagementComponent, canActivate: [AuthGuard] },
   { path: 'plant-plane', component: PlanPlaneComponent, canActivate: [AuthGuard] },
+  { path: 'plant-sensor', component: PlantSensorComponent, canActivate: [AuthGuard] },
   { path: 'sensor-type', component: SensorTypeComponent, canActivate: [AuthGuard] }
 ]
 
 @NgModule({
-  declarations: [VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
-    UserExternalComponent,
-    PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent,
+  declarations: [UserManagementComponent, UserManagementSaveComponent, UserExternalComponent,
+    VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
+    PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent, PlantSensorComponent, PlantSensorSaveComponent,
     SensorTypeComponent, SensorTypeSaveComponent],
   imports: [
     SharedModule,

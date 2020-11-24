@@ -4,10 +4,9 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantService } from 'src/app/core/services/plant.service';
-import { PlantCoordsService } from 'src/app/core/services/plantVirtualization.service';
+import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { ReasonService } from 'src/app/core/services/reason.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
-import { PlantVirtualization } from 'src/app/shared/models/plantvirtualization.model';
 import { Reason } from 'src/app/shared/models/reason.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
 import { Visit } from 'src/app/shared/models/visit.model';
@@ -28,8 +27,6 @@ export class RegisterVisitMessageComponent implements OnInit {
   body: string;
 
   constructor(
-    private reasonService: ReasonService,
-    private plantCoordService: PlantCoordsService,
     private modalService: NgbModal) { }
 
   // mdi mdi-check-circle-outline

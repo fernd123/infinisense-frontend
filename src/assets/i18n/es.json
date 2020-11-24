@@ -14,6 +14,24 @@
   "accept": "Aceptar",
   "close": "Cerrar",
   "register": "Registrar",
+  "status": "Estado",
+  "menu": {
+    "usertitle": "Gestión de Usuarios",
+    "user": "Usuarios",
+    "dashboard": "Dashboard",
+    "masterdata": "Datos maestros",
+    "sensortype": "Tipos de sensor",
+    "reasonvisit": "Motivos de visita",
+    "visits": "Visitas",
+    "externalusers": "Usuarios externos",
+    "planttitle": "Gestión de plantas",
+    "plants": "Plantas",
+    "plantsensor": "Sensores por planta",
+    "functionalities": "Funcionalidades",
+    "loginadmin": "Login admin",
+    "visitorsregister": "Registro externo",
+    "graphics": "Gráficas"
+  },
   "plant": {
     "title": "Planta",
     "configuration": "Configuración de Planta",
@@ -30,14 +48,19 @@
     "plant": "Planta",
     "plane": "Plano",
     "newcoordinatetitle": "Guardar zona virtual",
-    "epi": "Añadir EPI"
+    "epi": "Añadir EPI",
+    "sensor": {
+      "title": "Sensores por planta"
+    }
   },
   "sensortype": {
     "savesensortypetitle": "Guardar Tipo de Sensor",
     "sensorlisttitle": "Tipos de sensor"
   },
   "user": {
+    "userlisttitle": "Gestión de usuarios",
     "userexternallisttitle": "Listado de plantas",
+    "saveusertitle": "Guardar Perfil Usuario",
     "firstname": "Nombre",
     "lastname": "Apellidos",
     "dni": "DNI",
@@ -47,7 +70,8 @@
     "signature": "Firma",
     "removesignature": "Borrar firma",
     "email": "Email",
-    "company": "Empresa"
+    "company": "Empresa",
+    "roles": "Rol"
   },
   "visit": {
     "visitlisttitle": "Visitas",

@@ -5,12 +5,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantService } from 'src/app/core/services/plant.service';
-import { PlantCoordsService } from 'src/app/core/services/plantVirtualization.service';
+import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { ReasonService } from 'src/app/core/services/reason.service';
 import { Plant } from 'src/app/shared/models/plant.model';
-import { PlantVirtualization } from 'src/app/shared/models/plantvirtualization.model';
+import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { Reason } from 'src/app/shared/models/reason.model';
-import { SensorType } from 'src/app/shared/models/sensorType.model';
 
 
 @Component({
@@ -26,7 +25,7 @@ export class VisitReasonSaveComponent implements OnInit {
   associationtitle: string = this.translateService.instant('reason.associatetozone');
 
   plantList: Plant[];
-  plantZoneList: PlantVirtualization[];
+  plantZoneList: PlantCoordinates[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -77,7 +76,7 @@ export class VisitReasonSaveComponent implements OnInit {
   }
 
   loadPlantZone(removePlantZone = false) {
-    this.plantZoneService.getPlantCoordinates(this.reasonForm.get('plant').value, "").subscribe((res: PlantVirtualization[]) => {
+    this.plantZoneService.getPlantCoordinates(this.reasonForm.get('plant').value, "").subscribe((res: PlantCoordinates[]) => {
       this.plantZoneList = res.filter(r => { return r.virtualZoneType == 'zv' });
       if (removePlantZone) {
         this.reasonForm.get('plantZone').setValue(null);

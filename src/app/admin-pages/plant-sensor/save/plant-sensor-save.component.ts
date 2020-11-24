@@ -9,11 +9,12 @@ import { SensorTypeService } from 'src/app/core/services/sensorType.service';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
 
+
 @Component({
-  selector: 'infini-plant-coords-save',
-  templateUrl: './plant-coords-save.component.html'
+  selector: 'infini-plant-sensor-save',
+  templateUrl: './plant-sensor-save.component.html'
 })
-export class PlantCoordsSaveComponent implements OnInit {
+export class PlantSensorSaveComponent implements OnInit {
 
   plantCoordsForm: FormGroup;
   modalTitle: string = this.translate.instant('plant.newcoordinatetitle');
@@ -32,24 +33,16 @@ export class PlantCoordsSaveComponent implements OnInit {
   ];
 
   sensorTypeList: SensorType[];
-
-  epiList: any[] = [
-    { value: "casco", name: "Casco" },
-    { value: "guante", name: "Guantes" },
-    { value: "mascarilla1", name: "Mascarilla FFP2" },
-    { value: "chaleco", name: "Chaleco reflectante" },
-    { value: "botas", name: "Botas" }
-  ]
-
-  @Input() public selectedAreaId;
+  editionMode: boolean = false;
+  @Input() public plantCoordId;
   @Input() public plantId;
-  @Input() public coordinates;
-  epis: string;
+
+
 
   constructor(
     private formBuilder: FormBuilder,
-    private plantCoordService: PlantCoordsService,
     private sensorTypeService: SensorTypeService,
+    private plantCoordService: PlantCoordsService,
     private translate: TranslateService,
     private modalService: NgbModal
   ) { }
@@ -62,37 +55,22 @@ export class PlantCoordsSaveComponent implements OnInit {
       sensorType: ["", null],
       coordinates: [""],
       sensorId: [""],
-      status: [""]
+      status: ["Activo", Validators.required]
     });
 
     this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
       this.sensorTypeList = res;
     });
 
-    if (this.selectedAreaId != null && this.selectedAreaId != "") {
-      this.plantCoordService.getPlantCoordinateByUuid(this.plantId, this.selectedAreaId).subscribe((res: PlantCoordinates) => {
+    if (this.plantCoordId != null && this.plantCoordId != "") {
+      this.plantCoordService.getPlantCoordinateByUuid(this.plantId, this.plantCoordId).subscribe((res: PlantCoordinates) => {
         this.plantCoordsForm.get('uuid').setValue(res.uuid);
         this.plantCoordsForm.get('name').setValue(res.name);
         this.plantCoordsForm.get('virtualZoneType').setValue(res.virtualZoneType);
         this.plantCoordsForm.get('sensorType').setValue(res.sensorType?.uuid);
         this.plantCoordsForm.get('sensorId').setValue(res.sensorId);
         this.plantCoordsForm.get('status').setValue(res.status);
-        this.coordinates = res.coordinates;
-        this.epis = res.epis;
       });
-    }
-  }
-
-  markEpisCheckbox() {
-    let episInput = document.getElementsByClassName('form-check-input');
-    if (episInput != undefined) {
-      let episList = this.epis != null && this.epis.length > 0 ? this.epis.split(',') : [];
-      for (let i = 0; i < episInput.length; i++) {
-        let checkbox: any = episInput[i];
-        if (episList.includes(checkbox.id)) {
-          checkbox.checked = true;
-        }
-      }
     }
   }
 
@@ -102,23 +80,10 @@ export class PlantCoordsSaveComponent implements OnInit {
     plantCoords.name = this.plantCoordsForm.get('name').value;
     plantCoords.sensorType = this.plantCoordsForm.get('sensorType').value;
     plantCoords.sensorId = this.plantCoordsForm.get('sensorId').value;
-    plantCoords.virtualZoneType = this.plantCoordsForm.get('virtualZoneType').value;
-    plantCoords.plantid = this.plantId;
     plantCoords.status = this.plantCoordsForm.get('status').value;
-    plantCoords.coordinates = this.coordinates;
-
-    let epis = document.getElementsByClassName('form-check-input');
-    let selectedEpis = "";
-    if (epis != undefined) {
-      for (let i = 0; i < epis.length; i++) {
-        let checkbox: any = epis[i];
-        if (checkbox.checked) {
-          selectedEpis += checkbox.id + ",";
-        }
-      }
-      selectedEpis = selectedEpis.substr(0, selectedEpis.length - 1);
-    }
-    plantCoords.epis = selectedEpis;
+    plantCoords.virtualZoneType = this.plantCoordsForm.get('virtualZoneType').value;
+    plantCoords.coordinates = null;
+    plantCoords.plantid = this.plantId;
 
     this.plantCoordService.savePlantVirtual(plantCoords, "").subscribe(res => {
       this.modalService.dismissAll("success");
@@ -126,10 +91,7 @@ export class PlantCoordsSaveComponent implements OnInit {
   }
 
   delete() {
-    console.log('delete');
-    this.plantCoordService.deleteVirtualZone(this.plantId, this.selectedAreaId).subscribe(res => {
-      this.modalService.dismissAll("success");
-    });
+
   }
 
   closeModal() {

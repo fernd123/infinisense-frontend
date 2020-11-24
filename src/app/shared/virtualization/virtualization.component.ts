@@ -20,11 +20,13 @@ export class VirtualizationComponent implements OnInit {
   differ: any;
   imcreator: imageMapCreator;
   lastAction: string;
+  itemURL : string = "";
 
   constructor(differs: IterableDiffers,
     private imageMapCreatorService: ImageMapCreatorService,
     public modalService: NgbModal) {
     this.differ = differs.find([]).create(null);
+    
   }
 
   ngOnInit() {
@@ -40,7 +42,9 @@ export class VirtualizationComponent implements OnInit {
       let selectedAreaId = "";
       if (this.imcreator.lastAction == 'add') { // first position
         this.areas = this.imcreator.map.getAreas()[0];
+        this.areas.img = this.imcreator.itemURL; 
         this.areas.id = Math.random();
+        debugger;
       } else if (this.imcreator.lastAction == 'delete') {
         //TODO:
       } else if (this.imcreator.lastAction == 'selection' || this.imcreator.lastAction == 'openmodal') {

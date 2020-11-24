@@ -71,7 +71,6 @@ export class PlanPlaneComponent implements OnInit {
             //let plantPlaneList: PlantPlane[] = resPp;
             /*for (let i = 0; i < plantPlaneList.length; i++) { //TODO: Solo uno para la demo
               plantRequest.push(this.plantService.getPlantPlanes(plantPlaneList[i].name, 'tenantId'));
-              debugger;
               this.plantPlaneId = plantPlaneList[i].uuid;
             }*/
             /*if (plantRequest.length > 0) {
@@ -124,6 +123,7 @@ export class PlanPlaneComponent implements OnInit {
 
   procesaPropagar(data) {
     //console.log(data);
+    debugger;
     let dataJson = JSON.parse(data);
     let action = dataJson.action;
     if (action == "uploadImage") {
@@ -141,7 +141,6 @@ export class PlanPlaneComponent implements OnInit {
         }
       });
       this.plantCoordService.savePlantVirtual(plantCoords, "").subscribe(res => {
-        debugger;
 
       });*/
     }
@@ -177,6 +176,7 @@ export class PlanPlaneComponent implements OnInit {
     // Service callback function to create the modal with an object passed as a parameter
     //const initialState = this.getSaveModalParameters(selectedObject);
     if (!size || size === undefined) { size = 'modal-lg'; }
+    debugger;
     const modalRef = this.modalService.open(PlantCoordsSaveComponent);
     modalRef.componentInstance.coordinates = JSON.stringify(areasData.areas);
     modalRef.componentInstance.selectedAreaId = areasData.selectedAreaId;

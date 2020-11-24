@@ -82,6 +82,9 @@ export class imageMapCreator {
 	public p5: p5;
 	public selectedAreaId = null;
 	imageDropped: boolean = false;
+	public itemURL: any;
+	imgtest: any;
+	imagenessensores: {};
 
 
 
@@ -148,6 +151,23 @@ export class imageMapCreator {
 
 	//---------------------------- p5 Functions ----------------------------------
 
+	/* PRECARGAR LAS IMAGENES SIEMPRE PARA QUE SE VISUALIZEN EN EL CANVAS */
+	public preload() {
+		this.editionMode = false;
+		this.imagenessensores = [];
+		this.map.getAreas().forEach((a: Area) => {
+			if (a.type == 'se') {
+				let img = this.p5.loadImage(a.img);
+				let id = a.id;
+				let obj = {
+					"id": a.id,
+					"img": img
+				};
+				this.imagenessensores[id] = img;
+			}
+		});
+	}
+
 	private setup(): void {
 		let canvas = this.p5.createCanvas(this.width, this.height);
 		canvas.drop(this.handeFile.bind(this)).dragLeave(this.onLeave.bind(this)).dragOver(this.onOver.bind(this)).doubleClicked(this.doubleClicked.bind(this));
@@ -167,10 +187,17 @@ export class imageMapCreator {
 		//.addButton("Guardar", this.save.bind(this));
 		//@ts-ignore Fix for oncontextmenu
 		this.p5.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); });
+		this.p5.canvas.addEventListener("drop", (e) => { e.preventDefault(); this.dropSensor(e); })
 		//@ts-ignore Fix for middle click mouse down triggers scroll on windows
 		this.p5.canvas.addEventListener("mousedown", (e) => { e.preventDefault(); });
 		//@ts-ignore Select all onclick on the Output field
 		//document.getElementById("Output").setAttribute("onFocus", "this.select();");
+
+		let dragableitems = document.getElementById('drag-items');
+		let self = this;
+		dragableitems.addEventListener('dragstart', function (e: any) {
+			self.itemURL = e.target?.src;
+		});
 	}
 
 	public saveCoordenates(): any {
@@ -208,6 +235,7 @@ export class imageMapCreator {
 						case "circulo":
 						case "rectangulo":
 							this.setTempArea(coord);
+							//debugger;
 							break;
 						case "poligono":
 							let areaPoly = this.tempArea as AreaPoly;
@@ -245,6 +273,7 @@ export class imageMapCreator {
 	private mouseDragged(): void {
 		console.log("mouse dragged");
 		if (this.mouseIsHoverSketch() && !ContextMenu.isOpen()) {
+			console.log("mouse dragged IF");
 			if (this.p5.mouseButton == this.p5.LEFT) {
 				switch (this.tool) {
 					case "seleccionar":
@@ -253,6 +282,7 @@ export class imageMapCreator {
 						break;
 				}
 			} else if (this.p5.mouseButton == this.p5.CENTER) {
+				console.log("mouse dragged ELSE IF");
 				this.view.transX += this.p5.mouseX - this.p5.pmouseX;
 				this.view.transY += this.p5.mouseY - this.p5.pmouseY;
 			}
@@ -434,12 +464,39 @@ export class imageMapCreator {
 		this.bgLayer.disappear();
 	}
 
+	dropSensor(evt): void {
+		this.imgtest = this.p5.loadImage(this.itemURL);
+		debugger;
+		this.tempArea = new AreaRect();
+		//this.tempArea.setShape("rect")
+		let coord = this.drawingCoord(); // origen izq (3.4)
+		let coord1 = new Coord(coord.x + 100, coord.y); // Derecha (3.5)
+		let coord2 = new Coord(coord.x, coord.y + 100); // Arriba (4.4)
+		let coord3 = new Coord(coord.x + 100, coord.y + 100); // Derecha arriba (4.5)
+
+		this.setTempArea(coord);
+		this.tempArea.addCoord(coord);
+		this.tempArea.addCoord(coord1);
+		this.tempArea.addCoord(coord3);
+		this.tempArea.addCoord(coord2);
+
+		this.createArea(this.tempArea);
+		this.lastAction = "add";
+		this.tempArea = new AreaEmpty();
+
+		//this.onClick(evt);
+		//this.bgLayer.disappear();
+		//this.imgtest = null;
+		this.drawAreas();
+
+	}
+
 	doubleClicked(evt: MouseEvent) {
 		evt.preventDefault();
 		try {
 			this.selection.addArea(this.hoveredArea);
 			this.selection.resetOrigin(this.mCoord());
-
+			console.log(this.mCoord());
 			let allAreas = this.map.getAreas();
 			let area = allAreas.find((a: Area): boolean => {
 				if (this.selection.containsArea(a)) {
@@ -527,8 +584,21 @@ export class imageMapCreator {
 		for (let i = allAreas.length; i--;) {
 			let area = allAreas[i];
 			this.setAreaStyle(area);
-			if (area.isDrawable())
-				area.display(this.p5);
+			if (area.isDrawable()) {
+				let img = undefined;
+				//this.imgtest = img;
+				//debugger;
+				/*this.imagenessensores.forEach(a => {
+					if (a.id == area.id) {
+						img = a.img;
+					}
+				})*/
+				if(area.type == 'se'){
+					debugger;
+					img = this.imagenessensores[area.id];
+				}
+				area.display(this.p5, img);
+			}
 		}
 		if (this.hoveredPoint) {
 			let point = this.hoveredPoint;
@@ -619,6 +689,9 @@ export class imageMapCreator {
 		if (area.getType() == 'pe') { // punto encuentro
 			color = this.p5.color(255, 0, 0, 178);
 		}
+		if (area.getType() == 'se') { // sensor
+			color = undefined;
+		}
 		if (((this.tool == "eliminar" || this.tool == "seleccionar") &&
 			this.mouseIsHoverSketch() &&
 			area == this.hoveredArea) ||
@@ -626,10 +699,14 @@ export class imageMapCreator {
 		) {
 			color = this.p5.color(255, 200, 200, 178); // highlight (set color red)
 		}
-		this.p5.fill(color);
-		this.p5.strokeWeight(1 / this.view.scale);
-		this.p5.textStyle(this.p5.BOLD);
-		this.p5.stroke(0);
+		if (color != undefined) {
+			this.p5.fill(color);
+			this.p5.strokeWeight(1 / this.view.scale);
+			this.p5.textStyle(this.p5.BOLD);
+			this.p5.stroke(0);
+		} else {
+			this.p5.noFill();
+		}
 
 	}
 
@@ -684,6 +761,7 @@ export class imageMapCreator {
 			//this.settings.setValue("Default Area", objectMap.hasDefaultArea);
 		}
 		this.reset();
+		this.preload();
 	}
 
 	/**

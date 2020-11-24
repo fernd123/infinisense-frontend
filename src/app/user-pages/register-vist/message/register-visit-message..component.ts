@@ -34,7 +34,6 @@ export class RegisterVisitMessageComponent implements OnInit {
 
   // mdi mdi-check-circle-outline
   ngOnInit() {
-    debugger;
     this.title = `Bienvenido ${this.name}`;
     if (this.visit?.reason?.plantZone != undefined) {
       this.body = `<div style="color:red"><strong>Por favor diríjase a la zona ${this.visit?.reason?.plantZone?.name}</strong></div>`;
@@ -55,7 +54,7 @@ export class RegisterVisitMessageComponent implements OnInit {
       bodydiv.innerHTML = this.body;
     /*this.reasonService.getZoneReasonByUuid(this.reasonId, "").subscribe((res: PlantVirtualization) => {
       if (res != undefined) {
-        debugger;
+        
       }
     });*/
   }

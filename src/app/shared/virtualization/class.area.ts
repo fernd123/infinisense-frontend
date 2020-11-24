@@ -20,20 +20,21 @@ export abstract class Area {
 		protected title: string = "",
 		public id: number = 0,
 		public idCoordenate: string = "",
-		public type: string = "") {
+		public type: string = "",
+		public img: string = "") {
 	}
 
 	static fromObject(o: Object): Area {
 		switch ((<Area>o).shape) {
 			case 'rect':
 				const r = o as AreaRect;
-				return new AreaRect(r.coords.map(Coord.fromObject), r.href, r.title, r.id, r.idCoordenate, r.type);
+				return new AreaRect(r.coords.map(Coord.fromObject), r.href, r.title, r.id, r.idCoordenate, r.type, r.img);
 			case 'circulo':
 				const c = o as AreaCircle
-				return new AreaCircle(c.coords.map(Coord.fromObject), c.radius, c.href, c.title, c.id, c.idCoordenate, c.type);
+				return new AreaCircle(c.coords.map(Coord.fromObject), c.radius, c.href, c.title, c.id, c.idCoordenate, c.type, c.img);
 			case 'poly':
 				const p = o as AreaPoly
-				return new AreaPoly(p.coords.map(Coord.fromObject), p.href, p.title, p.id, p.idCoordenate, p.type, p.closed);
+				return new AreaPoly(p.coords.map(Coord.fromObject), p.href, p.title, p.id, p.idCoordenate, p.type, p.img, p.closed);
 			case 'default':
 				const d = o as AreaDefault
 				return new AreaDefault(d.iMap, d.href, d.title);
@@ -204,7 +205,7 @@ export abstract class Area {
 	abstract isDrawable(): boolean;
 	abstract svgArea(scale: number): string;
 	abstract isOver(coord: Coord): boolean;
-	abstract display(p: p5): void;
+	abstract display(p: p5, imgtest?: any): void;
 }
 
 export class AreaEmpty extends Area {
@@ -223,7 +224,7 @@ export class AreaEmpty extends Area {
 		return false;
 	}
 
-	display(p: p5): void { }
+	display(p: p5, imgsensor?: any): void { }
 }
 
 export class AreaCircle extends Area {
@@ -240,9 +241,10 @@ export class AreaCircle extends Area {
 		title: string = "",
 		id: number = 0,
 		idCoordenate: string = "",
-		type: string = ""
+		type: string = "",
+		img: string = ""
 	) {
-		super("circulo", coords, href, title, id, idCoordenate, type);
+		super("circulo", coords, href, title, id, idCoordenate, type, img);
 	}
 
 	getCenter(): Coord {
@@ -303,9 +305,10 @@ export class AreaPoly extends Area {
 		id: number = 0,
 		idCoordenate: string = "",
 		type: string = "",
+		img: string = "",
 		public closed = false
 	) {
-		super("poly", coords, href, title, id, idCoordenate, type);
+		super("poly", coords, href, title, id, idCoordenate, type, img);
 	}
 
 	isDrawable(): boolean {
@@ -365,10 +368,11 @@ export class AreaPoly extends Area {
 	 * draw the area to the given p5 instance
 	 * @param {p5} p5 
 	 */
-	display(p5: p5): void {
+	display(p5: p5, imgsensor): void {
 		p5.beginShape();
 		this.drawingCoords().forEach(c => p5.vertex(c.x, c.y));
 		p5.endShape();
+
 	}
 
 	svgArea(scale: number): string {
@@ -391,9 +395,11 @@ export class AreaRect extends AreaPoly {
 		title: string = "",
 		id: number = 0,
 		idCoordenate: string = "",
-		type: string = ""
+		type: string = "",
+		img: string = ""
 	) {
-		super(coords, href, title, id, idCoordenate, type, true);
+		super(coords, href, title, id, idCoordenate, type, img, true);
+		this.shape = "rect";
 		if (this.coords.length > 0 && this.coords.length < 4) {
 			let coord = this.firstCoord();
 			this.coords = [
@@ -418,6 +424,30 @@ export class AreaRect extends AreaPoly {
 		this.coords[2] = coord;
 		this.coords[3].y = coord.y;
 		return this;
+	}
+
+	isDrawable(): boolean {
+		return true;
+	}
+
+	/**
+	 * draw the area to the given p5 instance
+	 * @param {p5} p5 
+	 */
+	display(p5: p5, imgsensor): void {
+		
+		if (this.type == 'se' && imgsensor !=  undefined) {
+			this.displayImg(p5, imgsensor);
+		}
+		p5.beginShape();
+		this.drawingCoords().forEach(c => p5.vertex(c.x, c.y));
+		p5.endShape();
+
+	}
+
+	displayImg(p5: p5, imgsensor: any): void {
+		let center = this.coords[0];
+		p5.image(imgsensor, center.x, center.y);
 	}
 
 }

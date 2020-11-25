@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
+import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
 
@@ -21,9 +22,9 @@ export class PlantSensorSaveComponent implements OnInit {
 
   zoneTypeList: any = [
     { value: "", name: "Tipo de virtualización" },
-    { value: "zv", name: "Zona" },
-    { value: "se", name: "Sensor" },
-    { value: "pe", name: "Punto encuentro" }
+    { value: ZoneType.zv, name: "Zona" },
+    { value: ZoneType.se, name: "Sensor" },
+    { value: ZoneType.pe, name: "Punto encuentro" }
   ];
 
   statusList: any = [

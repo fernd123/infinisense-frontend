@@ -12,27 +12,27 @@
       </select>
     </div>
 
-    <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
+    <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == sensor">
       <label for="sensorType">{{ 'plant.sensortype'  | translate }}</label>
       <select class="form-control" id="sensorType" #sensorTypeHtml formControlName="sensorType">
         <option [value]="sensor.uuid" *ngFor="let sensor of sensorTypeList">{{sensor.name}}</option>
       </select>
     </div>
 
-    <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
+    <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == sensor">
       <label for="sensorId">{{ 'plant.sensorid'  | translate }}</label>
       <input type="text" class="form-control" id="idsensor" placeholder="{{ 'plant.sensorid'  | translate }}"
         formControlName="sensorId">
     </div>
 
-    <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'se'">
+    <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == sensor">
       <label for="status">{{ 'status'  | translate }}</label>
       <select class="form-control" id="status" #sensorTypeHtml formControlName="status">
         <option [value]="status.name" *ngFor="let status of statusList">{{status.name}}</option>
       </select>
     </div>
 
-    <div class="mt-4" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == 'zv'">
+    <div class="mt-4" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == zonevirtual">
       <ngb-accordion [closeOthers]="true" (click)="markEpisCheckbox()">
         <!--activeIds="collapse-1"-->
         <ngb-panel id="collapse-1" title="{{'plant.epi' | translate}}">

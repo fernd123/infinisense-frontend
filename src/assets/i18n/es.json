@@ -21,6 +21,7 @@
     "user": "Usuarios",
     "dashboard": "Dashboard",
     "masterdata": "Datos maestros",
+    "epis": "EPIs",
     "sensortype": "Tipos de sensor",
     "reasonvisit": "Motivos de visita",
     "visits": "Visitas",
@@ -92,6 +93,10 @@
     "reason": "Motivo",
     "relatedto": "Asociado con",
     "associatetozone": "Asociar un motivo de visita a una zona"
+  },
+  "epi": {
+    "epititle": "EPIs",
+    "savetitle": "Guardar EPI"
   },
   "registervisit": {
     "title": "Registro visita",

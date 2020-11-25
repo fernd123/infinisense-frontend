@@ -6,29 +6,27 @@ import jwt_decode from "jwt-decode";
 import { Router } from '@angular/router';
 import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
-import { BASEURL_DEV_REASON } from 'src/app/shared/constants/app.constants';
+import { BASEURL_DEV_EPI } from 'src/app/shared/constants/app.constants';
 import { Reason } from 'src/app/shared/models/reason.model';
+import { Epi } from 'src/app/shared/models/epi.model';
 
 @Injectable({ providedIn: 'root' })
-export class ReasonService {
+export class EpiService {
 
-    urlEndPoint: string = BASEURL_DEV_REASON;
+    urlEndPoint: string = BASEURL_DEV_EPI;
 
-    constructor(private http: HttpClient, private router: Router) {
+    constructor(private http: HttpClient, private router: Router) { }
 
-    }
-
-    saveReason(reason: Reason, tenantId: string) {
+    saveEpi(epi: Epi, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
             'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
         let body = new URLSearchParams();
-        body.set('name', reason.name);
-        body.set('description', reason.description);
-        body.set('active', `${reason.active}`);
-        body.set('plantZone', reason.plantZone);
+        body.set('name', epi.name);
+        body.set('description', epi.description);
+        body.set('active', `${epi.active}`);
 
         if (tenantId) {
             body.set('tenantId', tenantId);
@@ -36,14 +34,14 @@ export class ReasonService {
 
         let options = { headers: headers };
 
-        if (reason.uuid == null) {
+        if (epi.uuid == null) {
             return this.http.post(this.urlEndPoint, body.toString(), options);
         } else {
-            return this.http.put(this.urlEndPoint + "/" + reason.uuid, body.toString(), options);
+            return this.http.put(this.urlEndPoint + "/" + epi.uuid, body.toString(), options);
         }
     }
 
-    getReasons(tenantId: string) {
+    getEpis(tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
@@ -59,7 +57,7 @@ export class ReasonService {
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getReasonByUuid(uuid: string, tenantId: string) {
+    getEpisByUuid(uuid: string, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
@@ -75,23 +73,7 @@ export class ReasonService {
         return this.http.get(this.urlEndPoint + "/" + uuid, options);
     }
 
-    getZoneReasonByUuid(uuid: any, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
-        return this.http.get(this.urlEndPoint + "/zone" + uuid, options);
-    }
-
-    deleteReason(uuid: string, tenantId: string) {
+    deleteEpi(uuid: string, tenantId: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',

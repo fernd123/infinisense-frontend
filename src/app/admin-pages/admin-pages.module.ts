@@ -19,6 +19,8 @@ import { UserManagementComponent } from './user-management/user-management.compo
 import { UserManagementSaveComponent } from './user-management/save/user-management-save.component';
 import { PlantSensorComponent } from './plant-sensor/plant-sensor.component';
 import { PlantSensorSaveComponent } from './plant-sensor/save/plant-sensor-save.component';
+import { EpiSaveComponent } from './epis/save/epis-save.component';
+import { EpiComponent } from './epis/epis.component';
 
 const routes: Routes = [
   { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
@@ -28,14 +30,16 @@ const routes: Routes = [
   { path: 'plant-management', component: PlantManagementComponent, canActivate: [AuthGuard] },
   { path: 'plant-plane', component: PlanPlaneComponent, canActivate: [AuthGuard] },
   { path: 'plant-sensor', component: PlantSensorComponent, canActivate: [AuthGuard] },
-  { path: 'sensor-type', component: SensorTypeComponent, canActivate: [AuthGuard] }
+  { path: 'sensor-type', component: SensorTypeComponent, canActivate: [AuthGuard] },
+  { path: 'epis', component: EpiComponent, canActivate: [AuthGuard] }
 ]
 
 @NgModule({
   declarations: [UserManagementComponent, UserManagementSaveComponent, UserExternalComponent,
     VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
     PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent, PlantSensorComponent, PlantSensorSaveComponent,
-    SensorTypeComponent, SensorTypeSaveComponent],
+    SensorTypeComponent, SensorTypeSaveComponent,
+  EpiSaveComponent, EpiComponent],
   imports: [
     SharedModule,
     CommonModule,

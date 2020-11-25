@@ -73,13 +73,14 @@ export class VirtualizationComponent implements OnInit {
             return a;
           }
         });
+        this.imcreator.editionMode = true;
         this.imcreator.lastAction = null;
         this.imcreator.mouseAction = null;
         this.areas = this.areas[0];
         this.propagar.emit(JSON.stringify({ "areas": this.areas, "selectedAreaId": selectedAreaId, "selection": true }));
       }else{
-        this.imcreator.mouseAction = null;
-      }
+        this.imcreator.lastAction = null;
+        this.imcreator.mouseAction = null;      }
     }
 
     // Al soltar una imagen del plano en el canvas

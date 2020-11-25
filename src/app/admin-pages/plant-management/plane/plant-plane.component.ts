@@ -14,6 +14,7 @@ import { ImageMapCreatorService } from 'src/app/core/services/imageMapCreator.se
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { TranslateService } from '@ngx-translate/core';
+import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 
 @Component({
   selector: 'infini-plant-plane',
@@ -198,7 +199,7 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   getTitleConfig(){
-    return this.typeConfig == 'zv' ? this.translateService.instant('plant.configuratedzones') : this.translateService.instant('plant.configuratedsensors');
+    return this.typeConfig == ZoneType.zv ? this.translateService.instant('plant.configuratedzones') : this.translateService.instant('plant.configuratedsensors');
   }
 }
 

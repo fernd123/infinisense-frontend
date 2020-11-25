@@ -94,7 +94,7 @@
     </li>
 
     <li class="nav-item"
-      [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || visit.isActive || userExternal.isActive || sensorType.isActive  }">
+      [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || visit.isActive || userExternal.isActive || sensorType.isActive || epis.isActive  }">
       <a class="nav-link" (click)="masterDataCollapsed = !masterDataCollapsed"
         [attr.aria-expanded]="masterDataCollapsed" aria-controls="ui-basic" routerLinkActive
         #masterData="routerLinkActive">
@@ -108,6 +108,8 @@
               #sensorType="routerLinkActive">{{ 'menu.sensortype' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/visit-reason" routerLinkActive="active"
               #reasonVisit="routerLinkActive">{{ 'menu.reasonvisit' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/epis" routerLinkActive="active"
+              #epis="routerLinkActive">{{ 'menu.epis' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/visit-external" routerLinkActive="active"
               #visit="routerLinkActive">{{ 'menu.visits' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-external" routerLinkActive="active"

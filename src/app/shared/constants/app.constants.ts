@@ -20,6 +20,7 @@ export const BASEURL_DEV_VISIT = BASEURL_PROXY + '/api/visit';
 export const BASEURL_DEV_REASON = BASEURL_PROXY + '/api/reason';
 export const BASEURL_DEV_PLANT = BASEURL_PROXY + '/api/plant';
 export const BASEURL_DEV_SENSORTYPE = BASEURL_PROXY + '/api/sensortype';
+export const BASEURL_DEV_EPI = BASEURL_PROXY + '/api/epi';
 
 
 

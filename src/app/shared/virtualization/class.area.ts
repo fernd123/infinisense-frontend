@@ -2,6 +2,7 @@ import { round } from "./utils";
 import { Coord } from "./class.coord";
 import { ImageMap } from "./class.image-map";
 import * as p5 from "p5";
+import { ZoneType } from '../enums/zoneType.enumeration';
 
 export type Shape = "empty" | "rect" | "circulo" | "poly" | "default";
 
@@ -436,7 +437,7 @@ export class AreaRect extends AreaPoly {
 	 */
 	display(p5: p5, imgsensor): void {
 		
-		if (this.type == 'se' && imgsensor !=  undefined) {
+		if (this.type == ZoneType.se && imgsensor !=  undefined) {
 			this.displayImg(p5, imgsensor);
 		}
 		p5.beginShape();

@@ -7,6 +7,7 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { ReasonService } from 'src/app/core/services/reason.service';
+import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { Reason } from 'src/app/shared/models/reason.model';
@@ -77,7 +78,7 @@ export class VisitReasonSaveComponent implements OnInit {
 
   loadPlantZone(removePlantZone = false) {
     this.plantZoneService.getPlantCoordinates(this.reasonForm.get('plant').value, "").subscribe((res: PlantCoordinates[]) => {
-      this.plantZoneList = res.filter(r => { return r.virtualZoneType == 'zv' });
+      this.plantZoneList = res.filter(r => { return r.virtualZoneType == ZoneType.zv });
       if (removePlantZone) {
         this.reasonForm.get('plantZone').setValue(null);
       }

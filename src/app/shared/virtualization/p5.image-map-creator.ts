@@ -15,6 +15,7 @@ import "./lib/contextmenu/contextmenu.css";
 //@ts-ignore strange way to import but it's working
 import p5 = require("p5");
 import { Component, EventEmitter, Output } from '@angular/core';
+import { ZoneType } from '../enums/zoneType.enumeration';
 
 export type Tool = "rectangulo" | "circulo" | "poligono" | "seleccionar" | "eliminar";/* | "test"*/;
 export type Image = {
@@ -27,7 +28,6 @@ export type ToolLabel = {
 };
 export type View = { scale: number, transX: number, transY: number, };
 export type Zoom = { min: number, max: number, sensativity: number, };
-export type TypeConfig = "zv" | "se";
 
 export class Save {
 	constructor(public version: string, public map: ImageMap) { }
@@ -88,7 +88,7 @@ export class imageMapCreator {
 	public imgtest: any;
 	public imagenessensores: {};
 	public mouseAction = "";
-	public typeConfig: TypeConfig = null; // Para configurar sensores o zonas
+	public typeConfig: ZoneType = null; // Para configurar sensores o zonas
 
 
 
@@ -98,17 +98,17 @@ export class imageMapCreator {
 	 * @param {number} width
 	 * @param {number} height
 	 */
-	constructor(elementId: string, width: number = 600, height: number = 450, typeConfig: TypeConfig) {
+	constructor(elementId: string, width: number = 600, height: number = 450, typeConfig: ZoneType) {
 
 		const element = document.getElementById(elementId);
 		if (!element) throw new Error('HTMLElement not found');
 		this.width = width;
 		this.height = height;
 		this.typeConfig = typeConfig;
-		if(this.typeConfig == 'zv'){
+		if(this.typeConfig == ZoneType.zv){
 			this.tool = "rectangulo";
 			this.drawingTools = ["rectangulo", "circulo", "poligono", "seleccionar"];
-		}else if(this.typeConfig == 'se'){
+		}else if(this.typeConfig == ZoneType.se){
 			this.tool = "seleccionar";
 			this.drawingTools = ["seleccionar"];
 		}
@@ -167,7 +167,7 @@ export class imageMapCreator {
 		this.mouseAction = "";
 		this.imagenessensores = [];
 		this.map.getAreas().forEach((a: Area) => {
-			if (a.type == 'se') {
+			if (a.type == ZoneType.se) {
 				let img = this.p5.loadImage(a.img);
 				let id = a.id;
 				let obj = {
@@ -180,7 +180,7 @@ export class imageMapCreator {
 
 		let dragableitems = document.getElementById('drag-items');
 		switch (this.typeConfig) {
-			case "se":
+			case ZoneType.se:
 				dragableitems.hidden = false;
 				this.tool = "seleccionar";
 				let self = this;
@@ -189,7 +189,7 @@ export class imageMapCreator {
 					self.sensorTypeId = e.target?.id;
 				});
 				break;
-			case "zv":
+			case ZoneType.zv:
 				dragableitems.hidden = true;
 				break;
 		}
@@ -615,7 +615,7 @@ export class imageMapCreator {
 			this.setAreaStyle(area);
 			if (area.isDrawable()) {
 				let img = undefined;
-				if (area.type == 'se') {
+				if (area.type == ZoneType.se) {
 					img = this.imagenessensores[area.id];
 				}
 				area.display(this.p5, img);
@@ -704,13 +704,13 @@ export class imageMapCreator {
 
 	setAreaStyle(area: Area): void {
 		let color = this.p5.color(19, 236, 226, 178);
-		if (area.getType() == 'zv') { // zona virtual
+		if (area.getType() == ZoneType.zv) { // zona virtual
 			color = this.p5.color(233, 236, 19, 178);
 		}
-		if (area.getType() == 'pe') { // punto encuentro
+		if (area.getType() == ZoneType.pe) { // punto encuentro
 			color = this.p5.color(255, 0, 0, 178);
 		}
-		if (area.getType() == 'se') { // sensor
+		if (area.getType() == ZoneType.se) { // sensor
 			color = undefined;
 		}
 		if (((this.tool == "eliminar" || this.tool == "seleccionar") &&

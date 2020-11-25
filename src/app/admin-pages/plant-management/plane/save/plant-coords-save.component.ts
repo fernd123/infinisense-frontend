@@ -4,8 +4,11 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
+import { EpiService } from 'src/app/core/services/epi.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
+import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
+import { Epi } from 'src/app/shared/models/epi.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
 
@@ -17,12 +20,13 @@ export class PlantCoordsSaveComponent implements OnInit {
 
   plantCoordsForm: FormGroup;
   modalTitle: string = this.translate.instant('plant.newcoordinatetitle');
-
+  zonevirtual: ZoneType = ZoneType.zv;
+  sensor: ZoneType = ZoneType.se;
   zoneTypeList: any = [
     { value: "", name: "Tipo de virtualización" },
-    { value: "zv", name: "Zona" },
-    { value: "se", name: "Sensor" },
-    { value: "pe", name: "Punto encuentro" }
+    { value: ZoneType.zv, name: "Zona" },
+    { value: ZoneType.se, name: "Sensor" },
+    { value: ZoneType.pe, name: "Punto encuentro" }
   ];
 
   statusList: any = [
@@ -32,14 +36,14 @@ export class PlantCoordsSaveComponent implements OnInit {
   ];
 
   sensorTypeList: SensorType[];
-
-  epiList: any[] = [
+  epiList: Epi[];
+  /*epiList: any[] = [
     { value: "casco", name: "Casco" },
     { value: "guante", name: "Guantes" },
     { value: "mascarilla1", name: "Mascarilla FFP2" },
     { value: "chaleco", name: "Chaleco reflectante" },
     { value: "botas", name: "Botas" }
-  ]
+  ]*/
 
   @Input() public selectedAreaId;
   @Input() public plantId;
@@ -49,12 +53,15 @@ export class PlantCoordsSaveComponent implements OnInit {
   @Input() public selection: boolean = false;
 
   epis: string;
+  loaded = false;
+
 
   constructor(
     private formBuilder: FormBuilder,
     private plantCoordService: PlantCoordsService,
     private sensorTypeService: SensorTypeService,
     private translate: TranslateService,
+    private epiService: EpiService,
     private modalService: NgbModal
   ) { }
 
@@ -66,17 +73,20 @@ export class PlantCoordsSaveComponent implements OnInit {
       sensorType: ["", null],
       coordinates: [""],
       sensorId: [""],
-      status: [""]
+      status: ["Activo"]
     });
 
+    /* Load epis */
+    this.epiService.getEpis("").subscribe((res: Epi[]) => {
+      this.epiList = res;
+    });
+
+    /* Type of zone selected by user action in UI */
     this.plantCoordsForm.get('virtualZoneType').disable();
     this.plantCoordsForm.get('sensorType').disable();
+    this.plantCoordsForm.get('sensorType').setValue(this.sensorTypeId);
     this.plantCoordsForm.get('virtualZoneType').setValue(this.typeConfig);
-
-    if(this.sensorTypeId != undefined){
-      this.plantCoordsForm.get('sensorType').setValue(this.sensorTypeId);
-    }
-
+    
     this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
       this.sensorTypeList = res;
     });
@@ -89,7 +99,7 @@ export class PlantCoordsSaveComponent implements OnInit {
         this.plantCoordsForm.get('sensorType').setValue(res.sensorType?.uuid);
         this.plantCoordsForm.get('sensorId').setValue(res.sensorId);
         this.plantCoordsForm.get('status').setValue(res.status);
-        if(!this.selection){
+        if (!this.selection) {
           this.coordinates = res.coordinates;
         }
         this.epis = res.epis;
@@ -97,14 +107,18 @@ export class PlantCoordsSaveComponent implements OnInit {
     }
   }
 
-  markEpisCheckbox() {
-    let episInput = document.getElementsByClassName('form-check-input');
-    if (episInput != undefined) {
-      let episList = this.epis != null && this.epis.length > 0 ? this.epis.split(',') : [];
-      for (let i = 0; i < episInput.length; i++) {
-        let checkbox: any = episInput[i];
-        if (episList.includes(checkbox.id)) {
-          checkbox.checked = true;
+  markEpisCheckbox(load = false) {
+    if (!this.loaded) {
+      this.loaded = load;
+      console.log("----------------"+this.loaded);
+      let episInput = document.getElementsByClassName('form-check-input');
+      if (episInput != undefined) {
+        let episList = this.epis != null && this.epis.length > 0 ? this.epis.split(',') : [];
+        for (let i = 0; i < episInput.length; i++) {
+          let checkbox: any = episInput[i];
+          if (episList.includes(checkbox.id)) {
+            checkbox.checked = true;
+          }
         }
       }
     }

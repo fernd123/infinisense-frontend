@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlantService } from 'src/app/core/services/plant.service';
+import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantManagementSaveComponent } from './save/plant-management-save.component';
 
@@ -16,6 +17,8 @@ export class PlantManagementComponent implements OnInit {
 
   plantList: Plant[];
   titleModal: string;
+  zonevirtual: ZoneType = ZoneType.zv;
+  sensor: ZoneType = ZoneType.se;
 
   constructor(
     private router: Router,

@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
+import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
@@ -51,7 +52,7 @@ export class PlantSensorComponent implements OnInit {
   refreshList() {
     try {
       let filter = this.optionFilter != null ? this.plantList[this.optionFilter.nativeElement.selectedIndex].uuid : this.plantList[0].uuid;
-      this.plantCoordsService.getPlantPlaneByPlant(filter, "se", "").subscribe((res: PlantCoordinates[]) => {
+      this.plantCoordsService.getPlantPlaneByPlant(filter, ZoneType.se, "").subscribe((res: PlantCoordinates[]) => {
         this.plantCoordsList = res;
       });
     } catch (ex) {

@@ -115,8 +115,6 @@ export class PlanPlaneComponent implements OnInit {
   /* VIRTUALIZATION */
 
   procesaPropagar(data) {
-    //console.log(data);
-    debugger;
     let dataJson = JSON.parse(data);
     let action = dataJson.action;
     if (action == "uploadImage") {
@@ -124,18 +122,6 @@ export class PlanPlaneComponent implements OnInit {
     }
     else if (action != "select") {
       this.openSaveModal(dataJson);
-    } else {
-      let plantCoords = new PlantCoordinates();
-      // buscar por id en la lista y guardar los cambios
-      /*this.imageMapCreatorService.getImageMapCreator().map.getAreas().forEach(area => {
-        if (area.id == selectedIndex) {
-          plantCoords.plantid = this.plantId;
-          plantCoords.coordinates = area.getCoords();
-        }
-      });
-      this.plantCoordService.savePlantVirtual(plantCoords, "").subscribe(res => {
-
-      });*/
     }
   }
 
@@ -169,11 +155,11 @@ export class PlanPlaneComponent implements OnInit {
     // Service callback function to create the modal with an object passed as a parameter
     //const initialState = this.getSaveModalParameters(selectedObject);
     if (!size || size === undefined) { size = 'modal-lg'; }
-    debugger;
     const modalRef = this.modalService.open(PlantCoordsSaveComponent);
     modalRef.componentInstance.coordinates = JSON.stringify(areasData.areas);
     modalRef.componentInstance.selectedAreaId = areasData.selectedAreaId;
     modalRef.componentInstance.plantId = this.plantId;
+    modalRef.componentInstance.selection = areasData.selection;
     this.imageMapCreatorService.getImageMapCreator().editionMode = true;
 
     modalRef.result.then(() => { console.log('When user closes'); },
@@ -182,6 +168,7 @@ export class PlanPlaneComponent implements OnInit {
         this.imageMapCreatorService.getImageMapCreator().editionMode = false;
         this.imageMapCreatorService.getImageMapCreator().selectedAreaId = null;
         this.imageMapCreatorService.getImageMapCreator().clearSelection();
+        document.getElementById('drag-items').click();
         if (res != "success") {
           //const mapCreator: imageMapCreator = this.imageMapCreatorService.getImageMapCreator();
           //mapCreator.deleteArea(mapCreator.map.getAreas()[0]); // first position
@@ -195,8 +182,6 @@ export class PlanPlaneComponent implements OnInit {
       this.virtualizationList = resPp;
       let imageCreator = this.imageMapCreatorService.getImageMapCreator();
       imageCreator.clearAreas();
-      let areas = [];
-      //TODO: añadir las zonas en el atributo "area" del mapfake
       let areasStr = "";
       for (let i = 0; i < resPp.length; i++) {
         this.plant = resPp[i].plant;

@@ -20,13 +20,13 @@ export class VirtualizationComponent implements OnInit {
   differ: any;
   imcreator: imageMapCreator;
   lastAction: string;
-  itemURL : string = "";
+  itemURL: string = "";
 
   constructor(differs: IterableDiffers,
     private imageMapCreatorService: ImageMapCreatorService,
     public modalService: NgbModal) {
     this.differ = differs.find([]).create(null);
-    
+
   }
 
   ngOnInit() {
@@ -36,26 +36,40 @@ export class VirtualizationComponent implements OnInit {
   }
 
   ngDoCheck() {
-    if (this.imcreator != undefined && this.imcreator.lastAction != null) {
-      this.imcreator.editionMode = true;
-      console.log(this.imcreator.lastAction);
+    if (this.imcreator != undefined && this.imcreator.lastAction != null
+      && (this.imcreator.lastAction == 'delete' || this.imcreator.lastAction == 'add' || this.imcreator.lastAction == 'openmodal')) {
       let selectedAreaId = "";
       if (this.imcreator.lastAction == 'add') { // first position
         this.areas = this.imcreator.map.getAreas()[0];
-        this.areas.img = this.imcreator.itemURL; 
+        this.areas.img = this.imcreator.itemURL;
         this.areas.id = Math.random();
-        debugger;
+        this.imcreator.editionMode = true;
       } else if (this.imcreator.lastAction == 'delete') {
         //TODO:
-      } else if (this.imcreator.lastAction == 'selection' || this.imcreator.lastAction == 'openmodal') {
+      } else if (this.imcreator.lastAction == 'openmodal') {
         selectedAreaId = this.imageMapCreatorService.getImageMapCreator().selectedAreaId;
+        this.imcreator.editionMode = true;
       }
       this.propagar.emit(JSON.stringify({ "areas": this.areas, "selectedAreaId": selectedAreaId, "action": this.imcreator.lastAction }));
-
       this.imcreator.lastAction = null;
     }
 
-    if (this.imcreator != undefined && this.imcreator.imageDropped) {
+    // Guardar al arrastrar un elemento
+    else if (this.imcreator.lastAction == 'select' && this.imcreator.mouseAction == 'released') { // Si arrastro un elemento y suelto el botón, guardar posición nueva
+      let selectedAreaId = this.imageMapCreatorService.getImageMapCreator().selectedAreaId;
+      this.areas = this.imcreator.map.getAreas().filter(a => {
+        if(a.idCoordenate == selectedAreaId){
+          return a;
+        }
+      });
+      this.imcreator.lastAction = null;
+      this.imcreator.mouseAction = null;
+      this.areas = this.areas[0];
+      this.propagar.emit(JSON.stringify({ "areas": this.areas, "selectedAreaId": selectedAreaId, "selection": true }));
+    }
+
+    // Al soltar una imagen del plano en el canvas
+    if (this.imcreator.imageDropped) {
       this.imcreator.editionMode = false;
       this.imcreator.imageDropped = false;
       this.propagar.emit(JSON.stringify({ "action": "uploadImage" }));

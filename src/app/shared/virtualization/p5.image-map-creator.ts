@@ -81,10 +81,11 @@ export class imageMapCreator {
 	protected bgLayer: BgLayer;
 	public p5: p5;
 	public selectedAreaId = null;
-	imageDropped: boolean = false;
+	public imageDropped: boolean = false;
 	public itemURL: any;
-	imgtest: any;
-	imagenessensores: {};
+	public imgtest: any;
+	public imagenessensores: {};
+	public mouseAction = "";
 
 
 
@@ -131,7 +132,7 @@ export class imageMapCreator {
 	//---------------------------- p5 Sketch ----------------------------------
 
 	/**
-	 * Override p5 methods
+	 * Override p5 methods 
 	 * @param {p5} p5
 	 */
 	private sketch(p5: p5): void {
@@ -154,6 +155,7 @@ export class imageMapCreator {
 	/* PRECARGAR LAS IMAGENES SIEMPRE PARA QUE SE VISUALIZEN EN EL CANVAS */
 	public preload() {
 		this.editionMode = false;
+		this.mouseAction = "";
 		this.imagenessensores = [];
 		this.map.getAreas().forEach((a: Area) => {
 			if (a.type == 'se') {
@@ -176,9 +178,9 @@ export class imageMapCreator {
 			.setDraggable(false)
 			.addText("Nombre del plano", "", (v: string) => { this.map.setName(v) })
 			.addDropDown("Tipo de selección", ["rectangulo", "circulo", "poligono", "seleccionar"]/*, "eliminar", "test"]*/, (v: ToolLabel) => { this.setTool(v.value) })
-			//.addBoolean("Default Area", this.map.hasDefaultArea, (v: boolean) => { this.setDefaultArea(v) })
-			.addButton("Deshacer", this.undoManager.undo)
-			.addButton("Rehacer", this.undoManager.redo)
+		//.addBoolean("Default Area", this.map.hasDefaultArea, (v: boolean) => { this.setDefaultArea(v) })
+		//.addButton("Deshacer", this.undoManager.undo)
+		//.addButton("Rehacer", this.undoManager.redo)
 		//.addButton("Borrar todo", this.clearAreas.bind(this))
 		//.addButton("Cargar Zonas", () => { this.loadCoordenates(this.externalCoordenates); })
 		//.addButton("Generate Html", () => { this.settings.setValue("Output", this.map.toHtml()) })
@@ -200,14 +202,14 @@ export class imageMapCreator {
 		});
 	}
 
-	public saveCoordenates(): any {
+	/*public saveCoordenates(): any {
 		this.map.setAreas(this.externalCoordenates);
 	}
 
 	public loadCoordenates(coords: any): any {
 		this.externalCoordenates = coords;
 		this.map.setAreas(coords);
-	}
+	}*/
 
 	private draw(): void {
 		this.updateTempArea();
@@ -227,6 +229,7 @@ export class imageMapCreator {
 
 	private mousePressed(): void {
 		console.log("mouse pressed");
+		this.mouseAction = "pressed"; // Soltar el botón
 		if (!this.editionMode) {
 			if (this.mouseIsHoverSketch()) {
 				let coord = this.drawingCoord();
@@ -235,7 +238,6 @@ export class imageMapCreator {
 						case "circulo":
 						case "rectangulo":
 							this.setTempArea(coord);
-							//debugger;
 							break;
 						case "poligono":
 							let areaPoly = this.tempArea as AreaPoly;
@@ -255,13 +257,17 @@ export class imageMapCreator {
 							break;
 						case "seleccionar":
 							if (this.hoveredPoint !== null) {
+								console.log("1");
 								this.selection.addPoint(this.hoveredPoint);
 								this.selection.registerArea(this.hoveredArea!);
 								this.selection.resetOrigin(this.hoveredPoint);
+								this.lastAction = "select";
 							} else if (this.hoveredArea !== null) {
+								console.log("2");
 								this.selection.addArea(this.hoveredArea);
 								this.selection.resetOrigin(this.mCoord());
 								this.lastAction = "select";
+								this.selectedAreaId = this.hoveredArea.getIdCoordenate();
 							}
 							break;
 					}
@@ -272,8 +278,8 @@ export class imageMapCreator {
 
 	private mouseDragged(): void {
 		console.log("mouse dragged");
+		this.mouseAction = "dragged"; // Arrastras el elemento
 		if (this.mouseIsHoverSketch() && !ContextMenu.isOpen()) {
-			console.log("mouse dragged IF");
 			if (this.p5.mouseButton == this.p5.LEFT) {
 				switch (this.tool) {
 					case "seleccionar":
@@ -291,6 +297,7 @@ export class imageMapCreator {
 
 	private mouseReleased(e: MouseEvent): void {
 		console.log("mouse released");
+		this.mouseAction = "released"; // Soltar el botón
 		if (!this.editionMode) {
 			switch (this.tool) {
 				case "rectangulo":
@@ -324,6 +331,7 @@ export class imageMapCreator {
 
 	private mouseWheel(e: MouseWheelEvent): boolean {
 		console.log("mouse zoom");
+		this.mouseAction = "zoom"; // Soltar el botón
 		if (this.mouseIsHoverSketch()) {
 			let coefZoom = this.view.scale * this.zoomParams.sensativity * - e.deltaY;
 			this.zoom(coefZoom);
@@ -466,7 +474,6 @@ export class imageMapCreator {
 
 	dropSensor(evt): void {
 		this.imgtest = this.p5.loadImage(this.itemURL);
-		debugger;
 		this.tempArea = new AreaRect();
 		//this.tempArea.setShape("rect")
 		let coord = this.drawingCoord(); // origen izq (3.4)
@@ -485,10 +492,9 @@ export class imageMapCreator {
 		this.tempArea = new AreaEmpty();
 
 		//this.onClick(evt);
-		//this.bgLayer.disappear();
+		this.bgLayer.disappear();
 		//this.imgtest = null;
-		this.drawAreas();
-
+		//this.drawAreas();
 	}
 
 	doubleClicked(evt: MouseEvent) {
@@ -496,7 +502,6 @@ export class imageMapCreator {
 		try {
 			this.selection.addArea(this.hoveredArea);
 			this.selection.resetOrigin(this.mCoord());
-			console.log(this.mCoord());
 			let allAreas = this.map.getAreas();
 			let area = allAreas.find((a: Area): boolean => {
 				if (this.selection.containsArea(a)) {
@@ -586,15 +591,7 @@ export class imageMapCreator {
 			this.setAreaStyle(area);
 			if (area.isDrawable()) {
 				let img = undefined;
-				//this.imgtest = img;
-				//debugger;
-				/*this.imagenessensores.forEach(a => {
-					if (a.id == area.id) {
-						img = a.img;
-					}
-				})*/
-				if(area.type == 'se'){
-					debugger;
+				if (area.type == 'se') {
 					img = this.imagenessensores[area.id];
 				}
 				area.display(this.p5, img);
@@ -876,21 +873,14 @@ export class imageMapCreator {
 		this.img.data = this.p5.loadImage(img, imgg => this.resetView(imgg));
 	}
 
+	/* Busca un área cuando se hace over sobre el listado de zonas configuradas y la ilumina */
 	public searchArea(id) {
 		if (id == null) {
 			this.clearSelection();
 		} else {
 			let areaIndex = this.map.findAreaByUuid(id);
 			let area = this.map.getAreas()[areaIndex];
-
 			this.selection.addArea(area);
-
-			/*TODOlet color = this.p5.color(255, 200, 200, 178); // highlight (set color red)
-			this.p5.fill(color);
-			this.p5.strokeWeight(1 / this.view.scale);
-			this.p5.textStyle(this.p5.BOLD);
-			this.p5.stroke(0);
-			area.display(this.p5);*/
 		}
 	}
 }

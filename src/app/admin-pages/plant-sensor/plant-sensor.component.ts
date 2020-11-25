@@ -45,7 +45,6 @@ export class PlantSensorComponent implements OnInit {
   }
 
   changePlant() {
-    debugger;
     this.refreshList();
   }
 

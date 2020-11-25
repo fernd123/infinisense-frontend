@@ -44,6 +44,8 @@ export class PlantCoordsSaveComponent implements OnInit {
   @Input() public selectedAreaId;
   @Input() public plantId;
   @Input() public coordinates;
+  @Input() public selection: boolean = false;
+
   epis: string;
 
   constructor(
@@ -77,7 +79,9 @@ export class PlantCoordsSaveComponent implements OnInit {
         this.plantCoordsForm.get('sensorType').setValue(res.sensorType?.uuid);
         this.plantCoordsForm.get('sensorId').setValue(res.sensorId);
         this.plantCoordsForm.get('status').setValue(res.status);
-        this.coordinates = res.coordinates;
+        if(!this.selection){
+          this.coordinates = res.coordinates;
+        }
         this.epis = res.epis;
       });
     }

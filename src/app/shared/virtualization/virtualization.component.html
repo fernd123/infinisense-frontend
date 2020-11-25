@@ -1,7 +1,20 @@
 <div id="drag-items">
-    <img src="assets/images/faces/face1.jpg" draggable="true" />
-    <img src="assets/images/faces/face2.jpg" draggable="true" />
-    <img src="assets/images/faces/face3.jpg" draggable="true" />
+  <!--<nav aria-label="breadcrumb" role="navigation">
+    <ol class="breadcrumb bg-light">
+      <li class="breadcrumb-item" *ngFor="let sensor of sensorTypeList"><a href="javascript:;">
+          <img width="50em" height="50em" draggable="true" [src]="sensor.imgbuffer" [alt]="sensor.name"
+            [title]="sensor.name" />
+        </a></li>
+    </ol>
+  </nav>-->
+  <div class="icon-bar">
+    <h6><strong>Arrastre un sensor para configurarlo</strong></h6>
+    <a href="javascript:;" *ngFor="let sensor of sensorTypeList">
+      <img width="50em" height="50em" draggable="true" [src]="sensor.imgbuffer" [alt]="sensor.name" [id]="sensor.uuid"
+        [title]="sensor.name" /></a>
   </div>
+  <!--<img src="assets/images/faces/face2.jpg" draggable="true" />
+    <img src="assets/images/faces/face3.jpg" draggable="true" /> -->
+</div>
 
 <div id="div-1" style="position: relative;"></div>

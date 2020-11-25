@@ -13,6 +13,7 @@ import { PlantCoordsSaveComponent } from './save/plant-coords-save.component';
 import { ImageMapCreatorService } from 'src/app/core/services/imageMapCreator.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'infini-plant-plane',
@@ -24,35 +25,34 @@ export class PlanPlaneComponent implements OnInit {
   plantId: string;
   plantPlaneId: string;
   tenantId: string;
+  typeConfig: any;
   plant: Plant;
   selectedFiles: FileList;
   currentFile: File;
   progress = 0;
   message = '';
   iMap: any;
-
-  fileInfos: Observable<any>;
-
   plantImgList: any;
-  @ViewChild('virtualizationBody') virtualizationBody: any;
   height: number = 700;
   width: number = 500;
   virtualizationList: PlantCoordinates[];
   img: any;
 
+  @ViewChild('virtualizationBody') virtualizationBody: any;
+  fileInfos: Observable<any>;
 
   constructor(
-    private formBuilder: FormBuilder,
     private imageMapCreatorService: ImageMapCreatorService,
     private plantService: PlantService,
+    private translateService: TranslateService,
     private plantCoordService: PlantCoordsService,
-    private alertService: AlertService,
     private modalService: NgbModal,
-    private route: Router) {
-    this.plantId = this.route.getCurrentNavigation().extras.queryParams.plantId;
-    this.tenantId = this.route.getCurrentNavigation().extras.queryParams.tenantId;
-
+    private router: Router) {
+    this.plantId = this.router.getCurrentNavigation().extras.queryParams.plantId;
+    this.tenantId = this.router.getCurrentNavigation().extras.queryParams.tenantId;
+    this.typeConfig = this.router.getCurrentNavigation().extras.queryParams.type;
     this.plantService.getPlantByUuid(this.plantId, this.tenantId).subscribe((res: Plant) => {
+      this.plant = res;
       if (res != undefined) {
         this.plantService.getPlantPlaneByPlant(this.plantId, this.tenantId).subscribe((resPp: PlantPlane) => {
           if (resPp != undefined) {
@@ -61,29 +61,20 @@ export class PlanPlaneComponent implements OnInit {
               this.img = res;
               this.imageMapCreatorService.getImageMapCreator().setImage(this.img);
             });
-            //let plantPlaneList: PlantPlane[] = resPp;
-            /*for (let i = 0; i < plantPlaneList.length; i++) { //TODO: Solo uno para la demo
-              plantRequest.push(this.plantService.getPlantPlanes(plantPlaneList[i].name, 'tenantId'));
-              this.plantPlaneId = plantPlaneList[i].uuid;
-            }*/
-            /*if (plantRequest.length > 0) {
-              forkJoin(plantRequest).subscribe((res: any) => {
-                
-              });
-            }*/
           }
         });
-
         this.refreshVirtualZones();
       }
-      //this.plantService.getPlantPlanes(plantId, tenantId).subscribe(res=>{
     });
   }
 
   ngOnInit() {
     this.width = document.getElementById('virtualizationBody').offsetWidth - 200;
   }
-
+  
+  ngAfterViewInit(){
+    this.imageMapCreatorService.getImageMapCreator().setTypeConfig(this.typeConfig);
+  }
 
   selectFile(event) {
     this.selectedFiles = event.target.files;
@@ -107,13 +98,11 @@ export class PlanPlaneComponent implements OnInit {
         this.message = 'Could not upload the file!';
         this.currentFile = undefined;
       });
-
     this.selectedFiles = undefined;
   }
 
 
   /* VIRTUALIZATION */
-
   procesaPropagar(data) {
     let dataJson = JSON.parse(data);
     let action = dataJson.action;
@@ -126,9 +115,37 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   public searchCoordinates(uuid: string) {
-    console.log("entroooo");
     let imagemap = this.imageMapCreatorService.getImageMapCreator();
     imagemap.searchArea(uuid);
+  }
+
+  public openSaveModal(dataJson: any, size?: string): void {
+    // Service callback function to create the modal with an object passed as a parameter
+    //const initialState = this.getSaveModalParameters(selectedObject);
+    if (!size || size === undefined) { size = 'modal-lg'; }
+    const modalRef = this.modalService.open(PlantCoordsSaveComponent);
+    modalRef.componentInstance.coordinates = JSON.stringify(dataJson.areas);
+    modalRef.componentInstance.selectedAreaId = dataJson.selectedAreaId;
+    modalRef.componentInstance.sensorTypeId = dataJson.sensorTypeId;
+    modalRef.componentInstance.selection = dataJson.selection;
+    modalRef.componentInstance.plantId = this.plantId;
+    modalRef.componentInstance.typeConfig = this.typeConfig;
+
+    this.imageMapCreatorService.getImageMapCreator().editionMode = true;
+
+    modalRef.result.then(() => { console.log('When user closes'); },
+      (res) => {
+        this.refreshVirtualZones();
+        this.imageMapCreatorService.getImageMapCreator().editionMode = false;
+        this.imageMapCreatorService.getImageMapCreator().selectedAreaId = null;
+        this.imageMapCreatorService.getImageMapCreator().clearSelection();
+        document.getElementById('drag-items').click();
+        if (res != "success") {
+          //const mapCreator: imageMapCreator = this.imageMapCreatorService.getImageMapCreator();
+          //mapCreator.deleteArea(mapCreator.map.getAreas()[0]); // first position
+        } else {
+        }
+      });
   }
 
   public openEditModal(uuid: string) {
@@ -149,36 +166,8 @@ export class PlanPlaneComponent implements OnInit {
       });
   }
 
-
-
-  public openSaveModal(areasData: any, size?: string): void {
-    // Service callback function to create the modal with an object passed as a parameter
-    //const initialState = this.getSaveModalParameters(selectedObject);
-    if (!size || size === undefined) { size = 'modal-lg'; }
-    const modalRef = this.modalService.open(PlantCoordsSaveComponent);
-    modalRef.componentInstance.coordinates = JSON.stringify(areasData.areas);
-    modalRef.componentInstance.selectedAreaId = areasData.selectedAreaId;
-    modalRef.componentInstance.plantId = this.plantId;
-    modalRef.componentInstance.selection = areasData.selection;
-    this.imageMapCreatorService.getImageMapCreator().editionMode = true;
-
-    modalRef.result.then(() => { console.log('When user closes'); },
-      (res) => {
-        this.refreshVirtualZones();
-        this.imageMapCreatorService.getImageMapCreator().editionMode = false;
-        this.imageMapCreatorService.getImageMapCreator().selectedAreaId = null;
-        this.imageMapCreatorService.getImageMapCreator().clearSelection();
-        document.getElementById('drag-items').click();
-        if (res != "success") {
-          //const mapCreator: imageMapCreator = this.imageMapCreatorService.getImageMapCreator();
-          //mapCreator.deleteArea(mapCreator.map.getAreas()[0]); // first position
-        } else {
-        }
-      });
-  }
-
   private refreshVirtualZones() {
-    this.plantCoordService.getPlantPlaneByPlant(this.plantId, this.tenantId).subscribe((resPp: PlantCoordinates[]) => {
+    this.plantCoordService.getPlantPlaneByPlant(this.plantId, this.typeConfig, this.tenantId).subscribe((resPp: PlantCoordinates[]) => {
       this.virtualizationList = resPp;
       let imageCreator = this.imageMapCreatorService.getImageMapCreator();
       imageCreator.clearAreas();
@@ -191,10 +180,10 @@ export class PlanPlaneComponent implements OnInit {
         }
       }
 
-      if (areasStr.length != 0) {
+      //if (areasStr.length != 0) {
         let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${areasStr}],"name":"${this.plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;
         imageCreator.importMap(mapFake);
-      }
+      //}
     });
   }
 
@@ -202,6 +191,14 @@ export class PlanPlaneComponent implements OnInit {
     this.plantCoordService.deleteVirtualZone(this.plantId, uuid).subscribe(res => {
       this.refreshVirtualZones();
     });
+  }
+
+  back() {
+    this.router.navigateByUrl("/admin-pages/plant-management");
+  }
+
+  getTitleConfig(){
+    return this.typeConfig == 'zv' ? this.translateService.instant('plant.configuratedzones') : this.translateService.instant('plant.configuratedsensors');
   }
 }
 

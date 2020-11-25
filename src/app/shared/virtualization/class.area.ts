@@ -446,7 +446,8 @@ export class AreaRect extends AreaPoly {
 	}
 
 	displayImg(p5: p5, imgsensor: any): void {
-		let center = this.coords[0];
+		let center = this.coords[0]; //OJO: aqui cambia el tamaño de la imagen
+		imgsensor.resize(50, 50);
 		p5.image(imgsensor, center.x, center.y);
 	}
 

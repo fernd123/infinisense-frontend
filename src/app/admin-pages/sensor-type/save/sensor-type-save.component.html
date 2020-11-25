@@ -1,5 +1,5 @@
 <app-modal title="{{modalTitle}}">
-  <form [formGroup]="sensorTypeForm" (ngSubmit)="submit()">
+  <form [formGroup]="sensorTypeForm">
     <div class="form-group">
       <label for="name">{{ 'name'  | translate }}</label>
       <input type="text" class="form-control" id="name" placeholder="{{ 'name'  | translate }}" formControlName="name">
@@ -9,6 +9,13 @@
       <label for="name">{{ 'description'  | translate }}</label>
       <input type="text" class="form-control" id="description" placeholder="{{ 'description'  | translate }}"
         formControlName="description">
+    </div>
+
+    <div class="form-group">
+      <label for="name">{{ 'image'  | translate }}</label>
+      <input type="file" class="form-control" id="image" #image placeholder="{{ 'image'  | translate }}" id="sensorLogo"
+        (change)="readURL(image)">
+      <img height="100px" width="100px" id="sensorPreview" [src]="this.sensorTypeForm.get('image').value" *ngIf="this.sensorTypeForm.get('image').value" />
     </div>
 
     <div class="form-check form-check-flat form-check-primary">

@@ -15,6 +15,7 @@
   "close": "Cerrar",
   "register": "Registrar",
   "status": "Estado",
+  "image": "Imagen",
   "menu": {
     "usertitle": "Gestión de Usuarios",
     "user": "Usuarios",
@@ -35,7 +36,8 @@
   "plant": {
     "title": "Planta",
     "configuration": "Configuración de Planta",
-    "configuratedzones": "Zonas configuradas",
+    "configuratedzones": "Zonas Configuradas",
+    "configuratedsensors": "Sensores Configurados",
     "zonetype": "Tipo de zona",
     "sensortype": "Tipo de sensor",
     "sensorid": "Id del sensor",
@@ -47,6 +49,8 @@
     "plantlisttitle": "Listado de plantas",
     "plant": "Planta",
     "plane": "Plano",
+    "sensorconfig": "Sensores",
+    "zones": "Zonas",
     "newcoordinatetitle": "Guardar zona virtual",
     "epi": "Añadir EPI",
     "sensor": {
@@ -59,7 +63,7 @@
   },
   "user": {
     "userlisttitle": "Gestión de usuarios",
-    "userexternallisttitle": "Listado de plantas",
+    "userexternallisttitle": "Usuarios externos",
     "saveusertitle": "Guardar Perfil Usuario",
     "firstname": "Nombre",
     "lastname": "Apellidos",

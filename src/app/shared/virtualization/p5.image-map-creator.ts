@@ -27,6 +27,7 @@ export type ToolLabel = {
 };
 export type View = { scale: number, transX: number, transY: number, };
 export type Zoom = { min: number, max: number, sensativity: number, };
+export type TypeConfig = "zv" | "se";
 
 export class Save {
 	constructor(public version: string, public map: ImageMap) { }
@@ -82,10 +83,12 @@ export class imageMapCreator {
 	public p5: p5;
 	public selectedAreaId = null;
 	public imageDropped: boolean = false;
-	public itemURL: any;
+	public itemURL: string;
+	public sensorTypeId: string;
 	public imgtest: any;
 	public imagenessensores: {};
 	public mouseAction = "";
+	public typeConfig: TypeConfig = null; // Para configurar sensores o zonas
 
 
 
@@ -95,14 +98,20 @@ export class imageMapCreator {
 	 * @param {number} width
 	 * @param {number} height
 	 */
-	constructor(elementId: string, width: number = 600, height: number = 450) {
+	constructor(elementId: string, width: number = 600, height: number = 450, typeConfig: TypeConfig) {
 
 		const element = document.getElementById(elementId);
 		if (!element) throw new Error('HTMLElement not found');
 		this.width = width;
 		this.height = height;
-		this.tool = "rectangulo";
-		this.drawingTools = ["rectangulo", "circulo", "poligono"];
+		this.typeConfig = typeConfig;
+		if(this.typeConfig == 'zv'){
+			this.tool = "rectangulo";
+			this.drawingTools = ["rectangulo", "circulo", "poligono", "seleccionar"];
+		}else if(this.typeConfig == 'se'){
+			this.tool = "seleccionar";
+			this.drawingTools = ["seleccionar"];
+		}
 		this.settings;
 		this.tempArea = new AreaEmpty();
 		this.selection = new Selection();
@@ -168,6 +177,22 @@ export class imageMapCreator {
 				this.imagenessensores[id] = img;
 			}
 		});
+
+		let dragableitems = document.getElementById('drag-items');
+		switch (this.typeConfig) {
+			case "se":
+				dragableitems.hidden = false;
+				this.tool = "seleccionar";
+				let self = this;
+				dragableitems.addEventListener('dragstart', function (e: any) {
+					self.itemURL = e.target?.src;
+					self.sensorTypeId = e.target?.id;
+				});
+				break;
+			case "zv":
+				dragableitems.hidden = true;
+				break;
+		}
 	}
 
 	private setup(): void {
@@ -177,7 +202,7 @@ export class imageMapCreator {
 		this.settings = QuickSettings.create(this.p5.width + 5, 0, "Virtualizador", this.p5.canvas.parentElement)
 			.setDraggable(false)
 			.addText("Nombre del plano", "", (v: string) => { this.map.setName(v) })
-			.addDropDown("Tipo de selección", ["rectangulo", "circulo", "poligono", "seleccionar"]/*, "eliminar", "test"]*/, (v: ToolLabel) => { this.setTool(v.value) })
+			.addDropDown("Tipo de selección", this.drawingTools /*["rectangulo", "circulo", "poligono", "seleccionar"]*//*, "eliminar", "test"]*/, (v: ToolLabel) => { this.setTool(v.value) })
 		//.addBoolean("Default Area", this.map.hasDefaultArea, (v: boolean) => { this.setDefaultArea(v) })
 		//.addButton("Deshacer", this.undoManager.undo)
 		//.addButton("Rehacer", this.undoManager.redo)
@@ -195,11 +220,8 @@ export class imageMapCreator {
 		//@ts-ignore Select all onclick on the Output field
 		//document.getElementById("Output").setAttribute("onFocus", "this.select();");
 
-		let dragableitems = document.getElementById('drag-items');
-		let self = this;
-		dragableitems.addEventListener('dragstart', function (e: any) {
-			self.itemURL = e.target?.src;
-		});
+
+
 	}
 
 	/*public saveCoordenates(): any {
@@ -435,6 +457,7 @@ export class imageMapCreator {
 	}
 
 	onClick(event: MouseEvent): void {
+		console.log("click");
 		if (this.mouseIsHoverSketch()) {
 			if (this.hoveredArea) {
 				if (this.p5.mouseButton == this.p5.RIGHT) {
@@ -477,9 +500,9 @@ export class imageMapCreator {
 		this.tempArea = new AreaRect();
 		//this.tempArea.setShape("rect")
 		let coord = this.drawingCoord(); // origen izq (3.4)
-		let coord1 = new Coord(coord.x + 100, coord.y); // Derecha (3.5)
-		let coord2 = new Coord(coord.x, coord.y + 100); // Arriba (4.4)
-		let coord3 = new Coord(coord.x + 100, coord.y + 100); // Derecha arriba (4.5)
+		let coord1 = new Coord(coord.x + 50, coord.y); // Derecha (3.5)
+		let coord2 = new Coord(coord.x, coord.y + 50); // Arriba (4.4)
+		let coord3 = new Coord(coord.x + 50, coord.y + 50); // Derecha arriba (4.5)
 
 		this.setTempArea(coord);
 		this.tempArea.addCoord(coord);
@@ -499,6 +522,7 @@ export class imageMapCreator {
 
 	doubleClicked(evt: MouseEvent) {
 		evt.preventDefault();
+		console.log("doble click");
 		try {
 			this.selection.addArea(this.hoveredArea);
 			this.selection.resetOrigin(this.mCoord());
@@ -869,9 +893,18 @@ export class imageMapCreator {
 		return this.img;
 	}
 
+	public getSensorTypeId() {
+		return this.sensorTypeId;
+	}
+
 	public setImage(img) {
 		this.img.data = this.p5.loadImage(img, imgg => this.resetView(imgg));
 	}
+
+	public setTypeConfig(type) {
+		this.typeConfig = type;
+	}
+
 
 	/* Busca un área cuando se hace over sobre el listado de zonas configuradas y la ilumina */
 	public searchArea(id) {

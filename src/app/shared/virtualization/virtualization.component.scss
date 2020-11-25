@@ -1,0 +1,20 @@
+.icon-bar {
+  width: 100%;
+  background-color: rgb(236, 230, 230);
+  overflow: auto;
+}
+
+.icon-bar a {
+  float: left;
+  //width: 10%;
+  text-align: center;
+  padding: 12px 0;
+  transition: all 0.3s ease;
+  margin-left: 1em;
+  color: white;
+  font-size: 36px;
+}
+
+.icon-bar a:hover {
+  background-color: rgb(209, 208, 208);
+}

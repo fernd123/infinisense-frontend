@@ -29,9 +29,14 @@
                   <i class="mdi mdi-grease-pencil btn-icon-append"></i>
                 </button>
 
-                <button type="button" class="btn btn-gradient-info btn-sm" (click)="navigateToPlane(plant.uuid)">
-                  <i class="mdi mdi-home-map-marker"></i>
-                  {{ 'plant.plane'  | translate }}
+                <button type="button" class="btn btn-gradient-info btn-sm" (click)="navigateToPlane(plant.uuid, 'zv')">
+                  <i class="mdi mdi-map-marker"></i>
+                  {{ 'plant.zones'  | translate }}
+                </button>
+
+                <button type="button" class="btn btn-secondary btn-sm" (click)="navigateToPlane(plant.uuid, 'se')">
+                  <i class="mdi mdi-access-point"></i>
+                  {{ 'plant.sensorconfig'  | translate }}
                 </button>
               </td>
             <tr>

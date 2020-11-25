@@ -7,4 +7,6 @@ export class SensorType extends BaseModel implements ISensorType {
     name: string;
     description: string;
     active: boolean;
+    image ?: string;
+    imgbuffer: any;
 }

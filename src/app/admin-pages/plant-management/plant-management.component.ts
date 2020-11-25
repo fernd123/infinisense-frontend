@@ -19,7 +19,6 @@ export class PlantManagementComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private formBuilder: FormBuilder,
     private plantService: PlantService,
     private modalService: NgbModal) { }
 
@@ -43,8 +42,7 @@ export class PlantManagementComponent implements OnInit {
       });
   }
 
-  navigateToPlane(uuid: string) {
-    this.router.navigateByUrl("/admin-pages/plant-plane", { skipLocationChange: true, queryParams: { plantId: uuid, tenantId: "" } });
-
+  navigateToPlane(uuid: string, typeConfig: string) {
+    this.router.navigateByUrl("/admin-pages/plant-plane", { skipLocationChange: true, queryParams: { plantId: uuid, tenantId: "", type: typeConfig } });
   }
 }

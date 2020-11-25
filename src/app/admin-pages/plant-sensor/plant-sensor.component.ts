@@ -51,7 +51,7 @@ export class PlantSensorComponent implements OnInit {
   refreshList() {
     try {
       let filter = this.optionFilter != null ? this.plantList[this.optionFilter.nativeElement.selectedIndex].uuid : this.plantList[0].uuid;
-      this.plantCoordsService.getPlantCoordinates(filter, "").subscribe((res: PlantCoordinates[]) => {
+      this.plantCoordsService.getPlantPlaneByPlant(filter, "se", "").subscribe((res: PlantCoordinates[]) => {
         this.plantCoordsList = res;
       });
     } catch (ex) {

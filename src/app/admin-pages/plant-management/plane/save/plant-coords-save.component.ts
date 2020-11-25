@@ -44,6 +44,8 @@ export class PlantCoordsSaveComponent implements OnInit {
   @Input() public selectedAreaId;
   @Input() public plantId;
   @Input() public coordinates;
+  @Input() public sensorTypeId;
+  @Input() public typeConfig;
   @Input() public selection: boolean = false;
 
   epis: string;
@@ -66,6 +68,14 @@ export class PlantCoordsSaveComponent implements OnInit {
       sensorId: [""],
       status: [""]
     });
+
+    this.plantCoordsForm.get('virtualZoneType').disable();
+    this.plantCoordsForm.get('sensorType').disable();
+    this.plantCoordsForm.get('virtualZoneType').setValue(this.typeConfig);
+
+    if(this.sensorTypeId != undefined){
+      this.plantCoordsForm.get('sensorType').setValue(this.sensorTypeId);
+    }
 
     this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
       this.sensorTypeList = res;

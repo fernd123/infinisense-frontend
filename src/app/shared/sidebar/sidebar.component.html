@@ -21,7 +21,7 @@
         <i class="mdi mdi-home menu-icon"></i>
       </a>
     </li>
-    <li class="nav-item"
+    <!--<li class="nav-item"
       [ngClass]="{'active' : accordions.isActive || buttons.isActive || badges.isActive || breadcrumbs.isActive || dropdowns.isActive || modals.isActive || notifications.isActive || progressbar.isActive || pagination.isActive || tabs.isActive || typography.isActive || tooltips.isActive }">
       <a class="nav-link" (click)="uiBasicCollapsed = !uiBasicCollapsed" [attr.aria-expanded]="uiBasicCollapsed"
         aria-controls="ui-basic">
@@ -57,7 +57,7 @@
               #tooltips="routerLinkActive">Tooltips</a></li>
         </ul>
       </div>
-    </li>
+    </li>-->
     <!--<li class="nav-item" [ngClass]="{ 'active': forms.isActive }">
       <a class="nav-link" routerLink="forms/basic-elements" routerLinkActive #forms="routerLinkActive">
         <span class="menu-title">Form elements</span>
@@ -70,31 +70,15 @@
         <i class="mdi mdi-table-large menu-icon"></i>
       </a>
     </li>-->
-    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
+    <!--<li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
       <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
         <span class="menu-title">Icons</span>
         <i class="mdi mdi-contacts menu-icon"></i>
       </a>
-    </li>
+    </li>-->
 
 
-    <li class="nav-item" [ngClass]="{ 'active': user.isActive || userManagement.isActive || userExternal.isActive}">
-      <a class="nav-link" (click)="userManagementCollapsed = !userManagementCollapsed"
-        [attr.aria-expanded]="userManagementCollapsed" aria-controls="ui-basic" routerLinkActive
-        #userManagement="routerLinkActive">
-        <span class="menu-title">{{'menu.usertitle' | translate }}</span>
-        <i class="menu-arrow"></i>
-        <i class="mdi mdi-account menu-icon"></i>
-      </a>
-      <div class="collapse" id="ui-basic" [ngbCollapse]="!userManagementCollapsed">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-management" routerLinkActive="active"
-              #user="routerLinkActive">{{ 'menu.user' | translate }}</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-external" routerLinkActive="active"
-              #userExternal="routerLinkActive">{{ 'menu.externalusers' | translate }}</a></li>
-        </ul>
-      </div>
-    </li>
+
 
     <li class="nav-item"
       [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || sensorType.isActive || epis.isActive  }">
@@ -113,6 +97,24 @@
               #reasonVisit="routerLinkActive">{{ 'menu.reasonvisit' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/epis" routerLinkActive="active"
               #epis="routerLinkActive">{{ 'menu.epis' | translate }}</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item" [ngClass]="{ 'active': user.isActive || userManagement.isActive || userExternal.isActive}">
+      <a class="nav-link" (click)="userManagementCollapsed = !userManagementCollapsed"
+        [attr.aria-expanded]="userManagementCollapsed" aria-controls="ui-basic" routerLinkActive
+        #userManagement="routerLinkActive">
+        <span class="menu-title">{{'menu.usertitle' | translate }}</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-account menu-icon"></i>
+      </a>
+      <div class="collapse" id="ui-basic" [ngbCollapse]="!userManagementCollapsed">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-management" routerLinkActive="active"
+              #user="routerLinkActive">{{ 'menu.user' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-external" routerLinkActive="active"
+              #userExternal="routerLinkActive">{{ 'menu.externalusers' | translate }}</a></li>
         </ul>
       </div>
     </li>

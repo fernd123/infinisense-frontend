@@ -15,7 +15,9 @@
       <label for="name">{{ 'image'  | translate }}</label>
       <input type="file" class="form-control" id="image" #image placeholder="{{ 'image'  | translate }}" id="sensorLogo"
         (change)="readURL(image)">
-      <img height="100px" width="100px" id="sensorPreview" [src]="this.sensorTypeForm.get('image').value" *ngIf="this.sensorTypeForm.get('image').value" />
+      <div style="margin-top: 10px;">
+        <img height="100px" width="100px" id="sensorPreview" [src]="this.sensorTypeForm.get('image').value" *ngIf="this.sensorTypeForm.get('image').value" />
+      </div>
     </div>
 
     <div class="form-check form-check-flat form-check-primary">

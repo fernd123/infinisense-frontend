@@ -73,7 +73,7 @@ export class PlantCoordsSaveComponent implements OnInit {
       sensorType: ["", null],
       coordinates: [""],
       sensorId: [""],
-      status: ["Activo"]
+      status: [null]
     });
 
     /* Load epis */
@@ -110,7 +110,6 @@ export class PlantCoordsSaveComponent implements OnInit {
   markEpisCheckbox(load = false) {
     if (!this.loaded) {
       this.loaded = load;
-      console.log("----------------"+this.loaded);
       let episInput = document.getElementsByClassName('form-check-input');
       if (episInput != undefined) {
         let episList = this.epis != null && this.epis.length > 0 ? this.epis.split(',') : [];

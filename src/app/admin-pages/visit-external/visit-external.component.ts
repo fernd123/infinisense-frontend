@@ -1,6 +1,8 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { VisitService } from 'src/app/core/services/visit.service';
 import { Visit } from 'src/app/shared/models/visit.model';
@@ -12,23 +14,82 @@ import { Visit } from 'src/app/shared/models/visit.model';
 })
 export class VisitExternalComponent implements OnInit {
 
+  @ViewChild('optionFilter') optionFilter: any;
   reasonForm: FormGroup;
-  visitList: Visit[];
+  data: Visit[];
   optionList: any = [
     { name: "Visitas de hoy", value: "t" },
     { name: "Visitas de la semana", value: "w" },
     { name: "Visitas del mes", value: "m" },
     { name: "Visitas sin terminar", value: "p" }
   ];
-  @ViewChild('optionFilter') optionFilter: any;
   optionValue: string = this.optionList[0].value;
+  /* Table Settings */
+  settings = {
+    columns: {
+      user: {
+        title: this.translateService.instant('visit.person'),
+        valuePrepareFunction: (data) => {
+          if (data != null) {
+            return `${data?.firstname} ${data?.lastname}`;
+          }
+        }
+      },
+      reason: {
+        title: this.translateService.instant('visit.reason'),
+        valuePrepareFunction: (data) => {
+          if (data != null) {
+            return `${data?.name}`;
+          }
+        }
+      },
+      startDate: {
+        title: this.translateService.instant('visit.startdate'),
+        type: 'date',
+        valuePrepareFunction: (data) => {
+          if (data != null) {
+            return this.datePipe.transform(data, 'dd/MM/yyyy HH:mm');
+          }
+        }
+      }, endDate: {
+        title: this.translateService.instant('visit.enddate'),
+        valuePrepareFunction: (data) => {
+          if (data != null) {
+            return this.datePipe.transform(data, 'dd/MM/yyyy HH:mm');
+          }
+        }
+      }
+    },
+    actions: {
+      columnTitle: this.translateService.instant('actions'),
+      add: false,
+      edit: false,
+      delete: false,
+      custom: [
+        { name: 'update', title: '<i class="mdi mdi-exit-to-app"></i>' },
+      ],
+      position: 'right'
+    },
+    attr: {
+      class: 'table table-bordered'
+    },
+    rowClassFunction: (row) => {
+      // row css
+    },
+    pager: {
+      display: true,
+      perPage: 10
+    }
+  };
+
   constructor(private formBuilder: FormBuilder,
     private visitService: VisitService,
     private alertService: AlertService,
-    private modalService: NgbModal) { }
+    private datePipe: DatePipe,
+    private translateService: TranslateService
+  ) { }
 
   ngOnInit() {
-
     this.refreshList();
     this.reasonForm = this.formBuilder.group({
       name: [null, Validators.required],
@@ -41,14 +102,13 @@ export class VisitExternalComponent implements OnInit {
     let filter = this.optionList[0].value; // default
     filter = this.optionFilter != null ? this.optionList[this.optionFilter.nativeElement.selectedIndex].value : filter;
     this.visitService.getVisits("a", filter).subscribe((res: Visit[]) => {
-      this.visitList = res.filter((f: Visit) => {
+      this.data = res.filter((f: Visit) => {
         let today = new Date();
         let [start, end] = this.getWeekDates();
         let month = today.getMonth();
-        let day = today.getDay();
+        let day = today.getDate();
         let dateVisit = new Date(f.startDate);
-
-        if (filter == 't' && dateVisit.getDay() == day) {
+        if (filter == 't' && dateVisit.getDate() == day) {
           return f;
         } else if (filter == 'w' && dateVisit.getDate() >= start.getDate() && dateVisit.getDate() <= end.getDate()) {
           return f;
@@ -79,8 +139,8 @@ export class VisitExternalComponent implements OnInit {
     return [start, end];
   }
 
-  updateVisit(cosa: any) {
-    this.visitService.updateVisit(cosa, "").subscribe((res: any) => {
+  updateVisit(visit: any) {
+    this.visitService.updateVisit(visit, "").subscribe((res: any) => {
       let options = {
         autoClose: true,
         keepAfterRouteChange: true
@@ -88,5 +148,13 @@ export class VisitExternalComponent implements OnInit {
       this.alertService.success("Salida marcada correctamente", options);
       this.refreshList();
     });
+  }
+
+  onCustomAction(event) {
+    switch (event.action) {
+      case 'update':
+        this.updateVisit(event.data);
+        break;
+    }
   }
 }

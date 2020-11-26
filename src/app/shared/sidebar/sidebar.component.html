@@ -77,7 +77,8 @@
       </a>
     </li>
 
-    <li class="nav-item" [ngClass]="{ 'active': user.isActive || userManagement.isActive }">
+
+    <li class="nav-item" [ngClass]="{ 'active': user.isActive || userManagement.isActive || userExternal.isActive}">
       <a class="nav-link" (click)="userManagementCollapsed = !userManagementCollapsed"
         [attr.aria-expanded]="userManagementCollapsed" aria-controls="ui-basic" routerLinkActive
         #userManagement="routerLinkActive">
@@ -89,12 +90,14 @@
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-management" routerLinkActive="active"
               #user="routerLinkActive">{{ 'menu.user' | translate }}</a></li>
+          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-external" routerLinkActive="active"
+              #userExternal="routerLinkActive">{{ 'menu.externalusers' | translate }}</a></li>
         </ul>
       </div>
     </li>
 
     <li class="nav-item"
-      [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || visit.isActive || userExternal.isActive || sensorType.isActive || epis.isActive  }">
+      [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || sensorType.isActive || epis.isActive  }">
       <a class="nav-link" (click)="masterDataCollapsed = !masterDataCollapsed"
         [attr.aria-expanded]="masterDataCollapsed" aria-controls="ui-basic" routerLinkActive
         #masterData="routerLinkActive">
@@ -110,10 +113,21 @@
               #reasonVisit="routerLinkActive">{{ 'menu.reasonvisit' | translate }}</a></li>
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/epis" routerLinkActive="active"
               #epis="routerLinkActive">{{ 'menu.epis' | translate }}</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item" [ngClass]="{ 'active': visitexternal.isActive || visit.isActive  }">
+      <a class="nav-link" (click)="visitDataCollapsed = !visitDataCollapsed" [attr.aria-expanded]="visitDataCollapsed"
+        aria-controls="ui-basic" routerLinkActive #visitexternal="routerLinkActive">
+        <span class="menu-title">{{ 'menu.visits' | translate }}</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-calendar menu-icon"></i>
+      </a>
+      <div class="collapse" id="ui-basic" [ngbCollapse]="!visitDataCollapsed">
+        <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/visit-external" routerLinkActive="active"
               #visit="routerLinkActive">{{ 'menu.visits' | translate }}</a></li>
-          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/user-external" routerLinkActive="active"
-              #userExternal="routerLinkActive">{{ 'menu.externalusers' | translate }}</a></li>
         </ul>
       </div>
     </li>

@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
+import { statusList } from 'src/app/shared/constants/app.constants';
 import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
-import { SensorType } from 'src/app/shared/models/sensorType.model';
 import { PlantSensorSaveComponent } from './save/plant-sensor-save.component';
 
 @Component({
@@ -18,7 +19,7 @@ export class PlantSensorComponent implements OnInit {
 
   reasonForm: FormGroup;
   plantList: Plant[] = [];
-  plantCoordsList: PlantCoordinates[] = [];
+  data: PlantCoordinates[] = [];
   selectedPlantUuid: string;
 
   @ViewChild('modalWindow') modalWindow: any;
@@ -29,9 +30,63 @@ export class PlantSensorComponent implements OnInit {
   reasonEditUuid: string;
   titleModal: string;
 
+  /* Table Settings */
+  settings = {
+    columns: {
+      name: {
+        title: this.translateService.instant('name'),
+        width: '20%'
+      },
+      sensorType: {
+        title: this.translateService.instant('plant.sensortype'),
+        valuePrepareFunction: (data) => {
+          return data.name;
+        },
+      },
+      sensorId: {
+        title: this.translateService.instant('plant.sensorid'),
+      },
+      status: {
+        title: this.translateService.instant('status'),
+        filter: {
+          type: 'list',
+          config: {
+            selectText: this.translateService.instant('status'),
+            list: statusList,
+          },
+        },
+      }
+    },
+    actions: {
+      columnTitle: this.translateService.instant('actions'),
+      add: false,
+      edit: false,
+      delete: false,
+      custom: [
+        { name: 'edit', title: '<i class="mdi mdi-grease-pencil btn-icon-append"></i>' },
+        { name: 'remove', title: '<i class="mdi mdi-delete"></i>' }
+      ],
+      position: 'right'
+    },
+    edit: {
+      editButtonContent: '<i class="mdi mdi-grease-pencil btn-icon-append"></i>'
+    },
+    attr: {
+      class: 'table table-bordered'
+    },
+    rowClassFunction: (row) => {
+      // row css
+    },
+    pager: {
+      display: true,
+      perPage: 10
+    }
+  };
+
   constructor(
     private plantService: PlantService,
     private plantCoordsService: PlantCoordsService,
+    private translateService: TranslateService,
     private modalService: NgbModal
   ) { }
 
@@ -51,9 +106,13 @@ export class PlantSensorComponent implements OnInit {
 
   refreshList() {
     try {
-      let filter = this.optionFilter != null ? this.plantList[this.optionFilter.nativeElement.selectedIndex].uuid : this.plantList[0].uuid;
+      let selectedIndex = this.optionFilter.nativeElement.selectedIndex;
+      if (selectedIndex < 0) {
+        selectedIndex = 0;
+      }
+      let filter = this.optionFilter != null ? this.plantList[selectedIndex].uuid : this.plantList[0].uuid;
       this.plantCoordsService.getPlantPlaneByPlant(filter, ZoneType.se, "").subscribe((res: PlantCoordinates[]) => {
-        this.plantCoordsList = res;
+        this.data = res;
       });
     } catch (ex) {
 
@@ -74,4 +133,19 @@ export class PlantSensorComponent implements OnInit {
     this.modalService.dismissAll();
     this.reasonForm.reset();
   }
+
+  onCustomAction(event) {
+    switch (event.action) {
+      case 'edit':
+        this.openSaveModal(event.data.uuid);
+        break;
+      case 'remove':
+        this.plantCoordsService.deleteVirtualZone(event.data.uuid, "").subscribe(res => {
+          this.refreshList();
+        });
+        break;
+    }
+  }
+
+
 }

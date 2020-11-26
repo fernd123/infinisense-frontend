@@ -27,6 +27,11 @@ export const BASEURL_DEV_EPI = BASEURL_PROXY + '/api/epi';
 export const NO_PHOTO_URL = "/assets/images/nophoto.jpg";
 export const MASTER_DATA_CATEGORY = '/masterdata/api/categories';
 
+export const statusList: any = [
+    { value: "Activo", title: "Activo" },
+    { value: "Mantenimiento", title: "Mantenimiento" },
+    { value: "Fuera de Servicio", title: "Fuera de Servicio" }
+  ];
 
 /* MESSAGES */
 export const SUCCESS = 'Success';

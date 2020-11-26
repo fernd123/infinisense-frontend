@@ -8,31 +8,7 @@
             class="mdi mdi-plus ml-1"></i></button>
       </div>
       <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead class="thead-dark">
-            <tr>
-              <th>
-                {{ 'name'  | translate }}
-              </th>
-              <th>
-                {{ 'description'  | translate }}
-              </th>
-              <th>{{ 'actions'  | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let sensorType of sensorTypeList">
-              <td>{{sensorType.name}}</td>
-              <td>{{sensorType.description}}</td>
-              <td>
-                <button type="button" class="btn btn-warning btn-sm btn-icon-text"
-                  (click)="openSaveModal(sensorType.uuid)">
-                  <i class="mdi mdi-grease-pencil btn-icon-append"></i>
-                </button>
-              </td>
-            <tr>
-          </tbody>
-        </table>
+        <ng2-smart-table [settings]="settings" [source]="data" (custom)="onCustomAction($event)"></ng2-smart-table>
       </div>
     </div>
   </div>

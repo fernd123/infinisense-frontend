@@ -8,40 +8,8 @@
             class="mdi mdi-plus ml-1"></i></button>
       </div>
       <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead class="thead-dark">
-            <tr>
-              <th>{{ 'plant.plant'  | translate }}</th>
-              <th>{{ 'plant.location'  | translate }}</th>
-              <th>{{ 'plant.phone'  | translate }}</th>
-              <th>{{ 'plant.maximumcapacity'  | translate }}</th>
-              <th>{{ 'actions'  | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let plant of plantList">
-              <td>{{plant.name}}</td>
-              <td>{{plant.location}}</td>
-              <td>{{plant.phone}} / {{plant.alternativePhone}}</td>
-              <td>{{plant.maximumCapacity}}</td>
-              <td>
-                <button type="button" class="btn btn-warning btn-sm" (click)="openSaveModal(plant.uuid)">
-                  <i class="mdi mdi-grease-pencil btn-icon-append"></i>
-                </button>
-
-                <button type="button" class="btn btn-gradient-info btn-sm" (click)="navigateToPlane(plant.uuid, zonevirtual)">
-                  <i class="mdi mdi-map-marker"></i>
-                  {{ 'plant.zones'  | translate }}
-                </button>
-
-                <button type="button" class="btn btn-secondary btn-sm" (click)="navigateToPlane(plant.uuid, sensor)">
-                  <i class="mdi mdi-access-point"></i>
-                  {{ 'plant.sensorconfig'  | translate }}
-                </button>
-              </td>
-            <tr>
-          </tbody>
-        </table>
+        <ng2-smart-table [settings]="settings" [source]="data"
+        (custom)="onCustomAction($event)"></ng2-smart-table>
       </div>
     </div>
   </div>

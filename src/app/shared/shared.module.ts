@@ -7,6 +7,7 @@ import { AlertModule } from './alert/alert.module';
 import { VirtualizationComponent } from './virtualization/virtualization.component';
 import { ModalComponent } from './modal/modal.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
   exports: [
     CommonModule,
     NgbModule,
+    Ng2SmartTableModule,
     TranslateModule,
     VirtualizationComponent,
     ModalComponent,

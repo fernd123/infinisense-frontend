@@ -10,26 +10,7 @@
         </div>
       </div>
       <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead class="thead-dark">
-            <tr>
-              <th>{{ 'name'  | translate }}</th>
-              <th>{{ 'user.lastname'  | translate }}</th>
-              <th>{{ 'user.dni'  | translate }}</th>
-              <th>{{ 'user.email'  | translate }}</th>
-              <th>{{ 'user.company'  | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of userList">
-              <td>{{user.firstname}}</td>
-              <td>{{user.lastname}}</td>
-              <td>{{user.dni}}</td>
-              <td>{{user.email}}</td>
-              <td>{{user.company}}</td>
-            <tr>
-          </tbody>
-        </table>
+        <ng2-smart-table [settings]="settings" [source]="data" (custom)="onCustomAction($event)"></ng2-smart-table>
       </div>
     </div>
   </div>

@@ -8,28 +8,7 @@
             class="mdi mdi-plus ml-1"></i></button>
       </div>
       <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead class="thead-dark">
-            <tr>
-              <th>{{ 'reason.reason' | translate }}</th>
-              <th>{{ 'description' | translate }}</th>
-              <th>{{ 'reason.relatedto' | translate }}</th>
-              <th>{{ 'actions' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let reason of reasonList">
-              <td>{{reason.name}}</td>
-              <td>{{reason.description}}</td>
-              <td>{{reason.plantZone?.plant?.name}} - {{reason.plantZone?.name}}</td>
-              <td>
-                <button type="button" class="btn btn-warning btn-sm btn-icon-text" (click)="openSaveModal(reason.uuid)">
-                  <i class="mdi mdi-grease-pencil btn-icon-append"></i>
-                </button>
-              </td>
-            <tr>
-          </tbody>
-        </table>
+        <ng2-smart-table [settings]="settings" [source]="data" (custom)="onCustomAction($event)"></ng2-smart-table>
       </div>
     </div>
   </div>

@@ -1,15 +1,16 @@
 /* Pagination */
-
-.pagination{
+.pagination {
   .page-item {
     .page-link {
       border-color: $border-color;
       color: color(black);
-      font-size: .875rem;
+      font-size: inherit !important;
       @include transition-duration(0.3s);
-      &:focus{
+
+      &:focus {
         background: inherit;
       }
+
       i {
         &:before {
           font-size: inherit;
@@ -18,6 +19,7 @@
         }
       }
     }
+
     &.active,
     &:hover,
     &:focus,
@@ -29,72 +31,88 @@
       }
     }
   }
-  &.flat{
-    .page-item{
-      .page-link{
+
+  &.flat {
+    .page-item {
+      .page-link {
         border: none;
         @include border-radius(2px);
       }
     }
   }
-  &.separated{
-    .page-item{
+
+  &.separated {
+    .page-item {
       margin-left: 2px;
       margin-right: 2px;
-      &:first-child{
+
+      &:first-child {
         margin-left: 0;
       }
-      &:last-child{
+
+      &:last-child {
         margin-right: 0;
       }
-      .page-link{
+
+      .page-link {
         @include border-radius(2px);
       }
     }
   }
-  &.rounded{
-    .page-item{
-      .page-link{}
-      &:first-child{
-        .page-link{
+
+  &.rounded {
+    .page-item {
+      .page-link {}
+
+      &:first-child {
+        .page-link {
           @include border-radius(25px 0 0 25px);
         }
       }
-      &:last-child{
-        .page-link{
+
+      &:last-child {
+        .page-link {
           @include border-radius(0 25px 25px 0);
         }
       }
     }
   }
-  &.rounded-flat{
-    .page-item{
+
+  &.rounded-flat {
+    .page-item {
       margin-right: 3px;
       margin-left: 3px;
-      .page-link{
+
+      .page-link {
         border: none;
         @include border-radius(50px);
 
       }
     }
   }
-  &.rounded-separated{
-    .page-item{
+
+  &.rounded-separated {
+    .page-item {
       margin-left: 2px;
       margin-right: 2px;
-      &:first-child{
+
+      &:first-child {
         margin-left: 0;
-        .page-link{
+
+        .page-link {
           @include border-radius(10px 0 0 10px);
         }
       }
-      &:last-child{
+
+      &:last-child {
         margin-right: 0;
-        .page-link{
+
+        .page-link {
           @include border-radius(0 10px 10px 0);
         }
       }
-      .page-link{
+
+      .page-link {
         @include border-radius(2px);
       }
     }
@@ -103,7 +121,8 @@
 
 
 /* pagination variations */
-@each $color, $value in $theme-colors {
+@each $color,
+$value in $theme-colors {
   .pagination-#{$color} {
     @include pagination-variants($value);
   }

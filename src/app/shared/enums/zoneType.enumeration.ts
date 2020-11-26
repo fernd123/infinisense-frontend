@@ -1,6 +1,6 @@
 export enum ZoneType {
     "" = "Tipo de virtualización",
-    zv = "Zona Virtual", // Zona virtual
-    se = "Sensor", // Sensor
-    pe = "Punto Encuentro", // Punto de encuentro
+    zv = "zv", // Zona virtual
+    se = "se", // Sensor
+    pe = "pe", // Punto de encuentro
   }

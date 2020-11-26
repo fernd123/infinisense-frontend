@@ -77,8 +77,8 @@ export class VisitReasonSaveComponent implements OnInit {
   }
 
   loadPlantZone(removePlantZone = false) {
-    this.plantZoneService.getPlantCoordinates(this.reasonForm.get('plant').value, "").subscribe((res: PlantCoordinates[]) => {
-      this.plantZoneList = res.filter(r => { return r.virtualZoneType == ZoneType.zv });
+    this.plantZoneService.getPlantPlaneByPlant(this.reasonForm.get('plant').value, ZoneType.zv, "").subscribe((res: PlantCoordinates[]) => {
+      this.plantZoneList = res;
       if (removePlantZone) {
         this.reasonForm.get('plantZone').setValue(null);
       }

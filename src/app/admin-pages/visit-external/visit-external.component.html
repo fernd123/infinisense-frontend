@@ -15,40 +15,7 @@
         </div>
       </div>
       <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead class="thead-dark">
-            <tr>
-              <th>
-                {{ 'visit.person' | translate }}
-              </th>
-              <th>
-                {{ 'visit.reason' | translate }}
-              </th>
-              <th>
-                {{ 'visit.startdate' | translate }}
-              </th>
-              <th>
-                {{ 'visit.enddate' | translate }}
-              </th>
-              <th> {{ 'actions' | translate }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let visit of visitList">
-              <td>{{visit.user.firstname}} {{visit.user.lastname}}</td>
-              <td>{{visit.reason.name}}</td>
-              <td>{{visit.startDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-              <td>{{visit.endDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-              <td>
-                <button type="button" class="btn btn-info btn-sm btn-icon-text" (click)="updateVisit(visit)"
-                  *ngIf="visit.endDate == null">
-                  <i class="mdi mdi-exit-to-app btn-icon-append"></i> {{ 'visit.checkexit' | translate }}
-                </button>
-              </td>
-            <tr>
-          </tbody>
-        </table>
+        <ng2-smart-table [settings]="settings" [source]="data" (custom)="onCustomAction($event)"></ng2-smart-table>
       </div>
     </div>
   </div>

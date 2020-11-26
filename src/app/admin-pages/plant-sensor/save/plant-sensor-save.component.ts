@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
+import { statusList } from 'src/app/shared/constants/app.constants';
 import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
@@ -19,6 +20,9 @@ export class PlantSensorSaveComponent implements OnInit {
 
   plantCoordsForm: FormGroup;
   modalTitle: string = this.translate.instant('plant.newcoordinatetitle');
+  sensor : string = ZoneType.se;
+  zonevirtual : string = ZoneType.zv;
+  statusList: any = statusList;
 
   zoneTypeList: any = [
     { value: "", name: "Tipo de virtualización" },
@@ -27,18 +31,10 @@ export class PlantSensorSaveComponent implements OnInit {
     { value: ZoneType.pe, name: "Punto encuentro" }
   ];
 
-  statusList: any = [
-    { value: "Activo", name: "Activo" },
-    { value: "Mantenimiento", name: "Mantenimiento" },
-    { value: "Fuera de Servicio", name: "Fuera de Servicio" }
-  ];
-
   sensorTypeList: SensorType[];
   editionMode: boolean = false;
   @Input() public plantCoordId;
   @Input() public plantId;
-
-
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,6 +55,7 @@ export class PlantSensorSaveComponent implements OnInit {
       status: ["Activo", Validators.required]
     });
 
+    this.plantCoordsForm.get('virtualZoneType').disable();
     this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
       this.sensorTypeList = res;
     });

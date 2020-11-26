@@ -32,6 +32,8 @@
     "image-map-creator": "^1.1.9",
     "jquery": "^3.5.1",
     "ng2-charts": "^2.4.2",
+    "ng2-completer": "^9.0.1",
+    "ng2-smart-table": "^1.7.2",
     "node-sass": "^4.14.1",
     "p5": "^1.1.9",
     "rxjs": "~6.6.3",

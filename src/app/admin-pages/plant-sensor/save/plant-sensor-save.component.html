@@ -28,7 +28,7 @@
     <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == sensor">
       <label for="status">{{ 'status'  | translate }}</label>
       <select class="form-control" id="status" #sensorTypeHtml formControlName="status">
-        <option [value]="status.name" *ngFor="let status of statusList">{{status.name}}</option>
+        <option [value]="status.value" *ngFor="let status of statusList">{{status.title}}</option>
       </select>
     </div>
 

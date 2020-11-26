@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AlertService } from 'src/app/core/services/alert.service';
-import { ReasonService } from 'src/app/core/services/reason.service';
+import { TranslateService } from '@ngx-translate/core';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
-import { Reason } from 'src/app/shared/models/reason.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
 import { SensorTypeSaveComponent } from './save/sensor-type-save.component';
 
@@ -15,16 +12,52 @@ import { SensorTypeSaveComponent } from './save/sensor-type-save.component';
 })
 export class SensorTypeComponent implements OnInit {
 
-  reasonForm: FormGroup;
-  sensorTypeList: SensorType[];
+  data: SensorType[];
   @ViewChild('modalWindow') modalWindow: any;
   editionMode: boolean = false;
   reasonEditUuid: string;
   titleModal: string;
 
-  constructor(private formBuilder: FormBuilder,
+  /* Table Settings */
+  settings = {
+    columns: {
+      name: {
+        title: this.translateService.instant('name'),
+        width: '20%'
+      },
+      description: {
+        title: this.translateService.instant('description'),
+      }
+    },
+    actions: {
+      columnTitle: this.translateService.instant('actions'),
+      add: false,
+      edit: false,
+      delete: false,
+      custom: [
+        { name: 'edit', title: '<i class="mdi mdi-grease-pencil btn-icon-append"></i>' },
+        { name: 'remove', title: '<i class="mdi mdi-delete"></i>' }
+      ],
+      position: 'right'
+    },
+    edit: {
+      editButtonContent: '<i class="mdi mdi-grease-pencil btn-icon-append"></i>'
+    },
+    attr: {
+      class: 'table table-bordered'
+    },
+    rowClassFunction: (row) => {
+      // row css
+    },
+    pager: {
+      display: true,
+      perPage: 10
+    }
+  };
+
+  constructor(
     private sensorTypeService: SensorTypeService,
-    private alertService: AlertService,
+    private translateService: TranslateService,
     private modalService: NgbModal) { }
 
   ngOnInit() {
@@ -33,7 +66,7 @@ export class SensorTypeComponent implements OnInit {
 
   refreshList() {
     this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
-      this.sensorTypeList = res;
+      this.data = res;
     });
   }
 
@@ -49,6 +82,18 @@ export class SensorTypeComponent implements OnInit {
 
   closeModal() {
     this.modalService.dismissAll();
-    this.reasonForm.reset();
+  }
+
+  onCustomAction(event) {
+    switch (event.action) {
+      case 'edit':
+        this.openSaveModal(event.data.uuid);
+        break;
+      case 'remove':
+        this.sensorTypeService.deleteSensorType(event.data.uuid, "").subscribe(res => {
+          this.refreshList();
+        });
+        break;
+    }
   }
 }

@@ -21,6 +21,7 @@ import { CoreModule } from './core/core.module';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'; import { HttpClient } from '@angular/common/http';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 
 // AoT requires an exported function for factories
@@ -50,6 +51,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ChartsModule,
     CoreModule,
     SignaturePadModule,
+    Ng2SmartTableModule,
     SharedModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

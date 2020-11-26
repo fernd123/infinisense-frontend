@@ -8,11 +8,12 @@
           <option [value]="plant.uuid" *ngFor="let plant of plantList">{{plant.name}}</option>
         </select>
 
-        <!--<button type="button" class="btn btn-primary btn-sm" (click)="openSaveModal(null)">{{ 'new' | translate }}<i
-            class="mdi mdi-plus ml-1"></i></button>-->
       </div>
       <div class="table-responsive">
-        <table class="table table-bordered">
+
+        <ng2-smart-table [settings]="settings" [source]="data" (custom)="onCustomAction($event)"></ng2-smart-table>
+
+        <!--<table class="table table-bordered">
           <thead class="thead-dark">
             <tr>
               <th>{{ 'name'  | translate }}</th>
@@ -40,7 +41,7 @@
               </td>
             <tr>
           </tbody>
-        </table>
+        </table> -->
       </div>
     </div>
   </div>

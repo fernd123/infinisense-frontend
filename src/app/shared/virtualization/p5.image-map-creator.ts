@@ -279,13 +279,11 @@ export class imageMapCreator {
 							break;
 						case "seleccionar":
 							if (this.hoveredPoint !== null) {
-								console.log("1");
 								this.selection.addPoint(this.hoveredPoint);
 								this.selection.registerArea(this.hoveredArea!);
 								this.selection.resetOrigin(this.hoveredPoint);
 								this.lastAction = "select";
 							} else if (this.hoveredArea !== null) {
-								console.log("2");
 								this.selection.addArea(this.hoveredArea);
 								this.selection.resetOrigin(this.mCoord());
 								this.lastAction = "select";

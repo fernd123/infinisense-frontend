@@ -41,19 +41,19 @@ export class SidebarComponent implements OnInit {
 
     // User data
     let data: any = this.authService.getTokenInfo();
-
-    this.userService.getUserByUuid(data.uuid, "").subscribe((res: User) => {
-      if (res != undefined) {
-        let firstName = res.firstname;
-        let lastName = res.lastname;
-        let initials = firstName.charAt(0) + lastName.charAt(0);
-        this.name = firstName + " " + lastName;
-        if (this.name.length > 15) {
-          this.name = this.name.substr(0, 15) + ".";
+    if (data != undefined)
+      this.userService.getUserByUuid(data.uuid, "").subscribe((res: User) => {
+        if (res != undefined) {
+          let firstName = res.firstname;
+          let lastName = res.lastname;
+          let initials = firstName.charAt(0) + lastName.charAt(0);
+          this.name = firstName + " " + lastName;
+          if (this.name.length > 15) {
+            this.name = this.name.substr(0, 15) + ".";
+          }
+          document.getElementById('profileImage').innerHTML = initials.toUpperCase();
         }
-        document.getElementById('profileImage').innerHTML = initials.toUpperCase();
-      }
-    });
+      });
   }
 
 }

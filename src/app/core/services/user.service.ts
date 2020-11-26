@@ -56,10 +56,9 @@ export class UserService {
         // Save petition options into a variable
         const options = { headers: tokenHeaders };
 
-        const loginURL = this.urlEndPoint;
 
         // Execute the request
-        return this.http.get(loginURL, options);
+        return this.http.get(this.urlEndPoint + "/external", options);
     }
 
     getInternalUsers(arg0: string) {

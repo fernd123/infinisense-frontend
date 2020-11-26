@@ -7,6 +7,7 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { EpiService } from 'src/app/core/services/epi.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
+import { statusList } from 'src/app/shared/constants/app.constants';
 import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Epi } from 'src/app/shared/models/epi.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
@@ -73,7 +74,7 @@ export class PlantCoordsSaveComponent implements OnInit {
       sensorType: ["", null],
       coordinates: [""],
       sensorId: [""],
-      status: [null]
+      status: [statusList[0].value]
     });
 
     /* Load epis */

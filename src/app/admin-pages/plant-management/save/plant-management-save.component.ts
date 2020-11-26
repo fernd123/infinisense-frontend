@@ -77,9 +77,9 @@ export class PlantManagementSaveComponent implements OnInit {
   }
 
   delete() {
-    /*this.plantService.deletePlant(this.plantId, this.selectedAreaId).subscribe(res => {
+    this.plantService.deletePlant(this.plantId, "").subscribe(res => {
       this.modalService.dismissAll("success");
-    });*/
+    });
   }
 
   closeModal() {

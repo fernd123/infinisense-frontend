@@ -41,13 +41,25 @@ export class PlantSensorComponent implements OnInit {
         title: this.translateService.instant('plant.sensortype'),
         valuePrepareFunction: (data) => {
           return data.name;
-        },
+        }
       },
       sensorId: {
         title: this.translateService.instant('plant.sensorid'),
       },
       status: {
         title: this.translateService.instant('status'),
+        type: 'html',
+        valuePrepareFunction: (data) => {
+          debugger;
+          switch (data) {
+            case statusList[0].value:
+              return `<span class="active">${data}</span>`;
+            case statusList[1].value:
+              return `<span class="maintenance">${data}</span>`;
+            case statusList[2].value:
+              return `<span class="outservice">${data}</span>`;
+          }
+        },
         filter: {
           type: 'list',
           config: {

@@ -15,12 +15,12 @@ import { Visit } from 'src/app/shared/models/visit.model';
 })
 export class UserExternalComponent implements OnInit {
 
-  userList: User[];
+  data: User[];
   /* Table Settings */
   settings = {
     columns: {
-      name: {
-        title: this.translateService.instant('name'),
+      firstname: {
+        title: this.translateService.instant('user.firstname'),
         width: '20%'
       },
       lastname: {
@@ -62,12 +62,8 @@ export class UserExternalComponent implements OnInit {
   }
 
   refreshList() {
-    this.userService.getExternalUsers("a").subscribe((res: User[]) => {
-      this.userList = res.filter((u: User) => {
-        if (u.roles == 'VISITOR') {
-          return u;
-        }
-      })
+    this.userService.getExternalUsers("").subscribe((res: User[]) => {
+      this.data = res;
     });
   }
 
@@ -88,5 +84,5 @@ export class UserExternalComponent implements OnInit {
 
     return [start, end];
   }
-  
+
 }

@@ -98,6 +98,17 @@ export class PlantService {
         }
     }
 
+    deletePlant(uuid: string, tenantId: string) {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+
+        return this.http.delete(this.urlEndPoint + "/" + uuid);
+
+    }
+
     upload(file: File, plantUuid: string, uuid: string): any {
         const formData: FormData = new FormData();
         formData.append('file', file);

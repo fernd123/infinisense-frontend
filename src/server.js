@@ -12,9 +12,9 @@ app.listen(app.get('port'), function() {
 });
 */
 
-app.use(express.static('dist/infinisense-frontend'));
+app.use(express.static('dist/infinisenseapp'));
 app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/infinisense-frontend/index.html'));
+    res.sendFile(path.join(__dirname, 'dist/infinisenseapp/index.html'));
 });
 
 app.listen(process.env.PORT || 8080, () => {

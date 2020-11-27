@@ -14,7 +14,7 @@ import * as ContextMenu from "./lib/contextmenu/contextmenu";
 import "./lib/contextmenu/contextmenu.css";
 //@ts-ignore strange way to import but it's working
 import p5 = require("p5");
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { ZoneType } from '../enums/zoneType.enumeration';
 
 export type Tool = "rectangulo" | "circulo" | "poligono" | "seleccionar" | "eliminar";/* | "test"*/;
@@ -34,10 +34,12 @@ export class Save {
 }
 
 @Component({
-	selector: 'infini-imagemapcreator'
+	selector: 'infini-imagemapcreator',
+	template: ''
 })
 export class imageMapCreator {
 
+	protected elementId: string;
 	protected width: number;
 	protected height: number;
 	protected tool: Tool;
@@ -98,8 +100,9 @@ export class imageMapCreator {
 	 * @param {number} width
 	 * @param {number} height
 	 */
-	constructor(elementId: string, width: number = 600, height: number = 450, typeConfig: ZoneType) {
+	constructor(@Inject(String)elementId: any, @Inject(Number)width: number = 600, @Inject(Number)height: number = 450, @Inject(ZoneType)typeConfig: ZoneType) {
 
+		this.elementId = elementId;
 		const element = document.getElementById(elementId);
 		if (!element) throw new Error('HTMLElement not found');
 		this.width = width;

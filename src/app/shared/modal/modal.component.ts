@@ -10,7 +10,7 @@ export class ModalComponent implements OnInit {
   @Input() title = 'Information';
 
   constructor(
-    private modalService: NgbModal
+    public modalService: NgbModal
   ) { }
 
   ngOnInit() {

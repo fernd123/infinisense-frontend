@@ -57,4 +57,5 @@ export class LoginAdminComponent {
         this.error = true;
       })
   }
+  resetPassword(){}
 }

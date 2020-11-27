@@ -8,6 +8,7 @@ import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.servi
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
 import { statusList } from 'src/app/shared/constants/app.constants';
 import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
+import { Epi } from 'src/app/shared/models/epi.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
 
@@ -23,7 +24,7 @@ export class PlantSensorSaveComponent implements OnInit {
   sensor : string = ZoneType.se;
   zonevirtual : string = ZoneType.zv;
   statusList: any = statusList;
-
+  loaded: boolean = false;
   zoneTypeList: any = [
     { value: "", name: "Tipo de virtualización" },
     { value: ZoneType.zv, name: "Zona" },
@@ -32,6 +33,7 @@ export class PlantSensorSaveComponent implements OnInit {
   ];
 
   sensorTypeList: SensorType[];
+  epiList: Epi[]; //TODO
   editionMode: boolean = false;
   @Input() public plantCoordId;
   @Input() public plantId;
@@ -94,6 +96,22 @@ export class PlantSensorSaveComponent implements OnInit {
 
   closeModal() {
     this.modalService.dismissAll("exit");
+  }
+
+  markEpisCheckbox(load = false) {
+    /*if (!this.loaded) {
+      this.loaded = load;
+      let episInput = document.getElementsByClassName('form-check-input');
+      if (episInput != undefined) {
+        let episList = this.epis != null && this.epis.length > 0 ? this.epis.split(',') : [];
+        for (let i = 0; i < episInput.length; i++) {
+          let checkbox: any = episInput[i];
+          if (episList.includes(checkbox.id)) {
+            checkbox.checked = true;
+          }
+        }
+      }
+    }*/
   }
 }
 

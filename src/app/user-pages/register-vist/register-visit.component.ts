@@ -30,7 +30,7 @@ export class RegisterVisitComponent implements OnInit {
   loadSignature: boolean = true;
   userSignature = new Image();
 
-  private signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
+  public signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 0.5,
     'canvasWidth': 1200,
     'penColor': 'black',

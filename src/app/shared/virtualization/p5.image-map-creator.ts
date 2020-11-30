@@ -100,7 +100,7 @@ export class imageMapCreator {
 	 * @param {number} width
 	 * @param {number} height
 	 */
-	constructor(@Inject(String)elementId: any, @Inject(Number)width: number = 600, @Inject(Number)height: number = 450, @Inject(ZoneType)typeConfig: ZoneType) {
+	constructor(@Inject(String) elementId: any, @Inject(Number) width: number = 600, @Inject(Number) height: number = 450, @Inject(ZoneType) typeConfig: ZoneType) {
 
 		this.elementId = elementId;
 		const element = document.getElementById(elementId);
@@ -108,10 +108,10 @@ export class imageMapCreator {
 		this.width = width;
 		this.height = height;
 		this.typeConfig = typeConfig;
-		if(this.typeConfig == ZoneType.zv){
+		if (this.typeConfig == ZoneType.zv) {
 			this.tool = "rectangulo";
 			this.drawingTools = ["rectangulo", "circulo", "poligono", "seleccionar"];
-		}else if(this.typeConfig == ZoneType.se){
+		} else if (this.typeConfig == ZoneType.se) {
 			this.tool = "seleccionar";
 			this.drawingTools = ["seleccionar"];
 		}
@@ -497,28 +497,30 @@ export class imageMapCreator {
 	}
 
 	dropSensor(evt): void {
-		this.imgtest = this.p5.loadImage(this.itemURL);
-		this.tempArea = new AreaRect();
-		//this.tempArea.setShape("rect")
-		let coord = this.drawingCoord(); // origen izq (3.4)
-		let coord1 = new Coord(coord.x + 50, coord.y); // Derecha (3.5)
-		let coord2 = new Coord(coord.x, coord.y + 50); // Arriba (4.4)
-		let coord3 = new Coord(coord.x + 50, coord.y + 50); // Derecha arriba (4.5)
+		if (this.itemURL != undefined) {
+			this.imgtest = this.p5.loadImage(this.itemURL);
+			this.tempArea = new AreaRect();
+			//this.tempArea.setShape("rect")
+			let coord = this.drawingCoord(); // origen izq (3.4)
+			let coord1 = new Coord(coord.x + 50, coord.y); // Derecha (3.5)
+			let coord2 = new Coord(coord.x, coord.y + 50); // Arriba (4.4)
+			let coord3 = new Coord(coord.x + 50, coord.y + 50); // Derecha arriba (4.5)
 
-		this.setTempArea(coord);
-		this.tempArea.addCoord(coord);
-		this.tempArea.addCoord(coord1);
-		this.tempArea.addCoord(coord3);
-		this.tempArea.addCoord(coord2);
+			this.setTempArea(coord);
+			this.tempArea.addCoord(coord);
+			this.tempArea.addCoord(coord1);
+			this.tempArea.addCoord(coord3);
+			this.tempArea.addCoord(coord2);
 
-		this.createArea(this.tempArea);
-		this.lastAction = "add";
-		this.tempArea = new AreaEmpty();
+			this.createArea(this.tempArea);
+			this.lastAction = "add";
+			this.tempArea = new AreaEmpty();
 
-		//this.onClick(evt);
-		this.bgLayer.disappear();
-		//this.imgtest = null;
-		//this.drawAreas();
+			//this.onClick(evt);
+			this.bgLayer.disappear();
+			//this.imgtest = null;
+			//this.drawAreas();
+		}
 	}
 
 	doubleClicked(evt: MouseEvent) {

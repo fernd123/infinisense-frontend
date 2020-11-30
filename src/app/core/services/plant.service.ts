@@ -1,84 +1,44 @@
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { BASEURL_DEV_PLANT } from 'src/app/shared/constants/app.constants';
 import { Plant } from 'src/app/shared/models/plant.model';
-import { map, mergeMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({ providedIn: 'root' })
 export class PlantService {
 
     urlEndPoint: string = BASEURL_DEV_PLANT;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient,
+        private authService: AuthenticationService) { }
 
-    getPlants(tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+    getPlants() {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getPlantByUuid(plantId: string, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+    getPlantByUuid(plantId: string) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.get(this.urlEndPoint + "/" + plantId, options);
     }
 
-    getPlantPlaneByPlant(plantId: string, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
-        return this.http.get(this.urlEndPoint + `/${plantId}/planes`);
+    getPlantPlaneByPlant(plantId: string) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        return this.http.get(this.urlEndPoint + `/${plantId}/planes`, options);
     }
 
-    getPlantPlanes(filename: string, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
+    getPlantPlanes(filename: string) {
         let body = new URLSearchParams();
         body.set('filename', filename);
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
-        return this.http.get(this.urlEndPoint + `/planes/download/${filename}`, { responseType: 'blob' }).pipe(mergeMap(res => this.createImageFromBlob(res)));
+        let headers = this.authService.getHeadersTenancyDefault();
+        // TODO REVISAR
+        return this.http.get(this.urlEndPoint + `/planes/download/${filename}`, { headers, responseType: 'blob' }).pipe(mergeMap(res => this.createImageFromBlob(res)));
     }
 
-    savePlant(plant: Plant, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
+    savePlant(plant: Plant) {
         let body = new URLSearchParams();
         body.set('name', plant.name);
         body.set('location', plant.location);
@@ -86,11 +46,7 @@ export class PlantService {
         body.set('alternativePhone', plant.alternativePhone);
         body.set('maximumCapacity', plant.maximumCapacity);
 
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         if (plant.uuid == null) {
             return this.http.post(this.urlEndPoint, body.toString(), options);
         } else {
@@ -98,15 +54,9 @@ export class PlantService {
         }
     }
 
-    deletePlant(uuid: string, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-
-        return this.http.delete(this.urlEndPoint + "/" + uuid);
-
+    deletePlant(uuid: string) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        return this.http.delete(this.urlEndPoint + "/" + uuid, options);
     }
 
     upload(file: File, plantUuid: string, uuid: string): any {
@@ -118,11 +68,15 @@ export class PlantService {
             type = 'POST';
             url = `${this.urlEndPoint}/${plantUuid}/upload`;
         }
-
-        const req = new HttpRequest(type, url, formData, {
+        let headers = new HttpHeaders({
+            'X-TenantID': this.authService.getTenantId(),
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        let options = { headers: headers };
+        const req = new HttpRequest(type, url, formData, options/*{
             reportProgress: true,
             responseType: 'json'
-        });
+        }*/);
 
         return this.http.request(req);
     }

@@ -1,102 +1,48 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import { BASEURL_DEV_USER } from 'src/app/shared/constants/app.constants';
 import { User } from 'src/app/shared/models/user.model';
-
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-
-
-
     urlEndPoint: string = BASEURL_DEV_USER;
 
-    constructor(private http: HttpClient, private router: Router) { }
+
+    constructor(private http: HttpClient,
+        private authService: AuthenticationService) { }
 
     getUserByDni(dni: string) {
-        // Generate headers
-        const tokenHeaders = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic YW5ndWxhcjphbmd1bGFy`
-        });
-
-        // Save petition options into a variable
-        const options = { headers: tokenHeaders };
-
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         const loginURL = this.urlEndPoint + "/" + dni;
-
-        // Execute the request
         return this.http.get(loginURL, options);
     }
 
     getUserSignature(uuid: any) {
-        const tokenHeaders = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic YW5ndWxhcjphbmd1bGFy`
-        });
-
-        // Save petition options into a variable
-        const options = { headers: tokenHeaders };
-
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         const loginURL = this.urlEndPoint + "/" + uuid + "/signature";
-
-        // Execute the request
         return this.http.get(loginURL, { responseType: 'text' });
     }
 
-    getExternalUsers(tenantId: string) {
-        // Generate headers
-        const tokenHeaders = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic YW5ndWxhcjphbmd1bGFy`
-        });
-
-        // Save petition options into a variable
-        const options = { headers: tokenHeaders };
-
-
-        // Execute the request
+    getExternalUsers() {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.get(this.urlEndPoint + "/external", options);
     }
 
-    getInternalUsers(arg0: string) {
-        // Generate headers
-        const tokenHeaders = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic YW5ndWxhcjphbmd1bGFy`
-        });
-
-        // Save petition options into a variable
-        const options = { headers: tokenHeaders };
-
+    getInternalUsers() {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         const loginURL = this.urlEndPoint;
-
-        // Execute the request
         return this.http.get(loginURL, options);
     }
 
-    getUserByUuid(uuid: string, tenantId: string) {
-        const tokenHeaders = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic YW5ndWxhcjphbmd1bGFy`
-        });
-
-        // Save petition options into a variable
-        const options = { headers: tokenHeaders };
-
-        // Execute the request
+    getUserByUuid(uuid: string) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        debugger;
         return this.http.get(this.urlEndPoint + "/profile/" + uuid, options);
-
     }
 
-    saveUser(user: User, tenantId: string) {
-        const tokenHeaders = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic YW5ndWxhcjphbmd1bGFy`
-        });
-
+    saveUser(user: User) {
         let body = new URLSearchParams();
         body.set('username', user.username);
         body.set('firstname', user.firstname);
@@ -106,12 +52,9 @@ export class UserService {
         body.set('roles', user.roles);
         body.set('email', user.email);
         body.set('dni', user.dni);
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
 
         // Save petition options into a variable
-        const options = { headers: tokenHeaders };
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
 
         // Execute the request
         if (user.uuid == null) {

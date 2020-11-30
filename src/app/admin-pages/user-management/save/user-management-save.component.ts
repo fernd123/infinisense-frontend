@@ -48,7 +48,7 @@ export class UserManagementSaveComponent implements OnInit {
     });
     if (this.userId != null) {
       this.editionMode = true;
-      this.userService.getUserByUuid(this.userId, "").subscribe((res: User) => {
+      this.userService.getUserByUuid(this.userId).subscribe((res: User) => {
         if (res != undefined) {
           this.userForm.get('uuid').setValue(res.uuid);
           this.userForm.get('username').setValue(res.username);
@@ -83,7 +83,7 @@ export class UserManagementSaveComponent implements OnInit {
     user.roles = this.userForm.get('roles').value;
     user.active = this.userForm.get('active').value;
 
-    this.userService.saveUser(user, "").subscribe(res => {
+    this.userService.saveUser(user).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,

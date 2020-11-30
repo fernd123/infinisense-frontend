@@ -61,7 +61,7 @@ export class VisitReasonComponent implements OnInit {
       perPage: 10
     }
   };
-  
+
   constructor(
     private reasonService: ReasonService,
     private translateService: TranslateService,
@@ -72,7 +72,7 @@ export class VisitReasonComponent implements OnInit {
   }
 
   refreshList() {
-    this.reasonService.getReasons("").subscribe((res: Reason[]) => {
+    this.reasonService.getReasons().subscribe((res: Reason[]) => {
       this.data = res;
     });
   }
@@ -98,7 +98,7 @@ export class VisitReasonComponent implements OnInit {
         this.openSaveModal(event.data.uuid);
         break;
       case 'remove':
-        this.reasonService.deleteReason(event.data.uuid, "").subscribe(res => {
+        this.reasonService.deleteReason(event.data.uuid).subscribe(res => {
           this.refreshList();
         });
         break;

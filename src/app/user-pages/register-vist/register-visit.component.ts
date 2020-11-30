@@ -53,7 +53,7 @@ export class RegisterVisitComponent implements OnInit {
     this.translate.addLangs(['es', 'en']);
     this.translate.use('es');
 
-    this.reasonService.getReasons("").subscribe((res: any) => {
+    this.reasonService.getReasons().subscribe((res: any) => {
       this.reasonList = res;
     });
 
@@ -151,7 +151,7 @@ export class RegisterVisitComponent implements OnInit {
     visit.reason = this.registerForm.get('reason').value;
     visit.userUuid = "";
 
-    this.visitService.saveVisit(visit, user, "").subscribe(
+    this.visitService.saveVisit(visit, user).subscribe(
       (res: any) => {
         this.registerForm.get('dni').setValue(null);
 

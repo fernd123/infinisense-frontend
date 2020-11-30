@@ -43,7 +43,7 @@ export class SidebarComponent implements OnInit {
     // User data
     let data: any = this.authService.getTokenInfo();
     if (data != undefined)
-      this.userService.getUserByUuid(data.uuid, "").subscribe((res: User) => {
+      this.userService.getUserByUuid(data.uuid).subscribe((res: User) => {
         if (res != undefined) {
           let firstName = res.firstname;
           let lastName = res.lastname;

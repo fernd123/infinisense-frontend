@@ -40,7 +40,7 @@ export class PlantManagementSaveComponent implements OnInit {
 
     if (this.plantId != null) {
       this.editionMode = true;
-      this.plantService.getPlantByUuid(this.plantId, "").subscribe((res: Plant) => {
+      this.plantService.getPlantByUuid(this.plantId).subscribe((res: Plant) => {
         this.plantForm.get('uuid').setValue(res.uuid);
         this.plantForm.get('name').setValue(res.name);
         this.plantForm.get('location').setValue(res.location);
@@ -65,7 +65,7 @@ export class PlantManagementSaveComponent implements OnInit {
     plant.alternativePhone = this.plantForm.get('alternativePhone').value;
     plant.maximumCapacity = this.plantForm.get('maximumCapacity').value;
 
-    this.plantService.savePlant(plant, "").subscribe(res => {
+    this.plantService.savePlant(plant).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,
@@ -77,7 +77,7 @@ export class PlantManagementSaveComponent implements OnInit {
   }
 
   delete() {
-    this.plantService.deletePlant(this.plantId, "").subscribe(res => {
+    this.plantService.deletePlant(this.plantId).subscribe(res => {
       this.modalService.dismissAll("success");
     });
   }

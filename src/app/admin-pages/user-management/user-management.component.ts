@@ -74,7 +74,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   refreshList() {
-    this.userService.getInternalUsers("").subscribe((res: User[]) => {
+    this.userService.getInternalUsers().subscribe((res: User[]) => {
       this.data = res;
     });
   }

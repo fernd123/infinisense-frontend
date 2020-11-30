@@ -72,7 +72,7 @@ export class PlantManagementComponent implements OnInit {
   }
 
   refreshList() {
-    this.plantService.getPlants("").subscribe((res: Plant[]) => {
+    this.plantService.getPlants().subscribe((res: Plant[]) => {
       this.data = res;
     });
   }

@@ -54,7 +54,7 @@ export class VisitReasonSaveComponent implements OnInit {
     });
     if (this.visitReasonId != null) {
       this.editionMode = true;
-      this.reasonService.getReasonByUuid(this.visitReasonId, "").subscribe((res: Reason) => {
+      this.reasonService.getReasonByUuid(this.visitReasonId).subscribe((res: Reason) => {
         this.reasonForm.get('uuid').setValue(res.uuid);
         this.reasonForm.get('name').setValue(res.name);
         this.reasonForm.get('description').setValue(res.description);
@@ -71,13 +71,13 @@ export class VisitReasonSaveComponent implements OnInit {
   }
 
   loadData() {
-    this.plantService.getPlants("").subscribe((res: Plant[]) => {
+    this.plantService.getPlants().subscribe((res: Plant[]) => {
       this.plantList = res;
     });
   }
 
   loadPlantZone(removePlantZone = false) {
-    this.plantZoneService.getPlantPlaneByPlant(this.reasonForm.get('plant').value, ZoneType.zv, "").subscribe((res: PlantCoordinates[]) => {
+    this.plantZoneService.getPlantPlaneByPlant(this.reasonForm.get('plant').value, ZoneType.zv).subscribe((res: PlantCoordinates[]) => {
       this.plantZoneList = res;
       if (removePlantZone) {
         this.reasonForm.get('plantZone').setValue(null);
@@ -93,7 +93,7 @@ export class VisitReasonSaveComponent implements OnInit {
     reason.active = this.reasonForm.get('active').value;
     reason.plantZone = this.reasonForm.get('plantZone').value;
 
-    this.reasonService.saveReason(reason, "").subscribe(res => {
+    this.reasonService.saveReason(reason).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,
@@ -106,7 +106,7 @@ export class VisitReasonSaveComponent implements OnInit {
 
   delete() {
     let uuid = this.reasonForm.get('uuid').value;
-    this.reasonService.deleteReason(uuid, "").subscribe(res => {
+    this.reasonService.deleteReason(uuid).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,

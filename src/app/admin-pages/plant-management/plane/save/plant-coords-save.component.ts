@@ -1,9 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertService } from 'src/app/core/services/alert.service';
 import { EpiService } from 'src/app/core/services/epi.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
@@ -78,7 +76,7 @@ export class PlantCoordsSaveComponent implements OnInit {
     });
 
     /* Load epis */
-    this.epiService.getEpis("").subscribe((res: Epi[]) => {
+    this.epiService.getEpis().subscribe((res: Epi[]) => {
       this.epiList = res;
     });
 
@@ -87,8 +85,8 @@ export class PlantCoordsSaveComponent implements OnInit {
     this.plantCoordsForm.get('sensorType').disable();
     this.plantCoordsForm.get('sensorType').setValue(this.sensorTypeId);
     this.plantCoordsForm.get('virtualZoneType').setValue(this.typeConfig);
-    
-    this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
+
+    this.sensorTypeService.getSensorTypeList().subscribe((res: SensorType[]) => {
       this.sensorTypeList = res;
     });
 
@@ -148,7 +146,7 @@ export class PlantCoordsSaveComponent implements OnInit {
     }
     plantCoords.epis = selectedEpis;
 
-    this.plantCoordService.savePlantVirtual(plantCoords, "").subscribe(res => {
+    this.plantCoordService.savePlantVirtual(plantCoords).subscribe(res => {
       this.modalService.dismissAll("success");
     });
   }

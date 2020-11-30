@@ -25,7 +25,6 @@ export class PlanPlaneComponent implements OnInit {
 
   plantId: string;
   plantPlaneId: string;
-  tenantId: string;
   typeConfig: any;
   plant: Plant;
   selectedFiles: FileList;
@@ -50,15 +49,14 @@ export class PlanPlaneComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router) {
     this.plantId = this.router.getCurrentNavigation().extras.queryParams.plantId;
-    this.tenantId = this.router.getCurrentNavigation().extras.queryParams.tenantId;
     this.typeConfig = this.router.getCurrentNavigation().extras.queryParams.type;
-    this.plantService.getPlantByUuid(this.plantId, this.tenantId).subscribe((res: Plant) => {
+    this.plantService.getPlantByUuid(this.plantId).subscribe((res: Plant) => {
       this.plant = res;
       if (res != undefined) {
-        this.plantService.getPlantPlaneByPlant(this.plantId, this.tenantId).subscribe((resPp: PlantPlane) => {
+        this.plantService.getPlantPlaneByPlant(this.plantId).subscribe((resPp: PlantPlane) => {
           if (resPp != undefined) {
             this.plantPlaneId = resPp.uuid;
-            this.plantService.getPlantPlanes(resPp.name, 'tenantId').subscribe(res => {
+            this.plantService.getPlantPlanes(resPp.name).subscribe(res => {
               this.img = res;
               this.imageMapCreatorService.getImageMapCreator().setImage(this.img);
             });
@@ -72,8 +70,8 @@ export class PlanPlaneComponent implements OnInit {
   ngOnInit() {
     this.width = document.getElementById('virtualizationBody').offsetWidth - 200;
   }
-  
-  ngAfterViewInit(){
+
+  ngAfterViewInit() {
     this.imageMapCreatorService.getImageMapCreator().setTypeConfig(this.typeConfig);
   }
 
@@ -168,7 +166,7 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   private refreshVirtualZones() {
-    this.plantCoordService.getPlantPlaneByPlant(this.plantId, this.typeConfig, this.tenantId).subscribe((resPp: PlantCoordinates[]) => {
+    this.plantCoordService.getPlantPlaneByPlant(this.plantId, this.typeConfig).subscribe((resPp: PlantCoordinates[]) => {
       this.virtualizationList = resPp;
       let imageCreator = this.imageMapCreatorService.getImageMapCreator();
       imageCreator.clearAreas();
@@ -182,8 +180,8 @@ export class PlanPlaneComponent implements OnInit {
       }
 
       //if (areasStr.length != 0) {
-        let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${areasStr}],"name":"${this.plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;
-        imageCreator.importMap(mapFake);
+      let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${areasStr}],"name":"${this.plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;
+      imageCreator.importMap(mapFake);
       //}
     });
   }
@@ -198,7 +196,7 @@ export class PlanPlaneComponent implements OnInit {
     this.router.navigateByUrl("/admin-pages/plant-management");
   }
 
-  getTitleConfig(){
+  getTitleConfig() {
     return this.typeConfig == ZoneType.zv ? this.translateService.instant('plant.configuratedzones') : this.translateService.instant('plant.configuratedsensors');
   }
 }

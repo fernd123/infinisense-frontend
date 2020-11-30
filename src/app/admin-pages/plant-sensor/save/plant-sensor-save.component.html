@@ -31,25 +31,6 @@
         <option [value]="status.value" *ngFor="let status of statusList">{{status.title}}</option>
       </select>
     </div>
-
-    <div class="mt-4" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == zonevirtual">
-      <ngb-accordion [closeOthers]="true" (click)="markEpisCheckbox()">
-        <!--activeIds="collapse-1"-->
-        <ngb-panel id="collapse-1" title="{{'plant.epi' | translate}}">
-          <ng-template ngbPanelContent>
-            <div class="form-check form-check-flat form-check-primary" *ngFor="let epi of epiList">
-              <label class="form-check-label">
-                <input type="checkbox" class="form-check-input" id="{{epi.name}}">
-                {{ epi.name }}
-                <i class="input-helper"></i>
-              </label>
-            </div>
-
-          </ng-template>
-        </ngb-panel>
-      </ngb-accordion>
-    </div>
-
   </form>
 
   <div class="modal-footer">

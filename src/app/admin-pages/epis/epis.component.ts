@@ -73,7 +73,7 @@ export class EpiComponent implements OnInit {
   }
 
   refreshList() {
-    this.epiService.getEpis("").subscribe((res: Epi[]) => {
+    this.epiService.getEpis().subscribe((res: Epi[]) => {
       this.data = res;
     });
   }
@@ -100,7 +100,7 @@ export class EpiComponent implements OnInit {
         this.openSaveModal(event.data.uuid);
         break;
       case 'remove':
-        this.epiService.deleteEpi(event.data.uuid, "").subscribe(res => {
+        this.epiService.deleteEpi(event.data.uuid).subscribe(res => {
           this.refreshList();
         });
         break;

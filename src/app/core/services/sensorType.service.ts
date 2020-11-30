@@ -7,36 +7,23 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
 import { BASEURL_DEV_SENSORTYPE } from 'src/app/shared/constants/app.constants';
-import { Reason } from 'src/app/shared/models/reason.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({ providedIn: 'root' })
 export class SensorTypeService {
-
-
     urlEndPoint: string = BASEURL_DEV_SENSORTYPE;
 
-    constructor(private http: HttpClient, private router: Router) {
+    constructor(private http: HttpClient,
+        private authService: AuthenticationService) { }
 
-    } 
-
-    saveSensorType(sensorType: SensorType, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
+    saveSensorType(sensorType: SensorType) {
         let body = new URLSearchParams();
         body.set('name', sensorType.name);
         body.set('description', sensorType.description);
-        //body.set('image', sensorType.image);
         body.set('active', `${sensorType.active}`);
 
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
 
         if (sensorType.uuid == null) {
             return this.http.post(this.urlEndPoint, body.toString(), options);
@@ -45,72 +32,46 @@ export class SensorTypeService {
         }
     }
 
-    getSensorTypeList(tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+    getSensorTypeList() {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getSensorTypeByUuid(uuid: string, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+    getSensorTypeByUuid(uuid: string) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.get(this.urlEndPoint + "/" + uuid, options);
     }
 
-    deleteSensorType(uuid: string, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+    deleteSensorType(uuid: string) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.delete(this.urlEndPoint + "/" + uuid, options);
     }
 
     upload(file: File, uuid: string): any {
         const formData: FormData = new FormData();
         formData.append('file', file);
-        return this.http.post(`${this.urlEndPoint}/${uuid}/upload`, formData);
-    }
-
-    getSensorTypeImage(filename: string, tenantId: string) {
         let headers = new HttpHeaders({
+            //'Content-Type': 'application/x-www-form-urlencoded',
+            //'Accept': 'application/json',
+            'X-TenantID': this.authService.getTenantId(),
+            'response-type': 'blob',
             'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
+        let options = { headers: headers };
+        return this.http.post(`${this.urlEndPoint}/${uuid}/upload`, formData, options);
+    }
+
+    getSensorTypeImage(filename: string) {
         let body = new URLSearchParams();
         body.set('filename', filename);
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
-        return this.http.get(this.urlEndPoint + `/download/${filename}`, { responseType: 'blob' }).pipe(mergeMap(res => this.createImageFromBlob(res)));
+        let headers = new HttpHeaders({
+            //'Content-Type': 'application/x-www-form-urlencoded',
+            //'Accept': 'application/json',
+            'X-TenantID': this.authService.getTenantId(),
+            'response-type': 'blob',
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        return this.http.get(this.urlEndPoint + `/download/${filename}`, { headers, responseType: 'blob' }).pipe(mergeMap((res: Blob) => this.createImageFromBlob(res)));
     }
 
     createImageFromBlob(image: Blob): Observable<string | ArrayBuffer> {

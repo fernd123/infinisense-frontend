@@ -37,14 +37,14 @@ export class SensorTypeSaveComponent implements OnInit {
     });
     if (this.sensorTypeId != null) {
       this.editionMode = true;
-      this.sensorTypeService.getSensorTypeByUuid(this.sensorTypeId, "").subscribe((res: SensorType) => {
+      this.sensorTypeService.getSensorTypeByUuid(this.sensorTypeId).subscribe((res: SensorType) => {
         this.sensorTypeForm.get('uuid').setValue(res.uuid);
         this.sensorTypeForm.get('name').setValue(res.name);
         this.sensorTypeForm.get('description').setValue(res.description);
         //this.sensorTypeForm.get('image').setValue(res.image);
         this.sensorTypeForm.get('active').setValue(res.active);
         if (res.image != undefined)
-          this.sensorTypeService.getSensorTypeImage(res.image, "").subscribe((res: any) => {
+          this.sensorTypeService.getSensorTypeImage(res.image).subscribe((res: any) => {
             this.sensorTypeForm.get('image').setValue(res);
           });
       });
@@ -60,7 +60,7 @@ export class SensorTypeSaveComponent implements OnInit {
     //sensorType.image = this.sensorTypeForm.get('image').value;
     sensorType.active = this.sensorTypeForm.get('active').value;
 
-    this.sensorTypeService.saveSensorType(sensorType, "").subscribe((res: SensorType) => {
+    this.sensorTypeService.saveSensorType(sensorType).subscribe((res: SensorType) => {
       if (this.currentFile != undefined) {
         this.sensorTypeService.upload(this.currentFile, res.uuid).subscribe(resimg => {
           this.currentFile = undefined;
@@ -84,7 +84,7 @@ export class SensorTypeSaveComponent implements OnInit {
 
   delete() {
     let uuid = this.sensorTypeForm.get('uuid').value;
-    this.sensorTypeService.deleteSensorType(uuid, "").subscribe(res => {
+    this.sensorTypeService.deleteSensorType(uuid).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,

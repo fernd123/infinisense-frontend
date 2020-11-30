@@ -37,7 +37,7 @@ export class EpiSaveComponent implements OnInit {
     });
     if (this.epiId != null) {
       this.editionMode = true;
-      this.epiService.getEpisByUuid(this.epiId, "").subscribe((res: Epi) => {
+      this.epiService.getEpisByUuid(this.epiId).subscribe((res: Epi) => {
         this.epiForm.get('uuid').setValue(res.uuid);
         this.epiForm.get('name').setValue(res.name);
         this.epiForm.get('description').setValue(res.description);
@@ -54,7 +54,7 @@ export class EpiSaveComponent implements OnInit {
     reason.description = this.epiForm.get('description').value;
     reason.active = this.epiForm.get('active').value;
 
-    this.epiService.saveEpi(reason, "").subscribe(res => {
+    this.epiService.saveEpi(reason).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,
@@ -67,7 +67,7 @@ export class EpiSaveComponent implements OnInit {
 
   delete() {
     let uuid = this.epiForm.get('uuid').value;
-    this.epiService.deleteEpi(uuid, "").subscribe(res => {
+    this.epiService.deleteEpi(uuid).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,

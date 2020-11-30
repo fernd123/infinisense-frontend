@@ -101,7 +101,7 @@ export class VisitExternalComponent implements OnInit {
   refreshList() {
     let filter = this.optionList[0].value; // default
     filter = this.optionFilter != null ? this.optionList[this.optionFilter.nativeElement.selectedIndex].value : filter;
-    this.visitService.getVisits("a", filter).subscribe((res: Visit[]) => {
+    this.visitService.getVisits(filter).subscribe((res: Visit[]) => {
       this.data = res.filter((f: Visit) => {
         let today = new Date();
         let [start, end] = this.getWeekDates();
@@ -110,7 +110,7 @@ export class VisitExternalComponent implements OnInit {
         let dateVisit = new Date(f.startDate);
         if (filter == 't' && dateVisit.getDate() == day) {
           return f;
-        } else if (filter == 'w' && dateVisit.getDate() >= start.getDate() && dateVisit.getDate() <= end.getDate()) {
+        } else if (filter == 'w' && ((dateVisit.getDate() >= start.getDate() && dateVisit.getDate() <= end.getDate()) || (dateVisit.getDate() >= start.getDate() && dateVisit.getMonth() < end.getMonth()))) {
           return f;
         } else if (filter == 'm' && dateVisit.getMonth() == month) {
           return f;
@@ -140,7 +140,7 @@ export class VisitExternalComponent implements OnInit {
   }
 
   updateVisit(visit: any) {
-    this.visitService.updateVisit(visit, "").subscribe((res: any) => {
+    this.visitService.updateVisit(visit).subscribe((res: any) => {
       let options = {
         autoClose: true,
         keepAfterRouteChange: true

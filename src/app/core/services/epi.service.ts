@@ -1,38 +1,24 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import jwt_decode from "jwt-decode";
-import { Router } from '@angular/router';
-import { User } from 'src/app/shared/models/user.model';
-import { Visit } from 'src/app/shared/models/visit.model';
 import { BASEURL_DEV_EPI } from 'src/app/shared/constants/app.constants';
-import { Reason } from 'src/app/shared/models/reason.model';
 import { Epi } from 'src/app/shared/models/epi.model';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({ providedIn: 'root' })
 export class EpiService {
 
     urlEndPoint: string = BASEURL_DEV_EPI;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient,
+        private authService: AuthenticationService) { }
 
-    saveEpi(epi: Epi, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
+    saveEpi(epi: Epi) {
         let body = new URLSearchParams();
         body.set('name', epi.name);
         body.set('description', epi.description);
         body.set('active', `${epi.active}`);
 
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
 
         if (epi.uuid == null) {
             return this.http.post(this.urlEndPoint, body.toString(), options);
@@ -41,51 +27,18 @@ export class EpiService {
         }
     }
 
-    getEpis(tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+    getEpis() {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getEpisByUuid(uuid: string, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+    getEpisByUuid(uuid: string) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.get(this.urlEndPoint + "/" + uuid, options);
     }
 
-    deleteEpi(uuid: string, tenantId: string) {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
-        });
-        let body = new URLSearchParams();
-
-        if (tenantId) {
-            body.set('tenantId', tenantId);
-        }
-
-        let options = { headers: headers };
+    deleteEpi(uuid: string) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.delete(this.urlEndPoint + "/" + uuid, options);
     }
 

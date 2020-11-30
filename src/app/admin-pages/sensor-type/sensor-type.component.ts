@@ -65,7 +65,7 @@ export class SensorTypeComponent implements OnInit {
   }
 
   refreshList() {
-    this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
+    this.sensorTypeService.getSensorTypeList().subscribe((res: SensorType[]) => {
       this.data = res;
     });
   }
@@ -90,7 +90,7 @@ export class SensorTypeComponent implements OnInit {
         this.openSaveModal(event.data.uuid);
         break;
       case 'remove':
-        this.sensorTypeService.deleteSensorType(event.data.uuid, "").subscribe(res => {
+        this.sensorTypeService.deleteSensorType(event.data.uuid).subscribe(res => {
           this.refreshList();
         });
         break;

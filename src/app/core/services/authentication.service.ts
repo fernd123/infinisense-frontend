@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,12 +11,14 @@ import { User } from 'src/app/shared/models/user.model';
 export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<User>;
+    private tenantId: string;
 
     urlEndPoint: string = BASEURL_DEV_LOGIN;
 
     constructor(private http: HttpClient, private router: Router) {
         this.currentUserSubject = new BehaviorSubject<any>(localStorage.getItem('token'));
         this.currentUser = this.currentUserSubject.asObservable();
+        this.tenantId = null;
     }
 
     public get currentUserValue(): any {
@@ -40,15 +42,11 @@ export class AuthenticationService {
     }
 
     refreshToken() {
+        let headers = this.getHeadersTenancyDefault();
         const user = this.currentUserSubject.value;
         if (!user) {
             return of(null);
         }
-        // Generate headers
-        const tokenHeaders = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic YW5ndWxhcjphbmd1bGFy`
-        });
 
         // Genrate params for token refreshing
         const body = new URLSearchParams();
@@ -57,7 +55,7 @@ export class AuthenticationService {
         body.set('refresh_token', user.refresh_token);
 
         // Save petition options into a variable
-        const options = { headers: tokenHeaders };
+        const options = { headers: headers };
 
         const loginURL = this.urlEndPoint;
 
@@ -72,19 +70,17 @@ export class AuthenticationService {
     }
 
     doLogin(loginURL: string, username: string, password: string, tenantId: string) {
+
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
+            'X-TenantID': tenantId,
             'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
         let body = new URLSearchParams();
         body.set('grant_type', 'password');
         body.set('username', username);
         body.set('password', password);
-
-        if (tenantId) {
-            body.set('tenant_id', tenantId);
-        }
 
         let options = { headers: headers };
 
@@ -94,6 +90,8 @@ export class AuthenticationService {
                 if (token && token.jwt) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('token', token.jwt);
+                    localStorage.setItem('tenantid', tenantId);
+                    this.tenantId = tenantId;
                 }
             }));
     }
@@ -101,10 +99,24 @@ export class AuthenticationService {
     logout(doRedirect?: boolean) {
         // remove user from local storage to log user out
         localStorage.removeItem('token');
-        localStorage.removeItem('currentuser');
+        localStorage.removeItem('tenantid');
         // Redirect user to base login or portal login
         if (doRedirect) {
             this.router.navigate(['/admin']);
         }
+    }
+
+    public getHeadersTenancyDefault() {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'X-TenantID': this.tenantId,
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        return headers;
+    }
+
+    public getTenantId() {
+        return this.tenantId;
     }
 }

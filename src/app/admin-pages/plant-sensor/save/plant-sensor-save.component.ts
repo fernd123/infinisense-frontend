@@ -21,8 +21,8 @@ export class PlantSensorSaveComponent implements OnInit {
 
   plantCoordsForm: FormGroup;
   modalTitle: string = this.translate.instant('plant.newcoordinatetitle');
-  sensor : string = ZoneType.se;
-  zonevirtual : string = ZoneType.zv;
+  sensor: string = ZoneType.se;
+  zonevirtual: string = ZoneType.zv;
   statusList: any = statusList;
   loaded: boolean = false;
   zoneTypeList: any = [
@@ -33,7 +33,6 @@ export class PlantSensorSaveComponent implements OnInit {
   ];
 
   sensorTypeList: SensorType[];
-  epiList: Epi[]; //TODO
   editionMode: boolean = false;
   @Input() public plantCoordId;
   @Input() public plantId;
@@ -58,7 +57,9 @@ export class PlantSensorSaveComponent implements OnInit {
     });
 
     this.plantCoordsForm.get('virtualZoneType').disable();
-    this.sensorTypeService.getSensorTypeList("").subscribe((res: SensorType[]) => {
+    this.plantCoordsForm.get('sensorType').disable();
+
+    this.sensorTypeService.getSensorTypeList().subscribe((res: SensorType[]) => {
       this.sensorTypeList = res;
     });
 
@@ -85,7 +86,7 @@ export class PlantSensorSaveComponent implements OnInit {
     plantCoords.coordinates = null;
     plantCoords.plantid = this.plantId;
 
-    this.plantCoordService.savePlantVirtual(plantCoords, "").subscribe(res => {
+    this.plantCoordService.savePlantVirtual(plantCoords).subscribe(res => {
       this.modalService.dismissAll("success");
     });
   }

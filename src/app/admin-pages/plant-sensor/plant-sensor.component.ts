@@ -50,7 +50,6 @@ export class PlantSensorComponent implements OnInit {
         title: this.translateService.instant('status'),
         type: 'html',
         valuePrepareFunction: (data) => {
-          debugger;
           switch (data) {
             case statusList[0].value:
               return `<span class="active">${data}</span>`;
@@ -103,7 +102,7 @@ export class PlantSensorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.plantService.getPlants("").subscribe((res: Plant[]) => {
+    this.plantService.getPlants().subscribe((res: Plant[]) => {
       if (res != undefined) {
         this.plantList = res;
         this.optionFilter.nativeElement.selectedIndex = 0;
@@ -123,7 +122,7 @@ export class PlantSensorComponent implements OnInit {
         selectedIndex = 0;
       }
       let filter = this.optionFilter != null ? this.plantList[selectedIndex].uuid : this.plantList[0].uuid;
-      this.plantCoordsService.getPlantPlaneByPlant(filter, ZoneType.se, "").subscribe((res: PlantCoordinates[]) => {
+      this.plantCoordsService.getPlantPlaneByPlant(filter, ZoneType.se).subscribe((res: PlantCoordinates[]) => {
         this.data = res;
       });
     } catch (ex) {

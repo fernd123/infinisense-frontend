@@ -17,6 +17,8 @@
   "status": "Estado",
   "image": "Imagen",
   "menu": {
+    "customer": "Clientes",
+    "company": "Empresas",
     "usertitle": "Gestión de Usuarios",
     "user": "Usuarios",
     "dashboard": "Dashboard",
@@ -97,6 +99,10 @@
   "epi": {
     "epititle": "EPIs",
     "savetitle": "Guardar EPI"
+  },
+  "company": {
+    "epititle": "Clientes",
+    "savetitle": "Guardar Info. Empresa"
   },
   "registervisit": {
     "title": "Registro visita",

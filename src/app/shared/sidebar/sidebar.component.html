@@ -70,15 +70,28 @@
         <i class="mdi mdi-table-large menu-icon"></i>
       </a>
     </li>-->
-    <!--<li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
+    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
       <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
         <span class="menu-title">Icons</span>
         <i class="mdi mdi-contacts menu-icon"></i>
       </a>
-    </li>-->
+    </li>
 
-
-
+    <li class="nav-item" [ngClass]="{ 'active': companyData.isActive || company.isActive  }">
+      <a class="nav-link" (click)="companyDataCollapsed = !companyDataCollapsed"
+        [attr.aria-expanded]="companyDataCollapsed" aria-controls="ui-basic" routerLinkActive
+        #companyData="routerLinkActive">
+        <span class="menu-title">{{ 'menu.customer' | translate }}</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-domain menu-icon"></i>
+      </a>
+      <div class="collapse" id="ui-basic" [ngbCollapse]="!companyDataCollapsed">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/company" routerLinkActive="active"
+              #company="routerLinkActive">{{ 'menu.company' | translate }}</a></li>
+        </ul>
+      </div>
+    </li>
 
     <li class="nav-item"
       [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || sensorType.isActive || epis.isActive  }">

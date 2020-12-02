@@ -43,6 +43,7 @@ export class LoginAdminComponent {
     let password = this.loginForm.get('password').value;
     let tenantId = this.loginForm.get('tenantId').value;
     this.loading = true;
+    debugger;
     this.authService.login(username, password, tenantId).subscribe(
       (res: any) => {
         this.loading = false;
@@ -57,5 +58,5 @@ export class LoginAdminComponent {
         this.error = true;
       })
   }
-  resetPassword(){}
+  resetPassword() { }
 }

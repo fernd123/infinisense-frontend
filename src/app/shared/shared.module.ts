@@ -3,20 +3,23 @@ import { CommonModule } from '@angular/common';
 import { ModuleWithProviders } from '@angular/compiler/src/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AlertModule } from './alert/alert.module';
 import { VirtualizationComponent } from './virtualization/virtualization.component';
 import { ModalComponent } from './modal/modal.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 
 @NgModule({
   declarations: [
     VirtualizationComponent,
-    ModalComponent
+    ModalComponent,
+    SpinnerComponent
   ],
   imports: [
     CommonModule,
+    NgxPermissionsModule,
     ReactiveFormsModule,
     NgbModule
   ],
@@ -27,9 +30,11 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     TranslateModule,
     VirtualizationComponent,
     ModalComponent,
+    SpinnerComponent,
     ReactiveFormsModule
   ],
   entryComponents: [
+
   ],
   providers: []
 })

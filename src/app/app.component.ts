@@ -18,9 +18,11 @@ export class AppComponent implements OnInit {
   constructor(private router: Router,
     private translate: TranslateService) {
 
+    /* TRANSLATION MODULE */
     this.translate.setDefaultLang('es');
     this.translate.addLangs(['es', 'en']);
     this.translate.use('es');
+
 
 
     // Removing Sidebar, Navbar, Footer for Documentation, Error and Auth pages
@@ -71,5 +73,7 @@ export class AppComponent implements OnInit {
       }
       window.scrollTo(0, 0);
     });
+
+
   }
 }

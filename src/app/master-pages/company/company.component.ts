@@ -83,7 +83,7 @@ export class CompanyComponent implements OnInit {
   public openSaveModal(uuid: string, size?: string): void {
     if (!size || size === undefined) { size = 'modal-lg'; }
     const modalRef = this.modalService.open(CompanySaveComponent);
-    modalRef.componentInstance.epiId = uuid;
+    modalRef.componentInstance.companyId = uuid;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {

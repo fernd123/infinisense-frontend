@@ -22,6 +22,7 @@ import { SignaturePadModule } from 'angular2-signaturepad';
 import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'; import { HttpClient } from '@angular/common/http';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 
 // AoT requires an exported function for factories
@@ -38,7 +39,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     DashboardComponent,
     TodoListComponent,
     TodoComponent,
-    SpinnerComponent,
     ContentAnimateDirective
   ],
   imports: [
@@ -53,6 +53,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     SignaturePadModule,
     Ng2SmartTableModule,
     SharedModule.forRoot(),
+    NgxPermissionsModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

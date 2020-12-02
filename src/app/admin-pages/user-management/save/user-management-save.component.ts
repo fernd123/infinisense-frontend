@@ -18,7 +18,7 @@ export class UserManagementSaveComponent implements OnInit {
   modalTitle: string = this.translateService.instant('user.saveusertitle');
   editionMode: boolean = false;
   roleList: any[] = [
-    { value: "ADMIN" }, { value: "USER" }
+    { value: "ADMIN" }, { value: "USER" }, { value: "MASTER" }
   ];
 
   @Input() public userId;

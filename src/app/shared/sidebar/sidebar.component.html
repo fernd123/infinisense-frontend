@@ -77,7 +77,8 @@
       </a>
     </li>
 
-    <li class="nav-item" [ngClass]="{ 'active': companyData.isActive || company.isActive  }">
+    <li class="nav-item" [ngClass]="{ 'active': companyData.isActive || company.isActive }"
+      *ngxPermissionsOnly="['MASTER']">
       <a class="nav-link" (click)="companyDataCollapsed = !companyDataCollapsed"
         [attr.aria-expanded]="companyDataCollapsed" aria-controls="ui-basic" routerLinkActive
         #companyData="routerLinkActive">
@@ -87,13 +88,13 @@
       </a>
       <div class="collapse" id="ui-basic" [ngbCollapse]="!companyDataCollapsed">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/company" routerLinkActive="active"
+          <li class="nav-item"> <a class="nav-link" routerLink="master-pages/company" routerLinkActive="active"
               #company="routerLinkActive">{{ 'menu.company' | translate }}</a></li>
         </ul>
       </div>
     </li>
 
-    <li class="nav-item"
+    <li class="nav-item" *ngxPermissionsOnly="['ADMIN']"
       [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || sensorType.isActive || epis.isActive  }">
       <a class="nav-link" (click)="masterDataCollapsed = !masterDataCollapsed"
         [attr.aria-expanded]="masterDataCollapsed" aria-controls="ui-basic" routerLinkActive
@@ -132,7 +133,8 @@
       </div>
     </li>
 
-    <li class="nav-item" [ngClass]="{ 'active': visitexternal.isActive || visit.isActive  }">
+    <li class="nav-item" [ngClass]="{ 'active': visitexternal.isActive || visit.isActive  }"
+      *ngxPermissionsOnly="['ADMIN, USER']">
       <a class="nav-link" (click)="visitDataCollapsed = !visitDataCollapsed" [attr.aria-expanded]="visitDataCollapsed"
         aria-controls="ui-basic" routerLinkActive #visitexternal="routerLinkActive">
         <span class="menu-title">{{ 'menu.visits' | translate }}</span>
@@ -147,7 +149,8 @@
       </div>
     </li>
 
-    <li class="nav-item" [ngClass]="{ 'active': plant.isActive || plantManagement.isActive || plantSensor.isActive }">
+    <li class="nav-item" [ngClass]="{ 'active': plant.isActive || plantManagement.isActive || plantSensor.isActive }" ,
+      *ngxPermissionsOnly="['ADMIN']">
       <a class="nav-link" (click)="plantDataCollapsed = !plantDataCollapsed" [attr.aria-expanded]="plantDataCollapsed"
         aria-controls="ui-basic" routerLinkActive #plant="routerLinkActive">
         <span class="menu-title">{{ 'menu.planttitle' | translate }}</span>

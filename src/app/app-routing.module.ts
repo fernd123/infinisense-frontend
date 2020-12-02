@@ -18,7 +18,22 @@ const routes: Routes = [
   { path: 'user-pages', loadChildren: () => import('./user-pages/user-pages.module').then(m => m.UserPagesModule) },
   { path: 'error-pages', loadChildren: () => import('./error-pages/error-pages.module').then(m => m.ErrorPagesModule) },
   { path: 'admin', loadChildren: () => import('./core/login-admin/login-admin.module').then(mod => mod.LoginAdminModule) },
-  { path: 'admin-pages', loadChildren: () => import('./admin-pages/admin-pages.module').then(mod => mod.AdminPagesModule) }
+  {
+    path: 'admin-pages', loadChildren: () => import('./admin-pages/admin-pages.module').then(mod => mod.AdminPagesModule), data: {
+      permissions: {
+        only: 'ADMIN',
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'master-pages', loadChildren: () => import('./master-pages/master-pages.module').then(mod => mod.MasterPagesModule), data: {
+      permissions: {
+        only: 'MASTER',
+        redirectTo: '/dashboard'
+      }
+    }
+  }
 ];
 
 @NgModule({

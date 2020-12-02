@@ -21,15 +21,26 @@ import { PlantSensorComponent } from './plant-sensor/plant-sensor.component';
 import { PlantSensorSaveComponent } from './plant-sensor/save/plant-sensor-save.component';
 import { EpiSaveComponent } from './epis/save/epis-save.component';
 import { EpiComponent } from './epis/epis.component';
-import { CompanyComponent } from './company/company.component';
-import { CompanySaveComponent } from './company/save/company-save.component';
 
 const routes: Routes = [
-  { path: 'company', component: CompanyComponent, canActivate: [AuthGuard] },
-  { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
+  {
+    path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard], data: {
+      permissions: {
+        only: 'ADMIN',
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'user-external', component: UserExternalComponent, canActivate: [AuthGuard], data: {
+      permissions: {
+        only: 'ADMIN',
+        redirectTo: '/dashboard'
+      }
+    }
+  },
   { path: 'visit-reason', component: VisitReasonComponent, canActivate: [AuthGuard] },
   { path: 'visit-external', component: VisitExternalComponent, canActivate: [AuthGuard] },
-  { path: 'user-external', component: UserExternalComponent, canActivate: [AuthGuard] },
   { path: 'plant-management', component: PlantManagementComponent, canActivate: [AuthGuard] },
   { path: 'plant-plane', component: PlanPlaneComponent, canActivate: [AuthGuard] },
   { path: 'plant-sensor', component: PlantSensorComponent, canActivate: [AuthGuard] },
@@ -39,7 +50,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    CompanyComponent, CompanySaveComponent,
     UserManagementComponent, UserManagementSaveComponent, UserExternalComponent,
     VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
     PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent, PlantSensorComponent, PlantSensorSaveComponent,

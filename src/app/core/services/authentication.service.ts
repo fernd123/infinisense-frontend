@@ -6,6 +6,7 @@ import { BASEURL_DEV_LOGIN } from '../../shared/constants/app.constants';
 import jwt_decode from "jwt-decode";
 import { Router } from '@angular/router';
 import { User } from 'src/app/shared/models/user.model';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -15,7 +16,9 @@ export class AuthenticationService {
 
     urlEndPoint: string = BASEURL_DEV_LOGIN;
 
-    constructor(private http: HttpClient, private router: Router) {
+    constructor(private http: HttpClient,
+        private permissionsService: NgxPermissionsService,
+        private router: Router) {
         this.currentUserSubject = new BehaviorSubject<any>(localStorage.getItem('token'));
         this.currentUser = this.currentUserSubject.asObservable();
         this.tenantId = null;
@@ -92,6 +95,16 @@ export class AuthenticationService {
                     localStorage.setItem('token', token.jwt);
                     localStorage.setItem('tenantid', tenantId);
                     this.tenantId = tenantId;
+                    let info: any = this.getTokenInfo();
+                    debugger;
+                    /* PERMISSION MODULE */
+                    let authorities = info.authorities;
+                    let perm = [];
+                    for (let i = 0; i < authorities.length; i++) {
+                        perm.push(authorities[i].authority);
+                    }
+                    this.permissionsService.loadPermissions(perm);
+
                 }
             }));
     }

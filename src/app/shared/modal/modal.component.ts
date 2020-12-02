@@ -8,6 +8,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class ModalComponent implements OnInit {
 
   @Input() title = 'Information';
+  @Input() isLoading = false;
+
 
   constructor(
     public modalService: NgbModal

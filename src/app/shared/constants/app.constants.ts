@@ -22,6 +22,9 @@ export const BASEURL_DEV_PLANT = BASEURL_PROXY + '/api/plant';
 export const BASEURL_DEV_SENSORTYPE = BASEURL_PROXY + '/api/sensortype';
 export const BASEURL_DEV_EPI = BASEURL_PROXY + '/api/epi';
 export const BASEURL_DEV_COMPANY = BASEURL_PROXY + '/api/company';
+export const BASEURL_API_WEATHER = 'http://api.openweathermap.org/data/2.5';
+export const WEATHER = 'weather';
+export const AIRPOLLUTION = 'air_pollution';
 
 
 

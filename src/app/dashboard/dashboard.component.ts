@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiWeatherService } from 'src/app/core/services/apiweather.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,10 +13,16 @@ export class DashboardComponent implements OnInit {
     document.querySelector('body').classList.toggle('removeProbanner');
   }
 
-  constructor() { }
+  constructor(private apiWeatherService: ApiWeatherService) { }
 
   ngOnInit() {
-    this.getLocation();
+    this.apiWeatherService.getCurrentAirPollution().subscribe(res => {
+      debugger;
+    });
+
+    /*this.apiWeatherService.getCurrentWeather().subscribe(res => {
+      debugger;
+    });*/
   }
 
   date: Date = new Date();
@@ -164,19 +171,4 @@ export class DashboardComponent implements OnInit {
       ]
     }
   ];
-
-
-  getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(this.showPosition);
-    } else {
-      console.log("No geolocalization supported");
-    }
-  }
-
-  showPosition(position) {
-    console.log(position.coords.latitude);
-    console.log(position.coords.longitude);
-  }
-
 }

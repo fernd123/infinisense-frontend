@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, NavigationStart, RouteConfigLoadStart, RouteConfigLoadEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { ApiWeatherService } from './core/services/apiweather.service';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
   isLoading: boolean;
 
   constructor(private router: Router,
+    private apiweatherService: ApiWeatherService,
     private translate: TranslateService) {
 
     /* TRANSLATION MODULE */
@@ -23,7 +25,8 @@ export class AppComponent implements OnInit {
     this.translate.addLangs(['es', 'en']);
     this.translate.use('es');
 
-
+    /* GET CURRENT POSITION */
+    apiweatherService.getLocation();
 
     // Removing Sidebar, Navbar, Footer for Documentation, Error and Auth pages
     router.events.forEach((event) => {

@@ -6,8 +6,8 @@ export class Company extends BaseModel implements ICompany {
     uuid: string;
     name: string;
     description: string;
-    alira: boolean;
-    infinisense: boolean;
+    aliro: boolean;
+    ergo: boolean;
     active: boolean;
     user: User;
 }

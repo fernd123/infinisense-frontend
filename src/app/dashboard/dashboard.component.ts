@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     //TODO ACTIVAR
-    /*this.apiWeatherService.getCurrentWeather().subscribe((res: any) => {
+    this.apiWeatherService.getCurrentWeather().subscribe((res: any) => {
       if (res != undefined && res.data != undefined) {
         this.weather = res.data[0];
       }
@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
       if (res != undefined && res.data != undefined) {
         this.airPollution = res.data[0];
       }
-    });*/
+    });
   }
 
   date: Date = new Date();

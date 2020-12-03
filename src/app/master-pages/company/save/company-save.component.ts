@@ -40,8 +40,8 @@ export class CompanySaveComponent implements OnInit {
       email: ["", Validators.required],
       firstname: ["", Validators.required],
       lastname: ["", Validators.required],
-      alira: [true],
-      infinisense: [true],
+      aliro: [true],
+      ergo: [true],
       active: [true]
     });
     if (this.companyId != null) {
@@ -51,8 +51,8 @@ export class CompanySaveComponent implements OnInit {
         this.companyForm.get('uuid').setValue(res.uuid);
         this.companyForm.get('name').setValue(res.name);
         this.companyForm.get('description').setValue(res.description);
-        this.companyForm.get('alira').setValue(res.alira);
-        this.companyForm.get('infinisense').setValue(res.infinisense);
+        this.companyForm.get('aliro').setValue(res.aliro);
+        this.companyForm.get('ergo').setValue(res.ergo);
         this.companyForm.get('active').setValue(res.active);
       });
     }
@@ -65,8 +65,8 @@ export class CompanySaveComponent implements OnInit {
     company.uuid = this.companyForm.get('uuid').value;
     company.name = this.companyForm.get('name').value;
     company.description = this.companyForm.get('description').value;
-    company.alira = this.companyForm.get('alira').value;
-    company.infinisense = this.companyForm.get('infinisense').value;
+    company.aliro = this.companyForm.get('aliro').value;
+    company.ergo = this.companyForm.get('ergo').value;
     company.active = this.companyForm.get('active').value;
 
     let user = new User();

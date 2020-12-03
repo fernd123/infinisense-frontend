@@ -20,8 +20,8 @@ export class CompanyService {
         let body = new URLSearchParams();
         body.set('name', company.name);
         body.set('description', company.description);
-        body.set('alira', `${company.alira}`);
-        body.set('infinisense', `${company.infinisense}`);
+        body.set('alira', `${company.aliro}`);
+        body.set('ergo', `${company.ergo}`);
         body.set('active', `${company.active}`);
         body.set('username', user.username);
         body.set('password', user.password);
@@ -40,8 +40,8 @@ export class CompanyService {
         let body = new URLSearchParams();
         body.set('name', company.name);
         body.set('description', company.description);
-        body.set('alira', `${company.alira}`);
-        body.set('infinisense', `${company.infinisense}`);
+        body.set('alira', `${company.aliro}`);
+        body.set('ergo', `${company.ergo}`);
         body.set('active', `${company.active}`);
 
         let options = { headers: this.authService.getHeadersTenancyDefault() };

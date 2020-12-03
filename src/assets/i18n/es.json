@@ -1,7 +1,8 @@
 {
   "en": "Inglés",
   "es": "Español",
-  "alira": "Alira",
+  "aliro": "Infinisense Aliro",
+  "ergo": "Infinisense Ergo",
   "infinisense": "Infinisense",
   "name": "Nombre",
   "description": "Descripción",
@@ -106,7 +107,8 @@
   "company": {
     "epititle": "Clientes",
     "savetitle": "Guardar Info. Empresa",
-    "info": "Datos empresa"
+    "info": "Datos empresa",
+    "access": "Licencia"
   },
   "registervisit": {
     "title": "Registro visita",

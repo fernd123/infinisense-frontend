@@ -43,7 +43,7 @@ export class UserManagementSaveComponent implements OnInit {
       password: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       dni: ["", Validators.required],
-      roles: ["", Validators.required],
+      roles: [""],
       active: ["true"]
     });
     if (this.userId != null) {
@@ -67,7 +67,7 @@ export class UserManagementSaveComponent implements OnInit {
   updateSelectList() {
     let options = this.selectElRef.nativeElement.options;
     for (let i = 0; i < options.length; i++) {
-      options[i].selected = this.userForm.get('roles').value.includes(this.roleList[0].value);
+      options[i].selected = this.userForm.get('roles').value.includes(options[i].id);
     }
   }
 

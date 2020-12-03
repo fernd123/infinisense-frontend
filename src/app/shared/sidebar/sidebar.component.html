@@ -70,12 +70,12 @@
         <i class="mdi mdi-table-large menu-icon"></i>
       </a>
     </li>-->
-    <li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
+    <!--<li class="nav-item" [ngClass]="{ 'active': icons.isActive }">
       <a class="nav-link" routerLink="icons/mdi" routerLinkActive #icons="routerLinkActive">
         <span class="menu-title">Icons</span>
         <i class="mdi mdi-contacts menu-icon"></i>
       </a>
-    </li>
+    </li>-->
 
     <li class="nav-item" [ngClass]="{ 'active': companyData.isActive || company.isActive }"
       *ngxPermissionsOnly="['MASTER']">
@@ -134,7 +134,7 @@
     </li>
 
     <li class="nav-item" [ngClass]="{ 'active': visitexternal.isActive || visit.isActive  }"
-      *ngxPermissionsOnly="['ADMIN, USER']">
+      *ngxPermissionsOnly="['ADMIN']">
       <a class="nav-link" (click)="visitDataCollapsed = !visitDataCollapsed" [attr.aria-expanded]="visitDataCollapsed"
         aria-controls="ui-basic" routerLinkActive #visitexternal="routerLinkActive">
         <span class="menu-title">{{ 'menu.visits' | translate }}</span>
@@ -149,7 +149,7 @@
       </div>
     </li>
 
-    <li class="nav-item" [ngClass]="{ 'active': plant.isActive || plantManagement.isActive || plantSensor.isActive }" ,
+    <li class="nav-item" [ngClass]="{ 'active': plant.isActive || plantManagement.isActive || plantSensor.isActive }"
       *ngxPermissionsOnly="['ADMIN']">
       <a class="nav-link" (click)="plantDataCollapsed = !plantDataCollapsed" [attr.aria-expanded]="plantDataCollapsed"
         aria-controls="ui-basic" routerLinkActive #plant="routerLinkActive">

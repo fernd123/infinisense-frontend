@@ -38,7 +38,6 @@ export class UserService {
 
     getUserByUuid(uuid: string) {
         let options = { headers: this.authService.getHeadersTenancyDefault() };
-        debugger;
         return this.http.get(this.urlEndPoint + "/profile/" + uuid, options);
     }
 

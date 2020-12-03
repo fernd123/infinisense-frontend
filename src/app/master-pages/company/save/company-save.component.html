@@ -1,5 +1,16 @@
 <app-modal title="{{modalTitle}}">
+
+  <div class="d-flex justify-content-center" *ngIf="isLoading">
+    <div>Creando cliente en el sistema...</div>
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
   <form [formGroup]="companyForm">
+    <div>
+      <h4 class="card-title">{{'company.info' | translate }}</h4>
+    </div>
     <div class="form-group">
       <label for="name"> {{ 'name' | translate }}
       </label>
@@ -12,6 +23,67 @@
         formControlName="description">
     </div>
 
+    <div>
+      <h4 class="card-title">{{'user.default' | translate }}</h4>
+    </div>
+    <div class="form-group">
+      <label for="username"> {{ 'user.username' | translate }}
+      </label>
+      <input type="text" class="form-control" id="username" placeholder=" {{ 'user.username' | translate }}"
+        formControlName="username">
+    </div>
+
+    <div class="form-group">
+      <label for="password"> {{ 'user.password' | translate }}
+      </label>
+      <input type="password" class="form-control" id="password" placeholder=" {{ 'user.password' | translate }}"
+        formControlName="password">
+    </div>
+
+    <div class="form-group">
+      <label for="name"> {{ 'user.firstname' | translate }}
+      </label>
+      <input type="text" class="form-control" id="firstname" placeholder=" {{ 'user.firstname' | translate }}"
+        formControlName="firstname">
+    </div>
+
+    <div class="form-group">
+      <label for="lastname"> {{ 'user.lastname' | translate }}
+      </label>
+      <input type="text" class="form-control" id="lastname" placeholder=" {{ 'user.lastname' | translate }}"
+        formControlName="lastname">
+    </div>
+
+    <div class="form-group">
+      <label for="email"> {{ 'user.email' | translate }}
+      </label>
+      <input type="text" class="form-control" id="email" placeholder=" {{ 'user.email' | translate }}"
+        formControlName="email">
+    </div>
+
+    <div class="form-group">
+      <label for="dni"> {{ 'user.dni' | translate }}
+      </label>
+      <input type="text" class="form-control" id="dni" placeholder=" {{ 'user.dni' | translate }}"
+        formControlName="dni">
+    </div>
+
+    <div class="form-check form-check-flat form-check-primary">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" formControlName="infinisense">
+        {{ 'infinisense' | translate }}
+        <i class="input-helper"></i>
+      </label>
+    </div>
+
+    <div class="form-check form-check-flat form-check-primary">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" formControlName="alira">
+        {{ 'alira' | translate }}
+        <i class="input-helper"></i>
+      </label>
+    </div>
+
     <div class="form-check form-check-flat form-check-primary">
       <label class="form-check-label">
         <input type="checkbox" class="form-check-input" formControlName="active">
@@ -22,11 +94,13 @@
   </form>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
+    <button type="button" class="btn btn-danger btn-sm" (click)="delete()" [disabled]="isLoading"
       *ngIf="this.companyForm.get('uuid').value != null"> {{ 'delete' | translate }}</button>
-    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.companyForm.invalid">
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()"
+      [disabled]="this.companyForm.invalid || isLoading">
       {{ 'save' | translate }}</button>
-    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()"
+      [disabled]="isLoading">
       {{ 'cancel' | translate }}</button>
   </div>
 

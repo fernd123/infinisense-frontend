@@ -12,7 +12,6 @@ import { NgxPermissionsService } from 'ngx-permissions';
 export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<User>;
-    private tenantId: string;
 
     urlEndPoint: string = BASEURL_DEV_LOGIN;
 
@@ -21,7 +20,6 @@ export class AuthenticationService {
         private router: Router) {
         this.currentUserSubject = new BehaviorSubject<any>(localStorage.getItem('token'));
         this.currentUser = this.currentUserSubject.asObservable();
-        this.tenantId = null;
     }
 
     public get currentUserValue(): any {
@@ -94,9 +92,7 @@ export class AuthenticationService {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('token', token.jwt);
                     localStorage.setItem('tenantid', tenantId);
-                    this.tenantId = tenantId;
                     let info: any = this.getTokenInfo();
-                    debugger;
                     /* PERMISSION MODULE */
                     let authorities = info.authorities;
                     let perm = [];
@@ -123,13 +119,13 @@ export class AuthenticationService {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
-            'X-TenantID': this.tenantId,
+            'X-TenantID': this.getTenantId(),
             'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
         return headers;
     }
 
     public getTenantId() {
-        return this.tenantId;
+        return localStorage.getItem('tenantid');
     }
 }

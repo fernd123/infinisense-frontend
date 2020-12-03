@@ -1,6 +1,8 @@
 {
   "en": "Inglés",
   "es": "Español",
+  "alira": "Alira",
+  "infinisense": "Infinisense",
   "name": "Nombre",
   "description": "Descripción",
   "active": "Activo",
@@ -78,7 +80,8 @@
     "removesignature": "Borrar firma",
     "email": "Email",
     "company": "Empresa",
-    "roles": "Rol"
+    "roles": "Rol",
+    "default": "Usuario por defecto"
   },
   "visit": {
     "visitlisttitle": "Visitas",
@@ -102,7 +105,8 @@
   },
   "company": {
     "epititle": "Clientes",
-    "savetitle": "Guardar Info. Empresa"
+    "savetitle": "Guardar Info. Empresa",
+    "info": "Datos empresa"
   },
   "registervisit": {
     "title": "Registro visita",

@@ -40,7 +40,7 @@
     <div class="form-group">
       <label for="roles"> {{ 'user.roles' | translate }}</label>
       <select class="form-control" #selectrole id="role" formControlName="roles" multiple>
-        <option [value]="role.value" *ngFor="let role of roleList">{{role.value}}</option>
+        <option [value]="role.value" [id]="role.value" *ngFor="let role of roleList">{{role.value}}</option>
       </select>
     </div>
 
@@ -55,7 +55,7 @@
   </form>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.userForm.invalid">
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="false">
       {{ 'save' | translate }}</button>
     <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">
       {{ 'cancel' | translate }}</button>

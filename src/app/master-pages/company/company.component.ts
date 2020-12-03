@@ -75,14 +75,13 @@ export class CompanyComponent implements OnInit {
 
   refreshList() {
     this.companyService.getCompany().subscribe((res: Company[]) => {
-      debugger;
       this.data = res;
     });
   }
 
   public openSaveModal(uuid: string, size?: string): void {
     if (!size || size === undefined) { size = 'modal-lg'; }
-    const modalRef = this.modalService.open(CompanySaveComponent);
+    const modalRef = this.modalService.open(CompanySaveComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.companyId = uuid;
 
     modalRef.result.then(() => { console.log('When user closes'); },

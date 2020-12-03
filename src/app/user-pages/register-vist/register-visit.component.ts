@@ -174,6 +174,7 @@ export class RegisterVisitComponent implements OnInit {
     this.registerForm.get('firstname').setValue(null);
     this.registerForm.get('lastname').setValue(null);
     this.registerForm.get('company').setValue(null);
+    this.registerForm.get('email').setValue(null);
     this.registerForm.get('firstname').enable();
     this.registerForm.get('lastname').enable();
     this.registerForm.get('email').enable();

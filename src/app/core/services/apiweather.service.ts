@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BASEURL_API_WEATHER, WEATHER, AIRPOLLUTION } from 'src/app/shared/constants/app.constants';
 @Injectable({ providedIn: 'root' })
 export class ApiWeatherService {
@@ -7,7 +7,7 @@ export class ApiWeatherService {
     urlEndPoint: string = BASEURL_API_WEATHER;
     weather: string = WEATHER;
     airPollution: string = AIRPOLLUTION;
-    APIKey: string = '03bef4811b435ea3c4352a402d20e675';
+    APIKey: string = 'bcc84518d5bb4f0eaff1b88fd3beef88';
     lon: string = 'lon';
     lat: string = 'lat';
 
@@ -19,7 +19,7 @@ export class ApiWeatherService {
         let lon = localStorage.getItem(this.lon);
         let lat = localStorage.getItem(this.lat);
 
-        let url = `${this.urlEndPoint}/${this.weather}?lat=${lat}&lon=${lon}&appid=${this.APIKey}&units=metric`;
+        let url = `${this.urlEndPoint}/${this.weather}?lat=${lat}&lon=${lon}&lang=es&key=${this.APIKey}`;
         return this.http.get(url);
     }
 
@@ -27,7 +27,7 @@ export class ApiWeatherService {
         let lon = localStorage.getItem(this.lon);
         let lat = localStorage.getItem(this.lat);
 
-        let url = `${this.urlEndPoint}/${this.airPollution}?lat=${lat}&lon=${lon}&appid=${this.APIKey}&units=metric`;
+        let url = `${this.urlEndPoint}/${this.airPollution}?lat=${lat}&lon=${lon}&lang=es&key=${this.APIKey}`;
         return this.http.get(url);
     }
 

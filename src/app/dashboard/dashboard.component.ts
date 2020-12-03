@@ -8,6 +8,9 @@ import { ApiWeatherService } from 'src/app/core/services/apiweather.service';
 })
 export class DashboardComponent implements OnInit {
 
+  public airPollution: any;
+  public weather: any;
+
   toggleProBanner(event) {
     event.preventDefault();
     document.querySelector('body').classList.toggle('removeProbanner');
@@ -16,37 +19,43 @@ export class DashboardComponent implements OnInit {
   constructor(private apiWeatherService: ApiWeatherService) { }
 
   ngOnInit() {
-    this.apiWeatherService.getCurrentAirPollution().subscribe(res => {
-      debugger;
+    //TODO ACTIVAR
+    /*this.apiWeatherService.getCurrentWeather().subscribe((res: any) => {
+      if (res != undefined && res.data != undefined) {
+        this.weather = res.data[0];
+      }
     });
 
-    /*this.apiWeatherService.getCurrentWeather().subscribe(res => {
-      debugger;
+    this.apiWeatherService.getCurrentAirPollution().subscribe((res: any) => {
+      if (res != undefined && res.data != undefined) {
+        this.airPollution = res.data[0];
+      }
     });*/
   }
 
   date: Date = new Date();
 
-  visitSaleChartData = [{
-    label: 'CHN',
-    data: [20, 40, 15, 35, 25, 50, 30, 20],
-    borderWidth: 1,
-    fill: false,
-  },
-  {
-    label: 'USA',
-    data: [40, 30, 20, 10, 50, 15, 35, 40],
-    borderWidth: 1,
-    fill: false,
-  },
-  {
-    label: 'UK',
-    data: [70, 10, 30, 40, 25, 50, 15, 30],
-    borderWidth: 1,
-    fill: false,
-  }];
+  visitSaleChartData = [
+    {
+      label: 'Lluvia',
+      data: [0, 3, 0, 20, 50, 60, 15],
+      borderWidth: 1,
+      fill: false,
+    },
+    {
+      label: 'Temperatura',
+      data: [20, 23, 21, 15, 14, 13, 10],
+      borderWidth: 1,
+      fill: false,
+    },
+    {
+      label: 'Humedad',
+      data: [70, 10, 30, 40, 25, 50, 15],
+      borderWidth: 1,
+      fill: false,
+    }];
 
-  visitSaleChartLabels = ["2013", "2014", "2014", "2015", "2016", "2017"];
+  visitSaleChartLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
   visitSaleChartOptions = {
     responsive: true,
@@ -92,6 +101,7 @@ export class DashboardComponent implements OnInit {
         'rgba(154, 85, 255, 1)',
         'rgba(154, 85, 255, 1)',
         'rgba(154, 85, 255, 1)',
+        'rgba(154, 85, 255, 1)'
       ],
       borderColor: [
         'rgba(154, 85, 255, 1)',
@@ -100,6 +110,7 @@ export class DashboardComponent implements OnInit {
         'rgba(154, 85, 255, 1)',
         'rgba(154, 85, 255, 1)',
         'rgba(154, 85, 255, 1)',
+        'rgba(154, 85, 255, 1)'
       ]
     },
     {
@@ -110,6 +121,7 @@ export class DashboardComponent implements OnInit {
         'rgba(254, 112, 150, 1)',
         'rgba(254, 112, 150, 1)',
         'rgba(254, 112, 150, 1)',
+        'rgba(254, 112, 150, 1)',
       ],
       borderColor: [
         'rgba(254, 112, 150, 1)',
@@ -118,6 +130,7 @@ export class DashboardComponent implements OnInit {
         'rgba(254, 112, 150, 1)',
         'rgba(254, 112, 150, 1)',
         'rgba(254, 112, 150, 1)',
+        'rgba(254, 112, 150, 1)'
       ]
     },
     {
@@ -128,6 +141,7 @@ export class DashboardComponent implements OnInit {
         'rgba(177, 148, 250, 1)',
         'rgba(177, 148, 250, 1)',
         'rgba(177, 148, 250, 1)',
+        'rgba(177, 148, 250, 1)'
       ],
       borderColor: [
         'rgba(177, 148, 250, 1)',
@@ -136,6 +150,7 @@ export class DashboardComponent implements OnInit {
         'rgba(177, 148, 250, 1)',
         'rgba(177, 148, 250, 1)',
         'rgba(177, 148, 250, 1)',
+        'rgba(177, 148, 250, 1)'
       ]
     },
   ];
@@ -171,4 +186,55 @@ export class DashboardComponent implements OnInit {
       ]
     }
   ];
+
+  lineChartData = [{
+    label: 'Co2',
+    data: [250, 220, 231, 211, 240, 260, 250],
+    borderWidth: 1,
+    fill: false
+  }];
+
+  lineChartLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+  lineChartOptions = {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    },
+    legend: {
+      display: false
+    },
+    elements: {
+      point: {
+        radius: 0
+      }
+    }
+  };
+
+  lineChartColors = [
+    {
+      borderColor: 'rgba(255,99,132,1)'
+    }
+  ];
+
+  qualityAir() {
+    let air = this.airPollution?.aqi;
+    if (air <= 50) {
+      return `Buena (${air})`;
+    } else if (air > 50 && air <= 100) {
+      return `Moderada (${air})`;
+    } else if (air > 100 && air <= 150) {
+      return `Mala para ciertos grupos (${air})`;
+    } else if (air > 150 && air <= 200) {
+      return `Mala (${air})`;
+    } else if (air > 200 && air <= 300) {
+      return `Muy mala (${air})`;
+    } else if (air > 300 && air <= 500) {
+      return `Peligro (${air})`;
+    }
+
+  }
 }

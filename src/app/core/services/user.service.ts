@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { BASEURL_DEV_USER } from 'src/app/shared/constants/app.constants';
 import { User } from 'src/app/shared/models/user.model';
 import { AuthenticationService } from './authentication.service';
@@ -14,31 +15,31 @@ export class UserService {
         private authService: AuthenticationService) { }
 
     getUserByDni(dni: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        let headers = { headers: this.authService.getHeadersTenancyDefault() };
         const loginURL = this.urlEndPoint + "/" + dni;
-        return this.http.get(loginURL, options);
+        return this.http.get(loginURL, headers);
     }
 
     getUserSignature(uuid: any) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        let headers = this.authService.getHeadersTenancyDefault();
         const loginURL = this.urlEndPoint + "/" + uuid + "/signature";
-        return this.http.get(loginURL, { responseType: 'text' });
+        return this.http.get(loginURL, { headers, responseType: 'blob' }).pipe(mergeMap((res: Blob) => this.createImageFromBlob(res)));
     }
 
     getExternalUsers() {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/external", options);
+        let headers = { headers: this.authService.getHeadersTenancyDefault() };
+        return this.http.get(this.urlEndPoint + "/external", headers);
     }
 
     getInternalUsers() {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        let headers = { headers: this.authService.getHeadersTenancyDefault() };
         const loginURL = this.urlEndPoint;
-        return this.http.get(loginURL, options);
+        return this.http.get(loginURL, headers);
     }
 
     getUserByUuid(uuid: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/profile/" + uuid, options);
+        let headers = { headers: this.authService.getHeadersTenancyDefault() };
+        return this.http.get(this.urlEndPoint + "/profile/" + uuid, headers);
     }
 
     saveUser(user: User) {
@@ -61,5 +62,23 @@ export class UserService {
         } else {
             return this.http.put(this.urlEndPoint + "/" + user.uuid, body.toString(), options);
         }
+    }
+
+    createImageFromBlob(image: Blob): Observable<string | ArrayBuffer> {
+        const imageObservable = new Observable<string | ArrayBuffer>(observer => {
+            if (image) {
+                let reader = new FileReader();
+                reader.addEventListener("load", () => {
+                    observer.next(reader.result);
+                    observer.complete();
+                }, false);
+                reader.readAsDataURL(image);
+            } else {
+                console.log(image);
+                observer.next(null)
+                observer.complete();
+            }
+        });
+        return imageObservable;
     }
 }

@@ -3,13 +3,18 @@
     <div class="form-group">
       <label for="name"> {{ 'name' | translate }}
       </label>
-      <input type="text" class="form-control" id="name" placeholder=" {{ 'name' | translate }}" formControlName="name">
+      <input type="text" class="form-control" id="name" placeholder=" {{ 'name' | translate }}" formControlName="name"
+        [ngClass]="{'alert-danger' : !this.epiForm.get('name').valid &&  (this.epiForm.get('name').touched || this.epiForm.get('name').dirty) }">
+      <div class="invalid-feedback" *ngIf="!this.epiForm.get('name').valid">
+        {{ this.epiForm.get('name').getError('message') }}
+      </div>
     </div>
 
     <div class="form-group">
       <label for="name"> {{ 'description' | translate }}</label>
       <input type="text" class="form-control" id="description" placeholder=" {{ 'description' | translate }}"
-        formControlName="description">
+        formControlName="description"
+        [ngClass]="{'alert-danger' : !this.epiForm.get('description').valid &&  !this.epiForm.get('description').touched}">
     </div>
 
     <div class="form-check form-check-flat form-check-primary">
@@ -23,8 +28,8 @@
   </form>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
-      *ngIf="this.epiForm.get('uuid').value != null"> {{ 'delete' | translate }}</button>
+    <button type="button" class="btn btn-danger btn-sm" (click)="delete()" *ngIf="this.epiUrl != null">
+      {{ 'delete' | translate }}</button>
     <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.epiForm.invalid">
       {{ 'save' | translate }}</button>
     <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">

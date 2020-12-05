@@ -64,24 +64,18 @@ export class EpiComponent implements OnInit {
 
   ngOnInit() {
     this.refreshList();
-    this.reasonForm = this.formBuilder.group({
-      name: [null, Validators.required],
-      description: [null, Validators.required],
-      active: [true],
-      association: [null]
-    });
   }
 
   refreshList() {
-    this.epiService.getEpis().subscribe((res: Epi[]) => {
-      this.data = res;
+    this.epiService.getEpis().subscribe((res: any) => {
+      this.data = res._embedded.epis;
     });
   }
 
-  public openSaveModal(uuid: string, size?: string): void {
+  public openSaveModal(epiUrl: string, size?: string): void {
     if (!size || size === undefined) { size = 'modal-lg'; }
     const modalRef = this.modalService.open(EpiSaveComponent);
-    modalRef.componentInstance.epiId = uuid;
+    modalRef.componentInstance.epiUrl = epiUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {
@@ -97,10 +91,10 @@ export class EpiComponent implements OnInit {
   onCustomAction(event) {
     switch (event.action) {
       case 'edit':
-        this.openSaveModal(event.data.uuid);
+        this.openSaveModal(event.data._links.self.href);
         break;
       case 'remove':
-        this.epiService.deleteEpi(event.data.uuid).subscribe(res => {
+        this.epiService.deleteEpi(event.data._links.self.href).subscribe(res => {
           this.refreshList();
         });
         break;

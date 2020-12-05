@@ -16,7 +16,7 @@ export class SensorTypeSaveComponent implements OnInit {
   sensorTypeForm: FormGroup;
   modalTitle: string = this.translateService.instant('sensortype.savesensortypetitle');
   editionMode: boolean = false;
-  @Input() public sensorTypeId;
+  @Input() public sensorUrl;
   currentFile: File;
 
   constructor(
@@ -29,16 +29,14 @@ export class SensorTypeSaveComponent implements OnInit {
 
   ngOnInit() {
     this.sensorTypeForm = this.formBuilder.group({
-      uuid: [null],
       name: ["", Validators.required],
-      description: [null, Validators.required],
+      description: [""],
       image: [null, Validators.required],
       active: [true]
     });
-    if (this.sensorTypeId != null) {
+    if (this.sensorUrl != null) {
       this.editionMode = true;
-      this.sensorTypeService.getSensorTypeByUuid(this.sensorTypeId).subscribe((res: SensorType) => {
-        this.sensorTypeForm.get('uuid').setValue(res.uuid);
+      this.sensorTypeService.getSensorTypeByUuid(this.sensorUrl).subscribe((res: SensorType) => {
         this.sensorTypeForm.get('name').setValue(res.name);
         this.sensorTypeForm.get('description').setValue(res.description);
         //this.sensorTypeForm.get('image').setValue(res.image);
@@ -54,22 +52,28 @@ export class SensorTypeSaveComponent implements OnInit {
 
   submit() {
     let sensorType = new SensorType();
-    sensorType.uuid = this.sensorTypeForm.get('uuid').value;
     sensorType.name = this.sensorTypeForm.get('name').value;
     sensorType.description = this.sensorTypeForm.get('description').value;
-    //sensorType.image = this.sensorTypeForm.get('image').value;
     sensorType.active = this.sensorTypeForm.get('active').value;
 
-    this.sensorTypeService.saveSensorType(sensorType).subscribe((res: SensorType) => {
-      if (this.currentFile != undefined) {
-        this.sensorTypeService.upload(this.currentFile, res.uuid).subscribe(resimg => {
+    this.sensorTypeService.saveSensorType(this.sensorUrl, sensorType).subscribe((res: SensorType) => {
+      if (res != undefined && this.currentFile != undefined) {
+        this.sensorTypeService.upload(this.currentFile, res._links.self.href).subscribe(resimg => {
           this.currentFile = undefined;
           this.showSuccessAlert();
-        });
+        },
+          (error: any) => {
+            let message = this.translateService.instant(`error.${error.error.message}`);
+            this.sensorTypeForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
+          })
       } else {
         this.showSuccessAlert();
       }
-    });
+    },
+      (error: any) => {
+        let message = this.translateService.instant(`error.${error.error.message}`);
+        this.sensorTypeForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
+      });
   }
 
   private showSuccessAlert() {
@@ -83,8 +87,7 @@ export class SensorTypeSaveComponent implements OnInit {
   }
 
   delete() {
-    let uuid = this.sensorTypeForm.get('uuid').value;
-    this.sensorTypeService.deleteSensorType(uuid).subscribe(res => {
+    this.sensorTypeService.deleteSensorType(this.sensorUrl).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,

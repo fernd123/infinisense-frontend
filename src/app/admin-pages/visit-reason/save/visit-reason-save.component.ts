@@ -22,7 +22,7 @@ export class VisitReasonSaveComponent implements OnInit {
   reasonForm: FormGroup;
   modalTitle: string = "Guardar Motivo Visita";
   editionMode: boolean = false;
-  @Input() public visitReasonId;
+  @Input() public reasonUrl;
   associationtitle: string = this.translateService.instant('reason.associatetozone');
 
   plantList: Plant[];
@@ -35,8 +35,8 @@ export class VisitReasonSaveComponent implements OnInit {
     private plantZoneService: PlantCoordsService,
     private alertService: AlertService,
     private modalService: NgbModal,
-    private translateService: TranslateService,
-    private route: Router) { }
+    private translateService: TranslateService
+  ) { }
 
   ngOnInit() {
 
@@ -44,69 +44,85 @@ export class VisitReasonSaveComponent implements OnInit {
     this.loadData();
 
     this.reasonForm = this.formBuilder.group({
-      uuid: [null],
       name: ["", Validators.required],
-      description: ["", Validators.required],
+      description: [""],
       active: [true],
-      plant: [""],
-      plantZone: [""],
-
+      plant: [null],
+      plantCoordinate: [null],
     });
-    if (this.visitReasonId != null) {
+    if (this.reasonUrl != null) {
       this.editionMode = true;
-      this.reasonService.getReasonByUuid(this.visitReasonId).subscribe((res: Reason) => {
-        this.reasonForm.get('uuid').setValue(res.uuid);
+      this.reasonService.getReasonByUuid(this.reasonUrl).subscribe((res: Reason) => {
         this.reasonForm.get('name').setValue(res.name);
         this.reasonForm.get('description').setValue(res.description);
         this.reasonForm.get('active').setValue(res.active);
-        if (res.plantZone != undefined) {
-          this.reasonForm.get('plant').setValue(res.plantZone.plant.uuid);
-          this.reasonForm.get('plantZone').setValue(res.plantZone.uuid);
-          this.loadData();
-          this.loadPlantZone();
-        }
-      });
 
+        let plantCoordinate = res._links.plantCoordinate.href;
+        this.reasonService.getReasonByUuid(plantCoordinate).subscribe((resPlantCoord: any) => {
+          let plantUrl = resPlantCoord._links.plant.href;
+          this.reasonService.getReasonByUuid(plantUrl).subscribe((resPlant: any) => {
+            this.reasonForm.get('plant').setValue(resPlant._links.plantCoordinate.href);
+            this.reasonForm.get('plantCoordinate').setValue(resPlantCoord._links.self.href);
+            this.loadPlantZone();
+          })
+        }, (error => {
+
+        }));
+      });
     }
   }
 
   loadData() {
-    this.plantService.getPlants().subscribe((res: Plant[]) => {
-      this.plantList = res;
+    this.plantService.getPlants().subscribe((res: any) => {
+      this.plantList = res._embedded.plants;
     });
   }
 
   loadPlantZone(removePlantZone = false) {
-    this.plantZoneService.getPlantPlaneByPlant(this.reasonForm.get('plant').value, ZoneType.zv).subscribe((res: PlantCoordinates[]) => {
-      this.plantZoneList = res;
+    let selectedPlantCoordsUrl = this.reasonForm.get('plant').value;
+    this.plantZoneService.getPlantPlaneByPlant(selectedPlantCoordsUrl, ZoneType.zv).subscribe((res: any) => {
+      this.plantZoneList = res._embedded.plantCoordinateses;
       if (removePlantZone) {
-        this.reasonForm.get('plantZone').setValue(null);
+        this.reasonForm.get('plantCoordinate').setValue(null);
       }
     });
   }
 
   submit() {
     let reason = new Reason();
-    reason.uuid = this.reasonForm.get('uuid').value;
     reason.name = this.reasonForm.get('name').value;
     reason.description = this.reasonForm.get('description').value;
     reason.active = this.reasonForm.get('active').value;
-    reason.plantZone = this.reasonForm.get('plantZone').value;
+    reason.plantCoordinate = this.reasonForm.get('plantCoordinate').value;
 
-    this.reasonService.saveReason(reason).subscribe(res => {
-      this.modalService.dismissAll("success");
-      let options = {
-        autoClose: true,
-        keepAfterRouteChange: true
-      };
-      this.alertService.success(`¡Éxito!, motivo ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
-      this.editionMode = false;
-    });
+    let options = {
+      autoClose: true,
+      keepAfterRouteChange: true
+    };
+    this.reasonService.saveReason(this.reasonUrl, reason).subscribe((res: any) => {
+      if (reason.plantCoordinate != null) {
+        this.reasonService.assignCoordinateToReason(res._links.plantCoordinate.href, reason.plantCoordinate).subscribe(res => {
+          this.modalService.dismissAll("success");
+
+          this.alertService.success(`¡Éxito!, motivo ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
+          this.editionMode = false;
+        }),
+          ((error: any) => {
+            let message = this.translateService.instant(`error.${error.error.message}`);
+            this.reasonForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
+          });
+      } else {
+        this.reasonService.deleteCoordinateReason(res._links.plantCoordinate.href).subscribe(res => {
+          this.modalService.dismissAll("success");
+          this.alertService.success(`¡Éxito!, motivo ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
+          this.editionMode = false;
+        })
+      }
+    })
   }
 
   delete() {
-    let uuid = this.reasonForm.get('uuid').value;
-    this.reasonService.deleteReason(uuid).subscribe(res => {
+    this.reasonService.deleteReason(this.reasonUrl).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,

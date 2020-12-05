@@ -12,18 +12,13 @@ export class EpiService {
     constructor(private http: HttpClient,
         private authService: AuthenticationService) { }
 
-    saveEpi(epi: Epi) {
-        let body = new URLSearchParams();
-        body.set('name', epi.name);
-        body.set('description', epi.description);
-        body.set('active', `${epi.active}`);
+    saveEpi(epiUrl: string, epi: Epi) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
 
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-
-        if (epi.uuid == null) {
-            return this.http.post(this.urlEndPoint, body.toString(), options);
+        if (epiUrl == null) {
+            return this.http.post(this.urlEndPoint, epi, options);
         } else {
-            return this.http.put(this.urlEndPoint + "/" + epi.uuid, body.toString(), options);
+            return this.http.put(epiUrl, epi, options);
         }
     }
 
@@ -32,14 +27,14 @@ export class EpiService {
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getEpisByUuid(uuid: string) {
+    getEpisByUuid(epiUrl: string) {
         let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/" + uuid, options);
+        return this.http.get(epiUrl, options);
     }
 
-    deleteEpi(uuid: string) {
+    deleteEpi(epiUrl: string) {
         let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.delete(this.urlEndPoint + "/" + uuid, options);
+        return this.http.delete(epiUrl, options);
     }
 
 }

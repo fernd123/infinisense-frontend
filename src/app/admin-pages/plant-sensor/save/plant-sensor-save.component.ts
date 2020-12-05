@@ -35,7 +35,7 @@ export class PlantSensorSaveComponent implements OnInit {
   sensorTypeList: SensorType[];
   editionMode: boolean = false;
   @Input() public plantCoordId;
-  @Input() public plantId;
+  @Input() public plantUrl;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -64,7 +64,7 @@ export class PlantSensorSaveComponent implements OnInit {
     });
 
     if (this.plantCoordId != null && this.plantCoordId != "") {
-      this.plantCoordService.getPlantCoordinateByUuid(this.plantId, this.plantCoordId).subscribe((res: PlantCoordinates) => {
+      this.plantCoordService.getPlantCoordinateByUuid(this.plantUrl, this.plantCoordId).subscribe((res: PlantCoordinates) => {
         this.plantCoordsForm.get('uuid').setValue(res.uuid);
         this.plantCoordsForm.get('name').setValue(res.name);
         this.plantCoordsForm.get('virtualZoneType').setValue(res.virtualZoneType);
@@ -84,9 +84,9 @@ export class PlantSensorSaveComponent implements OnInit {
     plantCoords.status = this.plantCoordsForm.get('status').value;
     plantCoords.virtualZoneType = this.plantCoordsForm.get('virtualZoneType').value;
     plantCoords.coordinates = null;
-    plantCoords.plantid = this.plantId;
+    plantCoords.plantid = this.plantUrl;
 
-    this.plantCoordService.savePlantVirtual(plantCoords).subscribe(res => {
+    this.plantCoordService.savePlantVirtual(this.plantUrl, plantCoords).subscribe(res => {
       this.modalService.dismissAll("success");
     });
   }

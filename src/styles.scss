@@ -62,3 +62,7 @@
 /* === Layout === */
 @import "./assets/scss/layout";
 
+
+.invalid-feedback {
+    display: inherit !important;
+}

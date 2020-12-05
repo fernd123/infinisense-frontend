@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertService } from 'src/app/core/services/alert.service';
+import { LocalDataSource } from 'ng2-smart-table';
+import { forkJoin } from 'rxjs';
 import { ReasonService } from 'src/app/core/services/reason.service';
-import { Reason } from 'src/app/shared/models/reason.model';
+import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { VisitReasonSaveComponent } from './save/visit-reason-save.component';
 
 @Component({
@@ -14,11 +14,13 @@ import { VisitReasonSaveComponent } from './save/visit-reason-save.component';
 })
 export class VisitReasonComponent implements OnInit {
 
-  data: Reason[];
+  data: any[];
   @ViewChild('modalWindow') modalWindow: any;
   editionMode: boolean = false;
   reasonEditUuid: string;
   titleModal: string;
+  public source = new LocalDataSource();
+
 
   /* Table Settings */
   settings = {
@@ -30,12 +32,12 @@ export class VisitReasonComponent implements OnInit {
       description: {
         title: this.translateService.instant('description'),
       },
-      plantZone: {
+      plantCoordinate: {
         title: this.translateService.instant('reason.relatedto'),
-        valuePrepareFunction: (data) => {
-          if (data != null) {
-            return `${data.name} - ${data.plant?.name}`;
-          }
+        //type: 'custom',
+        //renderComponent: CustomRenderComponent
+        valuePrepareFunction: (cell, row) => {
+          return cell;
         }
       }
     },
@@ -72,15 +74,38 @@ export class VisitReasonComponent implements OnInit {
   }
 
   refreshList() {
-    this.reasonService.getReasons().subscribe((res: Reason[]) => {
-      this.data = res;
+    this.reasonService.getReasons().subscribe((res: any) => {
+      this.data = res._embedded.reasons;
+      let getRequest = [];
+      let dataUpdate = [];
+      for (let i = 0; i < this.data.length; i++) {
+        let plantZoneUrl = this.data[i]._links.plantCoordinate.href;
+        getRequest.push(this.reasonService.getData(plantZoneUrl));
+        dataUpdate.push(this.data[i]);
+        /*this.reasonService.getData(plantZoneUrl).subscribe((resZone: any) => {
+          this.data[i].plantCoordinate = resZone.name;
+          this.source.load(this.data);
+        },
+          (error: any) => {
+
+          });
+      }*/
+      }
+      /* Hacemos todas las peticiones para setear el campo de la relación y actualizar la tabla */
+      forkJoin(getRequest).subscribe((res: PlantCoordinates[]) => {
+        for (let i = 0; i < res.length; i++) {
+          dataUpdate[i].plantCoordinate = res[i].name;
+        }
+        this.source.load(dataUpdate);
+      },
+        (error: any) => { console.log(error); });
     });
   }
 
-  public openSaveModal(uuid: string, size?: string): void {
+  public openSaveModal(reasonUrl: string, size?: string): void {
     if (!size || size === undefined) { size = 'modal-lg'; }
     const modalRef = this.modalService.open(VisitReasonSaveComponent);
-    modalRef.componentInstance.visitReasonId = uuid;
+    modalRef.componentInstance.reasonUrl = reasonUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {
@@ -95,10 +120,10 @@ export class VisitReasonComponent implements OnInit {
   onCustomAction(event) {
     switch (event.action) {
       case 'edit':
-        this.openSaveModal(event.data.uuid);
+        this.openSaveModal(event.data._links.self.href);
         break;
       case 'remove':
-        this.reasonService.deleteReason(event.data.uuid).subscribe(res => {
+        this.reasonService.deleteReason(event.data._links.self.href).subscribe(res => {
           this.refreshList();
         });
         break;

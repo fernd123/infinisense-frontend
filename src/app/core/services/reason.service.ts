@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BASEURL_DEV_REASON } from 'src/app/shared/constants/app.constants';
 import { Reason } from 'src/app/shared/models/reason.model';
 import { AuthenticationService } from './authentication.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ReasonService {
@@ -12,30 +14,54 @@ export class ReasonService {
     constructor(private http: HttpClient,
         private authService: AuthenticationService) { }
 
-    saveReason(reason: Reason) {
-        let body = new URLSearchParams();
-        body.set('name', reason.name);
-        body.set('description', reason.description);
-        body.set('active', `${reason.active}`);
-        body.set('plantZone', reason.plantZone);
+    getData(url: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(url, options).pipe(
+            catchError(err => of(err.status)),
+        );
+    }
 
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+    saveReason(reasonUrl: string, reason: Reason) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
 
-        if (reason.uuid == null) {
-            return this.http.post(this.urlEndPoint, body.toString(), options);
+        if (reasonUrl == null) {
+            return this.http.post(this.urlEndPoint, reason, options);
         } else {
-            return this.http.put(this.urlEndPoint + "/" + reason.uuid, body.toString(), options);
+            return this.http.put(reasonUrl, reason, options);
         }
     }
 
+    assignCoordinateToReason(reasonUrl: string, coordinateUrl: string) {
+        let data = coordinateUrl;
+        const options = {
+            headers: {
+                'Content-Type': 'text/uri-list',
+                'X-TenantID': this.authService.getTenantId(),
+            },
+            'observe': "response" as 'response', // to display the full response & as 'body' for type cast
+        };
+        return this.http.put(reasonUrl, data, options);
+    }
+
+    deleteCoordinateReason(reasonUrl: String) {
+        const options = {
+            headers: {
+                'X-TenantID': this.authService.getTenantId(),
+            },
+            'observe': "response" as 'response', // to display the full response & as 'body' for type cast
+        };
+        return this.http.delete(reasonUrl + '/plantCoordinate', options);
+    }
+
+
     getReasons() {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getReasonByUuid(uuid: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/" + uuid, options);
+    getReasonByUuid(reasonUrl: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(reasonUrl, options);
     }
 
     getZoneReasonByUuid(uuid: any) {
@@ -43,9 +69,9 @@ export class ReasonService {
         return this.http.get(this.urlEndPoint + "/zone" + uuid, options);
     }
 
-    deleteReason(uuid: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.delete(this.urlEndPoint + "/" + uuid, options);
+    deleteReason(reasonUrl: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.delete(reasonUrl, options);
     }
 
 }

@@ -72,14 +72,14 @@ export class PlantManagementComponent implements OnInit {
   }
 
   refreshList() {
-    this.plantService.getPlants().subscribe((res: Plant[]) => {
-      this.data = res;
+    this.plantService.getPlants().subscribe((res: any) => {
+      this.data = res._embedded.plants;
     });
   }
 
-  public openSaveModal(sensor: any): void {
+  public openSaveModal(plantUrl: any): void {
     const modalRef = this.modalService.open(PlantManagementSaveComponent);
-    modalRef.componentInstance.plantId = sensor;
+    modalRef.componentInstance.plantUrl = plantUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {
@@ -87,20 +87,20 @@ export class PlantManagementComponent implements OnInit {
       });
   }
 
-  navigateToPlane(uuid: string, typeConfig: string) {
-    this.router.navigateByUrl("/admin-pages/plant-plane", { skipLocationChange: true, queryParams: { plantId: uuid, tenantId: "", type: typeConfig } });
+  navigateToPlane(plantUrl: string, typeConfig: string) {
+    this.router.navigateByUrl("/admin-pages/plant-plane", { skipLocationChange: true, queryParams: { plantUrl: plantUrl, tenantId: "", type: typeConfig } });
   }
 
   onCustomAction(event) {
     switch (event.action) {
       case 'edit':
-        this.openSaveModal(event.data.uuid);
+        this.openSaveModal(event.data._links.self.href);
         break;
       case 'zones':
-        this.navigateToPlane(event.data.uuid, this.zonevirtual);
+        this.navigateToPlane(event.data._links.self.href, this.zonevirtual);
         break;
       case 'sensor':
-        this.navigateToPlane(event.data.uuid, this.sensor);
+        this.navigateToPlane(event.data._links.self.href, this.sensor);
         break;
     }
   }

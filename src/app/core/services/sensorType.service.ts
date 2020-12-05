@@ -17,37 +17,32 @@ export class SensorTypeService {
     constructor(private http: HttpClient,
         private authService: AuthenticationService) { }
 
-    saveSensorType(sensorType: SensorType) {
-        let body = new URLSearchParams();
-        body.set('name', sensorType.name);
-        body.set('description', sensorType.description);
-        body.set('active', `${sensorType.active}`);
+    saveSensorType(sensorUrl: string, sensorType: SensorType) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
 
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-
-        if (sensorType.uuid == null) {
-            return this.http.post(this.urlEndPoint, body.toString(), options);
+        if (sensorUrl == null) {
+            return this.http.post(this.urlEndPoint, sensorType, options);
         } else {
-            return this.http.put(this.urlEndPoint + "/" + sensorType.uuid, body.toString(), options);
+            return this.http.put(sensorUrl, sensorType, options);
         }
     }
 
     getSensorTypeList() {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getSensorTypeByUuid(uuid: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/" + uuid, options);
+    getSensorTypeByUuid(sensorUrl: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(sensorUrl, options);
     }
 
-    deleteSensorType(uuid: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.delete(this.urlEndPoint + "/" + uuid, options);
+    deleteSensorType(sensorUrl: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.delete(sensorUrl, options);
     }
 
-    upload(file: File, uuid: string): any {
+    upload(file: File, sensorUrl: string): any {
         const formData: FormData = new FormData();
         formData.append('file', file);
         let headers = new HttpHeaders({
@@ -58,7 +53,7 @@ export class SensorTypeService {
             'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
         let options = { headers: headers };
-        return this.http.post(`${this.urlEndPoint}/${uuid}/upload`, formData, options);
+        return this.http.post(`${sensorUrl}/upload`, formData, options);
     }
 
     getSensorTypeImage(filename: string) {

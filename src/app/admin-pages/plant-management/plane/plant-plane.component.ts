@@ -23,7 +23,7 @@ import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 })
 export class PlanPlaneComponent implements OnInit {
 
-  plantId: string;
+  plantUrl: string;
   plantPlaneId: string;
   typeConfig: any;
   plant: Plant;
@@ -48,12 +48,12 @@ export class PlanPlaneComponent implements OnInit {
     private plantCoordService: PlantCoordsService,
     private modalService: NgbModal,
     private router: Router) {
-    this.plantId = this.router.getCurrentNavigation().extras.queryParams.plantId;
+    this.plantUrl = this.router.getCurrentNavigation().extras.queryParams.plantUrl;
     this.typeConfig = this.router.getCurrentNavigation().extras.queryParams.type;
-    this.plantService.getPlantByUuid(this.plantId).subscribe((res: Plant) => {
+    this.plantService.getPlantByUuid(this.plantUrl).subscribe((res: Plant) => {
       this.plant = res;
       if (res != undefined) {
-        this.plantService.getPlantPlaneByPlant(this.plantId).subscribe((resPp: PlantPlane) => {
+        this.plantService.getPlantPlaneByPlant(this.plantUrl).subscribe((resPp: PlantPlane) => {
           if (resPp != undefined) {
             this.plantPlaneId = resPp.uuid;
             this.plantService.getPlantPlanes(resPp.name).subscribe(res => {
@@ -82,7 +82,7 @@ export class PlanPlaneComponent implements OnInit {
   upload() {
     this.progress = 0;
     this.currentFile = this.imageMapCreatorService.getImageMapCreator().getImage().file;
-    this.plantService.upload(this.currentFile, this.plantId, this.plantPlaneId).subscribe(
+    this.plantService.upload(this.currentFile, this.plantUrl, this.plantPlaneId).subscribe(
       event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.progress = Math.round(100 * event.loaded / event.total);
@@ -127,7 +127,7 @@ export class PlanPlaneComponent implements OnInit {
     modalRef.componentInstance.selectedAreaId = dataJson.selectedAreaId;
     modalRef.componentInstance.sensorTypeId = dataJson.sensorTypeId;
     modalRef.componentInstance.selection = dataJson.selection;
-    modalRef.componentInstance.plantId = this.plantId;
+    modalRef.componentInstance.plantUrl = this.plantUrl;
     modalRef.componentInstance.typeConfig = this.typeConfig;
 
     this.imageMapCreatorService.getImageMapCreator().editionMode = true;
@@ -150,7 +150,7 @@ export class PlanPlaneComponent implements OnInit {
   public openEditModal(uuid: string) {
     const modalRef = this.modalService.open(PlantCoordsSaveComponent);
     modalRef.componentInstance.selectedAreaId = uuid;
-    modalRef.componentInstance.plantId = this.plantId;
+    modalRef.componentInstance.plantUrl = this.plantUrl;
     this.imageMapCreatorService.getImageMapCreator().editionMode = true;
 
     modalRef.result.then(() => { console.log('When user closes'); },
@@ -166,7 +166,7 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   private refreshVirtualZones() {
-    this.plantCoordService.getPlantPlaneByPlant(this.plantId, this.typeConfig).subscribe((resPp: PlantCoordinates[]) => {
+    this.plantCoordService.getPlantPlaneByPlant(this.plantUrl, this.typeConfig).subscribe((resPp: PlantCoordinates[]) => {
       this.virtualizationList = resPp;
       let imageCreator = this.imageMapCreatorService.getImageMapCreator();
       imageCreator.clearAreas();
@@ -187,7 +187,7 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   public deleteVirtualZone(uuid: string) {
-    this.plantCoordService.deleteVirtualZone(this.plantId, uuid).subscribe(res => {
+    this.plantCoordService.deleteVirtualZone(this.plantUrl, uuid).subscribe(res => {
       this.refreshVirtualZones();
     });
   }

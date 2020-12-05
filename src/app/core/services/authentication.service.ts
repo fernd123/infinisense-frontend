@@ -125,6 +125,16 @@ export class AuthenticationService {
         return headers;
     }
 
+    public getHeadersJsonTenancyDefault() {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-TenantID': this.getTenantId(),
+            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+        });
+        return headers;
+    }
+
     public getTenantId() {
         return localStorage.getItem('tenantid');
     }

@@ -122,5 +122,8 @@
     "error": {
       "invalidcredentials": "The user name or password is incorrect. Try again"
     }
+  },
+  "error": {
+    "must.be.unique": "Ya existe un registro con el mismo valor"
   }
 }

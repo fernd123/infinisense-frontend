@@ -14,29 +14,29 @@ export class PlantCoordsService {
         private authService: AuthenticationService) { }
 
     getPlant(plantId: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(this.urlEndPoint + "/" + plantId, options);
     }
 
-    getPlantPlaneByPlant(plantId: string, type: string = null) {
+    getPlantPlaneByPlant(plantCoordsUrl: string, type: string = null) {
         let body = new URLSearchParams();
         body.set('type', type);
         //TODO revisar
-        let options = { headers: this.authService.getHeadersTenancyDefault(), params: { type: type } };
-        return this.http.get(this.urlEndPoint + `/${plantId}/coordinates`, options);
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault()/*, params: { type: type }*/ };
+        return this.http.get(`${plantCoordsUrl}`, options);
     }
 
-    getPlantCoordinateByUuid(plantId: string, uuid: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/" + plantId + "/coordinates/" + uuid, options);
+    getPlantCoordinateByUuid(plantUrl: string, uuid: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(plantUrl + "/coordinates/" + uuid, options);
     }
 
-    getPlantCoordinates(plantId: string, uuid: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/" + plantId + "/coordinates", options);
+    getPlantCoordinates(plantUrl: string, uuid: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(plantUrl + "/coordinates", options);
     }
 
-    savePlantVirtual(plantVirtual: PlantCoordinates) {
+    savePlantVirtual(plantUrl: string, plantVirtual: PlantCoordinates) {
         let body = new URLSearchParams();
         body.set('name', plantVirtual.name);
         body.set('virtualZoneType', plantVirtual.virtualZoneType);
@@ -48,9 +48,9 @@ export class PlantCoordsService {
 
         let options = { headers: this.authService.getHeadersTenancyDefault() };
         if (plantVirtual.uuid == null) {
-            return this.http.post(this.urlEndPoint + "/" + plantVirtual.plantid + "/coordinates", body.toString(), options);
+            return this.http.post(plantUrl + "/coordinates", body.toString(), options);
         } else {
-            return this.http.put(this.urlEndPoint + "/" + plantVirtual.plantid + "/coordinates/" + plantVirtual.uuid, body.toString(), options);
+            return this.http.put(plantUrl + "/coordinates/" + plantVirtual.uuid, body.toString(), options);
         }
     }
 
@@ -65,8 +65,8 @@ export class PlantCoordsService {
         return this.http.request(req);
     }
 
-    deleteVirtualZone(plantId: string, uuid: string) {
+    deleteVirtualZone(plantUrl: string, uuid: string) {
         let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.delete(this.urlEndPoint + "/" + plantId + "/coordinates/" + uuid, options);
+        return this.http.delete(plantUrl + "/coordinates/" + uuid, options);
     }
 }

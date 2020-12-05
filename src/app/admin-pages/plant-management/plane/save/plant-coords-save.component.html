@@ -54,7 +54,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
-      *ngIf="this.plantCoordsForm.get('uuid').value != null">{{ 'delete'  | translate }}</button>
+      *ngIf="this.plantUrl != null">{{ 'delete'  | translate }}</button>
     <button type="button" class="btn btn-success btn-sm" (click)="submit()"
       [disabled]="this.plantCoordsForm.invalid">{{ 'save'  | translate }}</button>
     <button type="button" class="btn btn-light btn-sm" data-dismiss="modal"

@@ -15,6 +15,8 @@ export class SidebarComponent implements OnInit {
   public plantDataCollapsed = false;
   public userManagementCollapsed = false;
   public visitDataCollapsed = false;
+  public companyDataCollapsed = false;
+
   public name: string = "";
   @ViewChild('profileImage') profileImage: any;
 

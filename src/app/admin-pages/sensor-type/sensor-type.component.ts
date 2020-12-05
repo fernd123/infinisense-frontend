@@ -65,14 +65,14 @@ export class SensorTypeComponent implements OnInit {
   }
 
   refreshList() {
-    this.sensorTypeService.getSensorTypeList().subscribe((res: SensorType[]) => {
-      this.data = res;
+    this.sensorTypeService.getSensorTypeList().subscribe((res: any) => {
+      this.data = res._embedded.sensorTypes;
     });
   }
 
-  public openSaveModal(sensor: any): void {
+  public openSaveModal(sensorUrl: any): void {
     const modalRef = this.modalService.open(SensorTypeSaveComponent);
-    modalRef.componentInstance.sensorTypeId = sensor;
+    modalRef.componentInstance.sensorUrl = sensorUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {
@@ -87,10 +87,10 @@ export class SensorTypeComponent implements OnInit {
   onCustomAction(event) {
     switch (event.action) {
       case 'edit':
-        this.openSaveModal(event.data.uuid);
+        this.openSaveModal(event.data._links.self.href);
         break;
       case 'remove':
-        this.sensorTypeService.deleteSensorType(event.data.uuid).subscribe(res => {
+        this.sensorTypeService.deleteSensorType(event.data._links.self.href).subscribe(res => {
           this.refreshList();
         });
         break;

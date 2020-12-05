@@ -18,7 +18,7 @@ export class PlantManagementSaveComponent implements OnInit {
   plantForm: FormGroup;
   modalTitle: string = this.translateService.instant('plant.saveplantinfotitle');
   editionMode: boolean = false;
-  @Input() public plantId;
+  @Input() public plantUrl;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,10 +38,9 @@ export class PlantManagementSaveComponent implements OnInit {
       maximumCapacity: [null, Validators.required]
     });
 
-    if (this.plantId != null) {
+    if (this.plantUrl != null) {
       this.editionMode = true;
-      this.plantService.getPlantByUuid(this.plantId).subscribe((res: Plant) => {
-        this.plantForm.get('uuid').setValue(res.uuid);
+      this.plantService.getPlantByUuid(this.plantUrl).subscribe((res: Plant) => {
         this.plantForm.get('name').setValue(res.name);
         this.plantForm.get('location').setValue(res.location);
         this.plantForm.get('phone').setValue(res.phone);
@@ -58,14 +57,13 @@ export class PlantManagementSaveComponent implements OnInit {
 
   submit() {
     let plant = new Plant();
-    plant.uuid = this.plantForm.get('uuid').value;
     plant.name = this.plantForm.get('name').value;
     plant.location = this.plantForm.get('location').value;
     plant.phone = this.plantForm.get('phone').value;
     plant.alternativePhone = this.plantForm.get('alternativePhone').value;
     plant.maximumCapacity = this.plantForm.get('maximumCapacity').value;
 
-    this.plantService.savePlant(plant).subscribe(res => {
+    this.plantService.savePlant(this.plantUrl, plant).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,
@@ -73,11 +71,14 @@ export class PlantManagementSaveComponent implements OnInit {
       };
       this.alertService.success(`¡Éxito!, Planta ${this.editionMode ? 'actualizada' : 'guardado'} correctamente`, options);
       this.editionMode = false;
+    }, (error: any) => {
+      let message = this.translateService.instant(`error.${error.error.message}`);
+      this.plantForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
     });
   }
 
   delete() {
-    this.plantService.deletePlant(this.plantId).subscribe(res => {
+    this.plantService.deletePlant(this.plantUrl).subscribe(res => {
       this.modalService.dismissAll("success");
     });
   }

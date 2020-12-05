@@ -18,7 +18,7 @@ export class EpiSaveComponent implements OnInit {
   epiForm: FormGroup;
   modalTitle: string = this.translateService.instant('epi.savetitle');
   editionMode: boolean = false;
-  @Input() public epiId;
+  @Input() public epiUrl;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,15 +30,13 @@ export class EpiSaveComponent implements OnInit {
 
   ngOnInit() {
     this.epiForm = this.formBuilder.group({
-      uuid: [null],
       name: ["", Validators.required],
-      description: ["", Validators.required],
+      description: [""],
       active: [true]
     });
-    if (this.epiId != null) {
+    if (this.epiUrl != null) {
       this.editionMode = true;
-      this.epiService.getEpisByUuid(this.epiId).subscribe((res: Epi) => {
-        this.epiForm.get('uuid').setValue(res.uuid);
+      this.epiService.getEpisByUuid(this.epiUrl).subscribe((res: Epi) => {
         this.epiForm.get('name').setValue(res.name);
         this.epiForm.get('description').setValue(res.description);
         this.epiForm.get('active').setValue(res.active);
@@ -48,13 +46,12 @@ export class EpiSaveComponent implements OnInit {
   }
 
   submit() {
-    let reason = new Reason();
-    reason.uuid = this.epiForm.get('uuid').value;
-    reason.name = this.epiForm.get('name').value;
-    reason.description = this.epiForm.get('description').value;
-    reason.active = this.epiForm.get('active').value;
+    let epi = new Epi();
+    epi.name = this.epiForm.get('name').value;
+    epi.description = this.epiForm.get('description').value;
+    epi.active = this.epiForm.get('active').value;
 
-    this.epiService.saveEpi(reason).subscribe(res => {
+    this.epiService.saveEpi(this.epiUrl, epi).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,
@@ -62,12 +59,15 @@ export class EpiSaveComponent implements OnInit {
       };
       this.alertService.success(`¡Éxito!, EPI ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
       this.editionMode = false;
-    });
+    },
+      (error: any) => {
+        let message = this.translateService.instant(`error.${error.error.message}`);
+        this.epiForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
+      });
   }
 
   delete() {
-    let uuid = this.epiForm.get('uuid').value;
-    this.epiService.deleteEpi(uuid).subscribe(res => {
+    this.epiService.deleteEpi(this.epiUrl).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,

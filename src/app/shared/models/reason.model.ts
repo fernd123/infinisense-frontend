@@ -6,5 +6,5 @@ export class Reason extends BaseModel implements IReason {
     name: string;
     description: string;
     active: boolean;
-    plantZone?: any;
+    plantCoordinate?: any;
 }

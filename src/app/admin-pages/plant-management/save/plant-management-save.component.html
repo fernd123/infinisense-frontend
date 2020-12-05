@@ -2,7 +2,11 @@
   <form [formGroup]="plantForm" (ngSubmit)="submit()">
     <div class="form-group">
       <label for="name">{{ 'name'  | translate }}</label>
-      <input type="text" class="form-control" id="name" placeholder="{{ 'name'  | translate }}" formControlName="name">
+      <input type="text" class="form-control" id="name" placeholder="{{ 'name'  | translate }}" formControlName="name"
+        [ngClass]="{'alert-danger' : !this.plantForm.get('name').valid && (this.plantForm.get('name').touched || this.plantForm.get('name').dirty)}">
+      <div class="invalid-feedback" *ngIf="!this.plantForm.get('name').valid">
+        {{ this.plantForm.get('name').getError('message') }}
+      </div>
     </div>
 
     <div class="form-group">
@@ -33,7 +37,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
-      *ngIf="this.plantForm.get('uuid').value != null">{{ 'delete'  | translate }}</button>
+      *ngIf="this.plantUrl != null">{{ 'delete'  | translate }}</button>
     <button type="button" class="btn btn-success btn-sm" (click)="submit()"
       [disabled]="this.plantForm.invalid">{{ 'save'  | translate }}</button>
     <button type="button" class="btn btn-light btn-sm" data-dismiss="modal"

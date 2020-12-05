@@ -16,18 +16,18 @@ export class PlantService {
         private authService: AuthenticationService) { }
 
     getPlants() {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getPlantByUuid(plantId: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/" + plantId, options);
+    getPlantByUuid(plantUrl: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(plantUrl, options);
     }
 
-    getPlantPlaneByPlant(plantId: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + `/${plantId}/planes`, options);
+    getPlantPlaneByPlant(plantUrl: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(plantUrl + "/planes", options);
     }
 
     getPlantPlanes(filename: string) {
@@ -38,35 +38,28 @@ export class PlantService {
         return this.http.get(this.urlEndPoint + `/planes/download/${filename}`, { headers, responseType: 'blob' }).pipe(mergeMap(res => this.createImageFromBlob(res)));
     }
 
-    savePlant(plant: Plant) {
-        let body = new URLSearchParams();
-        body.set('name', plant.name);
-        body.set('location', plant.location);
-        body.set('phone', plant.phone);
-        body.set('alternativePhone', plant.alternativePhone);
-        body.set('maximumCapacity', plant.maximumCapacity);
-
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        if (plant.uuid == null) {
-            return this.http.post(this.urlEndPoint, body.toString(), options);
+    savePlant(plantUrl: string, plant: Plant) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        if (plantUrl == null) {
+            return this.http.post(this.urlEndPoint, plant, options);
         } else {
-            return this.http.put(this.urlEndPoint + "/" + plant.uuid, body.toString(), options);
+            return this.http.put(plantUrl, plant, options);
         }
     }
 
-    deletePlant(uuid: string) {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.delete(this.urlEndPoint + "/" + uuid, options);
+    deletePlant(plantUrl: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.delete(plantUrl, options);
     }
 
-    upload(file: File, plantUuid: string, uuid: string): any {
+    upload(file: File, plantUrl: string, uuid: string): any {
         const formData: FormData = new FormData();
         formData.append('file', file);
         let type = 'PUT';
-        let url = `${this.urlEndPoint}/${plantUuid}/upload/${uuid}`;
+        let url = `${plantUrl}/upload/${uuid}`;
         if (uuid == undefined) {
             type = 'POST';
-            url = `${this.urlEndPoint}/${plantUuid}/upload`;
+            url = `${plantUrl}/upload`;
         }
         let headers = new HttpHeaders({
             'X-TenantID': this.authService.getTenantId(),

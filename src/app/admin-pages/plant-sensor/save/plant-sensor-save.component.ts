@@ -34,20 +34,20 @@ export class PlantSensorSaveComponent implements OnInit {
 
   sensorTypeList: SensorType[];
   editionMode: boolean = false;
-  @Input() public plantCoordId;
+  @Input() public plantCoordUrl;
   @Input() public plantUrl;
 
   constructor(
     private formBuilder: FormBuilder,
     private sensorTypeService: SensorTypeService,
     private plantCoordService: PlantCoordsService,
+    private alertService: AlertService,
     private translate: TranslateService,
     private modalService: NgbModal
   ) { }
 
   ngOnInit() {
     this.plantCoordsForm = this.formBuilder.group({
-      uuid: [null],
       name: ["", Validators.required],
       virtualZoneType: ["", Validators.required],
       sensorType: ["", null],
@@ -59,34 +59,40 @@ export class PlantSensorSaveComponent implements OnInit {
     this.plantCoordsForm.get('virtualZoneType').disable();
     this.plantCoordsForm.get('sensorType').disable();
 
-    this.sensorTypeService.getSensorTypeList().subscribe((res: SensorType[]) => {
-      this.sensorTypeList = res;
+    this.sensorTypeService.getSensorTypeList().subscribe((res: any) => {
+      this.sensorTypeList = res._embedded.sensorTypes;
     });
 
-    if (this.plantCoordId != null && this.plantCoordId != "") {
-      this.plantCoordService.getPlantCoordinateByUuid(this.plantUrl, this.plantCoordId).subscribe((res: PlantCoordinates) => {
-        this.plantCoordsForm.get('uuid').setValue(res.uuid);
+
+    if (this.plantCoordUrl != null && this.plantCoordUrl != "") {
+      this.plantCoordService.getData(this.plantCoordUrl).subscribe((res: any) => {
         this.plantCoordsForm.get('name').setValue(res.name);
         this.plantCoordsForm.get('virtualZoneType').setValue(res.virtualZoneType);
-        this.plantCoordsForm.get('sensorType').setValue(res.sensorType?.uuid);
         this.plantCoordsForm.get('sensorId').setValue(res.sensorId);
         this.plantCoordsForm.get('status').setValue(res.status);
+        this.plantCoordsForm.get('coordinates').setValue(res.coordinates);
+
+        this.plantCoordService.getData(res._links.sensorType.href).subscribe((res: any) => {
+          this.plantCoordsForm.get('sensorType').setValue(res._links.self.href);
+        });
       });
     }
   }
 
   submit() {
     let plantCoords = new PlantCoordinates();
-    plantCoords.uuid = this.plantCoordsForm.get('uuid').value;
     plantCoords.name = this.plantCoordsForm.get('name').value;
-    plantCoords.sensorType = this.plantCoordsForm.get('sensorType').value;
     plantCoords.sensorId = this.plantCoordsForm.get('sensorId').value;
     plantCoords.status = this.plantCoordsForm.get('status').value;
+    plantCoords.coordinates = this.plantCoordsForm.get('coordinates').value;
     plantCoords.virtualZoneType = this.plantCoordsForm.get('virtualZoneType').value;
-    plantCoords.coordinates = null;
-    plantCoords.plantid = this.plantUrl;
 
-    this.plantCoordService.savePlantVirtual(this.plantUrl, plantCoords).subscribe(res => {
+    this.plantCoordService.savePlantVirtual(this.plantCoordUrl, plantCoords).subscribe(res => {
+      let options = {
+        autoClose: true,
+        keepAfterRouteChange: true
+      };
+      this.alertService.success(`¡Éxito!, Registro actualizado correctamente`, options);
       this.modalService.dismissAll("success");
     });
   }

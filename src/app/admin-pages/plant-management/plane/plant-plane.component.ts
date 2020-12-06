@@ -1,11 +1,8 @@
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { Route } from '@angular/compiler/src/core';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, Observable } from 'rxjs';
-import { AlertService } from 'src/app/core/services/alert.service';
+import { Observable } from 'rxjs';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantPlane } from 'src/app/shared/models/plantPlane.model';
@@ -137,6 +134,7 @@ export class PlanPlaneComponent implements OnInit {
         this.refreshVirtualZones();
         this.imageMapCreatorService.getImageMapCreator().editionMode = false;
         this.imageMapCreatorService.getImageMapCreator().selectedAreaId = null;
+
         this.imageMapCreatorService.getImageMapCreator().clearSelection();
         document.getElementById('drag-items').click();
         if (res != "success") {
@@ -147,10 +145,11 @@ export class PlanPlaneComponent implements OnInit {
       });
   }
 
-  public openEditModal(uuid: string) {
+  public openEditModal(plantCoordinate: any) {
     const modalRef = this.modalService.open(PlantCoordsSaveComponent);
-    modalRef.componentInstance.selectedAreaId = uuid;
+    modalRef.componentInstance.plantCoordinateUrlFromTable = plantCoordinate._links.self.href;
     modalRef.componentInstance.plantUrl = this.plantUrl;
+    modalRef.componentInstance.sensorTypeId = plantCoordinate._links.sensorType.href;
     this.imageMapCreatorService.getImageMapCreator().editionMode = true;
 
     modalRef.result.then(() => { console.log('When user closes'); },
@@ -166,15 +165,15 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   private refreshVirtualZones() {
-    this.plantCoordService.getPlantPlaneByPlant(this.plantUrl, this.typeConfig).subscribe((resPp: PlantCoordinates[]) => {
-      this.virtualizationList = resPp;
+    this.plantCoordService.getPlantPlaneByPlant(this.plantUrl + "/plantCoordinate", this.typeConfig).subscribe((resPp: any) => {
+      this.virtualizationList = resPp._embedded.plantCoordinateses;
+      this.virtualizationList = this.virtualizationList.filter(f => { return f.virtualZoneType == this.typeConfig });
       let imageCreator = this.imageMapCreatorService.getImageMapCreator();
       imageCreator.clearAreas();
       let areasStr = "";
-      for (let i = 0; i < resPp.length; i++) {
-        this.plant = resPp[i].plant;
-        areasStr += resPp[i].coordinates;
-        if (i != resPp.length - 1) {
+      for (let i = 0; i < this.virtualizationList.length; i++) {
+        areasStr += this.virtualizationList[i].coordinates;
+        if (i != this.virtualizationList.length - 1) {
           areasStr += ", ";
         }
       }
@@ -187,7 +186,7 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   public deleteVirtualZone(uuid: string) {
-    this.plantCoordService.deleteVirtualZone(this.plantUrl, uuid).subscribe(res => {
+    this.plantCoordService.deleteVirtualZone(this.plantUrl).subscribe(res => {
       this.refreshVirtualZones();
     });
   }

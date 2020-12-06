@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BASEURL_DEV_PLANT } from 'src/app/shared/constants/app.constants';
+import { Observable } from 'rxjs';
+import { BASEURL_DEV_PLANT, BASEURL_DEV_PLANTCOORDINATES } from 'src/app/shared/constants/app.constants';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { AuthenticationService } from './authentication.service';
 
@@ -9,9 +10,14 @@ import { AuthenticationService } from './authentication.service';
 export class PlantCoordsService {
 
     urlEndPoint: string = BASEURL_DEV_PLANT;
-
+    plantCoordinatesBaseUrl: string = BASEURL_DEV_PLANTCOORDINATES;
     constructor(private http: HttpClient,
         private authService: AuthenticationService) { }
+
+    getData(uri: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(uri, options);
+    }
 
     getPlant(plantId: string) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
@@ -20,38 +26,39 @@ export class PlantCoordsService {
 
     getPlantPlaneByPlant(plantCoordsUrl: string, type: string = null) {
         let body = new URLSearchParams();
-        body.set('type', type);
-        //TODO revisar
         let options = { headers: this.authService.getHeadersJsonTenancyDefault()/*, params: { type: type }*/ };
         return this.http.get(`${plantCoordsUrl}`, options);
     }
 
     getPlantCoordinateByUuid(plantUrl: string, uuid: string) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
-        return this.http.get(plantUrl + "/coordinates/" + uuid, options);
+        return this.http.get(plantUrl + "/plantCoordinate/" + uuid, options);
     }
 
     getPlantCoordinates(plantUrl: string, uuid: string) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
-        return this.http.get(plantUrl + "/coordinates", options);
+        return this.http.get(plantUrl + "/plantCoordinate", options);
     }
 
-    savePlantVirtual(plantUrl: string, plantVirtual: PlantCoordinates) {
-        let body = new URLSearchParams();
-        body.set('name', plantVirtual.name);
-        body.set('virtualZoneType', plantVirtual.virtualZoneType);
-        body.set('sensorType', plantVirtual.sensorType);
-        body.set('sensorId', plantVirtual.sensorId);
-        body.set('status', plantVirtual.status);
-        body.set('coordinates', plantVirtual.coordinates);
-        body.set('epis', plantVirtual.epis);
-
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        if (plantVirtual.uuid == null) {
-            return this.http.post(plantUrl + "/coordinates", body.toString(), options);
+    savePlantVirtual(plantCoordinateUrl: string, plantVirtual: PlantCoordinates) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        if (plantCoordinateUrl == null) {
+            return this.http.post(this.plantCoordinatesBaseUrl, plantVirtual, options);
         } else {
-            return this.http.put(plantUrl + "/coordinates/" + plantVirtual.uuid, body.toString(), options);
+            return this.http.put(plantCoordinateUrl, plantVirtual, options);
         }
+    }
+
+    associateRelation(plantUrl: string, coordinateUrl: string) {
+        let data = plantUrl;
+        const options = {
+            headers: {
+                'Content-Type': 'text/uri-list',
+                'X-TenantID': this.authService.getTenantId(),
+            },
+            'observe': "response" as 'response', // to display the full response & as 'body' for type cast
+        };
+        return this.http.put(coordinateUrl, data, options);
     }
 
     upload(file: File, uuid: string): any {
@@ -65,8 +72,8 @@ export class PlantCoordsService {
         return this.http.request(req);
     }
 
-    deleteVirtualZone(plantUrl: string, uuid: string) {
+    deleteVirtualZone(plantCoordinateUrl: string) {
         let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.delete(plantUrl + "/coordinates/" + uuid, options);
+        return this.http.delete(plantCoordinateUrl, options);
     }
 }

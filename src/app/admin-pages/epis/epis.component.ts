@@ -57,7 +57,6 @@ export class EpiComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
     private epiService: EpiService,
     private translateService: TranslateService,
     private modalService: NgbModal) { }

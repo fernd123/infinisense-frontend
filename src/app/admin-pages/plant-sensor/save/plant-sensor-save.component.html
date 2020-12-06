@@ -15,7 +15,7 @@
     <div class="form-group" *ngIf="this.plantCoordsForm.get('virtualZoneType').value == sensor">
       <label for="sensorType">{{ 'plant.sensortype'  | translate }}</label>
       <select class="form-control" id="sensorType" #sensorTypeHtml formControlName="sensorType">
-        <option [value]="sensor.uuid" *ngFor="let sensor of sensorTypeList">{{sensor.name}}</option>
+        <option [value]="sensor._links.self.href" *ngFor="let sensor of sensorTypeList">{{sensor.name}}</option>
       </select>
     </div>
 
@@ -35,7 +35,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-danger btn-sm" (click)="delete()"
-      *ngIf="this.plantCoordsForm.get('uuid').value != null">{{ 'delete'  | translate }}</button>
+      *ngIf="this.plantCoordUrl != null">{{ 'delete'  | translate }}</button>
     <button type="button" class="btn btn-success btn-sm" (click)="submit()"
       [disabled]="this.plantCoordsForm.invalid">{{ 'save'  | translate }}</button>
     <button type="button" class="btn btn-light btn-sm" data-dismiss="modal"

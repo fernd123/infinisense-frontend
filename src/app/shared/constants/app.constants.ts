@@ -19,6 +19,7 @@ export const BASEURL_DEV_USER = BASEURL_PROXY + '/api/public/user';
 export const BASEURL_DEV_VISIT = BASEURL_PROXY + '/api/visit';
 export const BASEURL_DEV_REASON = BASEURL_PROXY + '/api/reason';
 export const BASEURL_DEV_PLANT = BASEURL_PROXY + '/api/plant';
+export const BASEURL_DEV_PLANTCOORDINATES = BASEURL_PROXY + '/api/plantCoordinate';
 export const BASEURL_DEV_SENSORTYPE = BASEURL_PROXY + '/api/sensortype';
 export const BASEURL_DEV_EPI = BASEURL_PROXY + '/api/epi';
 export const BASEURL_DEV_COMPANY = BASEURL_PROXY + '/api/company';

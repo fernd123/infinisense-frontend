@@ -8,11 +8,11 @@ import { ListResource, Resource } from 'src/app/shared/models/resource.model';
 declare function stringToInt(initials: string): any;
 
 export function RestService(options: { serviceURL: string, resource: string }) {
-  return function (constructor: Function) {
+  /*return function (constructor: Function) {
     constructor.prototype.serviceURL = options.serviceURL;
     constructor.prototype.resource = options.resource;
     constructor.prototype.urlEndPoint = BASEURL_PROXY + options.serviceURL + "/" + options.resource;
-  }
+  }*/
 }
 export type FetchFunction<T> = (data: any | any[]) => ListResource<T> | T;
 export type ResponseHandler<T> = (data: any | any[], res: ListResource<T> | T) => void;

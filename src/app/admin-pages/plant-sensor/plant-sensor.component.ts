@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
+import { forkJoin } from 'rxjs';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { statusList } from 'src/app/shared/constants/app.constants';
@@ -9,6 +10,7 @@ import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { PlantSensorSaveComponent } from './save/plant-sensor-save.component';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'infini-plant-sensor',
@@ -21,6 +23,7 @@ export class PlantSensorComponent implements OnInit {
   plantList: Plant[] = [];
   data: PlantCoordinates[] = [];
   selectedPlantUuid: string;
+  public source = new LocalDataSource();
 
   @ViewChild('modalWindow') modalWindow: any;
   @ViewChild('optionFilter') optionFilter: any;
@@ -40,7 +43,7 @@ export class PlantSensorComponent implements OnInit {
       sensorType: {
         title: this.translateService.instant('plant.sensortype'),
         valuePrepareFunction: (data) => {
-          return data.name;
+          return data;
         }
       },
       sensorId: {
@@ -102,9 +105,9 @@ export class PlantSensorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.plantService.getPlants().subscribe((res: Plant[]) => {
+    this.plantService.getPlants().subscribe((res: any) => {
       if (res != undefined) {
-        this.plantList = res;
+        this.plantList = res._embedded.plants;
         this.optionFilter.nativeElement.selectedIndex = 0;
         this.refreshList();
       }
@@ -116,23 +119,34 @@ export class PlantSensorComponent implements OnInit {
   }
 
   refreshList() {
-    try {
-      let selectedIndex = this.optionFilter.nativeElement.selectedIndex;
-      if (selectedIndex < 0) {
-        selectedIndex = 0;
-      }
-      let filter = this.optionFilter != null ? this.plantList[selectedIndex].uuid : this.plantList[0].uuid;
-      this.plantCoordsService.getPlantPlaneByPlant(filter, ZoneType.se).subscribe((res: PlantCoordinates[]) => {
-        this.data = res;
-      });
-    } catch (ex) {
-
+    let selectedIndex = this.optionFilter.nativeElement.selectedIndex;
+    if (selectedIndex < 0) {
+      selectedIndex = 0;
     }
+    let filter = this.optionFilter != null ? this.plantList[selectedIndex]._links.plantCoordinate.href : this.plantList[0]._links.plantCoordinate.href;
+    this.plantCoordsService.getPlantPlaneByPlant(filter, ZoneType.se).subscribe((res: any) => {
+      this.data = res._embedded.plantCoordinateses.filter(f => { return f.virtualZoneType == ZoneType.se });
+      let getRequest = [];
+      let dataUpdate = [];
+      for (let i = 0; i < this.data.length; i++) {
+        let sensorTypeUrl = this.data[i]._links.sensorType.href;
+        getRequest.push(this.plantCoordsService.getData(sensorTypeUrl));
+        dataUpdate.push(this.data[i]);
+      }
+      /* Hacemos todas las peticiones para setear el campo de la relación y actualizar la tabla */
+      forkJoin(getRequest).subscribe((res: PlantCoordinates[]) => {
+        for (let i = 0; i < res.length; i++) {
+          dataUpdate[i].sensorType = res[i].name;
+        }
+        this.source.load(dataUpdate);
+      },
+        (error: any) => { console.log(error); });
+    });
   }
 
-  public openSaveModal(plantCoordId: any): void {
+  public openSaveModal(plantCoordUrl: any): void {
     const modalRef = this.modalService.open(PlantSensorSaveComponent);
-    modalRef.componentInstance.plantCoordId = plantCoordId;
+    modalRef.componentInstance.plantCoordUrl = plantCoordUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {
@@ -148,10 +162,10 @@ export class PlantSensorComponent implements OnInit {
   onCustomAction(event) {
     switch (event.action) {
       case 'edit':
-        this.openSaveModal(event.data.uuid);
+        this.openSaveModal(event.data._links.self.href);
         break;
       case 'remove':
-        this.plantCoordsService.deleteVirtualZone(event.data.uuid, "").subscribe(res => {
+        this.plantCoordsService.deleteVirtualZone(event.data._links.self.href).subscribe(res => {
           this.refreshList();
         });
         break;

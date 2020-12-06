@@ -18,7 +18,7 @@
       <li class="breadcrumb-item" aria-current="page">{{ plant?.name }}</li>
     </ol>
   </nav>
- 
+
   <h4 class="card-title">{{ plant?.name }}</h4>
   <div class="row">
     <div class="col-sm-2" style="background-color: white;">
@@ -32,7 +32,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let virt of virtualizationList">
-              <td (click)="openEditModal(virt.uuid)" (mouseover)="searchCoordinates(virt.uuid)"
+              <td (click)="openEditModal(virt)" (mouseover)="searchCoordinates(virt._links.self.href)"
                 (mouseout)="searchCoordinates(null)" style=" cursor: pointer;">{{virt.name}}</td>
               <!--<td><button type="button" class="btn btn-danger btn-sm" (click)="deleteVirtualZone(virt.uuid)">
                   <i class="mdi mdi-home-map-marker"></i>
@@ -47,7 +47,8 @@
 
     <div class="col-sm-10">
       <div class="card" id="virtualizationBody">
-        <infini-virtualization (propagar)="procesaPropagar($event)" [height]="height" [width]="width" [typeConfig]="typeConfig">
+        <infini-virtualization (propagar)="procesaPropagar($event)" [height]="height" [width]="width"
+          [typeConfig]="typeConfig">
         </infini-virtualization>
       </div>
     </div>

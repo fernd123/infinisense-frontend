@@ -122,7 +122,7 @@ export class ImageMap {
 
 	findAreaByUuid(id: string) {
 		return this.areas.findIndex(a => {
-			return a.getIdCoordenate() == id;
+			return id.includes(a.getIdCoordenate());
 		});
 	}
 

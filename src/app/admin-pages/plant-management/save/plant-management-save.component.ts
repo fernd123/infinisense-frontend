@@ -78,9 +78,20 @@ export class PlantManagementSaveComponent implements OnInit {
   }
 
   delete() {
+    let options = {
+      autoClose: true,
+      keepAfterRouteChange: true
+    };
     this.plantService.deletePlant(this.plantUrl).subscribe(res => {
       this.modalService.dismissAll("success");
-    });
+      this.alertService.success(`¡Éxito!, Elemento borrado correctamente`, options);
+
+    },
+      (error: any) => {
+        if (error.error.message = 'Data Integrity')
+          this.alertService.error(`Error, No se puede eliminar el elemento porque tiene datos relacionados`, options);
+        this.modalService.dismissAll("success");
+      });
   }
 
   closeModal() {

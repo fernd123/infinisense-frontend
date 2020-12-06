@@ -37,13 +37,14 @@ export class VirtualizationComponent implements OnInit {
     this.imageMapCreatorService.setImageMapCreator(this.imcreator);
     this.areas = this.imcreator.map.getAreas();
     this.sensorTypeService.getSensorTypeList().subscribe((res: any) => {
-      if (res != undefined)
+      if (res != undefined) {
         this.sensorTypeList = res._embedded.sensorTypes;
-      this.sensorTypeList.forEach(sensort => {
-        this.sensorTypeService.getSensorTypeImage(sensort.image).subscribe(resimg => {
-          sensort.imgbuffer = resimg;
+        this.sensorTypeList.forEach(sensort => {
+          this.sensorTypeService.getSensorTypeImage(sensort.image).subscribe(resimg => {
+            sensort.imgbuffer = resimg;
+          })
         })
-      })
+      }
     });
   }
 

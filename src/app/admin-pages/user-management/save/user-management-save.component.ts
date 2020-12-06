@@ -21,7 +21,7 @@ export class UserManagementSaveComponent implements OnInit {
     { value: "ADMIN" }, { value: "USER" }, { value: "MASTER" }
   ];
 
-  @Input() public userId;
+  @Input() public userUrl;
   @ViewChild('selectrole') selectElRef;
 
 
@@ -46,9 +46,9 @@ export class UserManagementSaveComponent implements OnInit {
       roles: [""],
       active: ["true"]
     });
-    if (this.userId != null) {
+    if (this.userUrl != null) {
       this.editionMode = true;
-      this.userService.getUserByUuid(this.userId).subscribe((res: User) => {
+      this.userService.getData(this.userUrl).subscribe((res: User) => {
         if (res != undefined) {
           this.userForm.get('uuid').setValue(res.uuid);
           this.userForm.get('username').setValue(res.username);
@@ -80,17 +80,28 @@ export class UserManagementSaveComponent implements OnInit {
     user.password = this.userForm.get('password').value;
     user.dni = this.userForm.get('dni').value;
     user.email = this.userForm.get('email').value;
-    user.roles = this.userForm.get('roles').value;
     user.active = this.userForm.get('active').value;
 
-    this.userService.saveUser(user).subscribe(res => {
-      this.modalService.dismissAll("success");
+    let roles = "";
+    let selectedRoles = this.userForm.get('roles').value;
+    for (let i = 0; i < selectedRoles.length; i++) {
+      roles += selectedRoles[i];
+      if (i != selectedRoles.length - 1) {
+        roles += ",";
+      }
+    }
+    user.roles = roles;
+    this.userService.saveUser(this.userUrl, user).subscribe(res => {
       let options = {
         autoClose: true,
         keepAfterRouteChange: true
       };
       this.alertService.success(`¡Éxito!, usuario ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
       this.editionMode = false;
+      this.modalService.dismissAll("success");
+    }, (error: any) => {
+      let message = this.translateService.instant(`error.${error.error.message}`);
+      this.userForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
     });
   }
 

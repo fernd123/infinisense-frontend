@@ -14,8 +14,13 @@ export class UserService {
     constructor(private http: HttpClient,
         private authService: AuthenticationService) { }
 
+    getData(url: string) {
+        let headers = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(url, headers);
+    }
+
     getUserByDni(dni: string) {
-        let headers = { headers: this.authService.getHeadersTenancyDefault() };
+        let headers = { headers: this.authService.getHeadersJsonTenancyDefault() };
         const loginURL = this.urlEndPoint + "/" + dni;
         return this.http.get(loginURL, headers);
     }
@@ -27,40 +32,28 @@ export class UserService {
     }
 
     getExternalUsers() {
-        let headers = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/external", headers);
+        let headers = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(this.urlEndPoint + "/search/findByExternalUsers", headers);
     }
 
     getInternalUsers() {
-        let headers = { headers: this.authService.getHeadersTenancyDefault() };
-        const loginURL = this.urlEndPoint;
-        return this.http.get(loginURL, headers);
+        let headers = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(this.urlEndPoint + "/search/findByInternalUsers", headers);
     }
 
     getUserByUuid(uuid: string) {
-        let headers = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.get(this.urlEndPoint + "/profile/" + uuid, headers);
+        let headers = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(this.urlEndPoint + "/" + uuid, headers);
     }
 
-    saveUser(user: User) {
-        let body = new URLSearchParams();
-        body.set('username', user.username);
-        body.set('firstname', user.firstname);
-        body.set('lastname', user.lastname);
-        body.set('password', user.password);
-        body.set('active', `${user.active}`);
-        body.set('roles', user.roles);
-        body.set('email', user.email);
-        body.set('dni', user.dni);
-
+    saveUser(userUrl: string, user: User) {
         // Save petition options into a variable
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         // Execute the request
-        if (user.uuid == null) {
-            return this.http.post(this.urlEndPoint, body.toString(), options);
+        if (userUrl == null) {
+            return this.http.post(this.urlEndPoint, user, options);
         } else {
-            return this.http.put(this.urlEndPoint + "/" + user.uuid, body.toString(), options);
+            return this.http.put(userUrl, user, options);
         }
     }
 

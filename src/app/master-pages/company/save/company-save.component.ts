@@ -89,11 +89,14 @@ export class CompanySaveComponent implements OnInit {
         this.isLoading = false;
         this.companyForm.enable();
       }, error => {
-        this.alertService.error(`Error, Cliente no creado. ${error}`, options);
+        this.isLoading = false;
+        //let message = this.translateService.instant(`error.${error.error.message}`);
+        this.companyForm.get("name").setErrors({ 'incorrect': true, 'message': 'Ya existe un cliente con el nombre introducido' });
+        this.companyForm.enable();
+        /*this.alertService.error(`Error, Cliente no creado. ${error}`, options);
         this.editionMode = false;
         this.isLoading = false;
-        this.companyForm.enable();
-        this.closeModal();
+        this.closeModal();*/
       });
     else {
       this.companyService.saveCompany(company).subscribe(res => {
@@ -103,12 +106,15 @@ export class CompanySaveComponent implements OnInit {
         this.isLoading = false;
         this.companyForm.enable();
       },
-        error => {
-          this.alertService.error(`Error, Cliente no creado. ${error}`, options);
+        (error: any) => {
+          this.isLoading = false;
+          //let message = this.translateService.instant(`error.${error.error.message}`);
+          this.companyForm.get("name").setErrors({ 'incorrect': true, 'message': 'Ya existe un cliente con el nombre introducido' });
+          /*this.alertService.error(`Error, Cliente no creado. ${error}`, options);
           this.editionMode = false;
           this.isLoading = false;
+          this.closeModal();*/
           this.companyForm.enable();
-          this.closeModal();
         });
     }
   }

@@ -62,8 +62,8 @@ export class UserExternalComponent implements OnInit {
   }
 
   refreshList() {
-    this.userService.getExternalUsers().subscribe((res: User[]) => {
-      this.data = res;
+    this.userService.getExternalUsers().subscribe((res: any) => {
+      this.data = res._embedded.users;
     });
   }
 

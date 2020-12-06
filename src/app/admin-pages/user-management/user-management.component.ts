@@ -74,15 +74,15 @@ export class UserManagementComponent implements OnInit {
   }
 
   refreshList() {
-    this.userService.getInternalUsers().subscribe((res: User[]) => {
-      this.data = res;
+    this.userService.getInternalUsers().subscribe((res: any) => {
+      this.data = res._embedded.users;
     });
   }
 
-  public openSaveModal(uuid: string, size?: string): void {
+  public openSaveModal(userUrl: string, size?: string): void {
     //if (!size || size === undefined) { size = 'modal-lg'; }
     const modalRef = this.modalService.open(UserManagementSaveComponent);
-    modalRef.componentInstance.userId = uuid;
+    modalRef.componentInstance.userUrl = userUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {
@@ -97,7 +97,7 @@ export class UserManagementComponent implements OnInit {
   onCustomAction(event) {
     switch (event.action) {
       case 'edit':
-        this.openSaveModal(event.data.uuid);
+        this.openSaveModal(event.data._links.self.href);
         break;
     }
   }

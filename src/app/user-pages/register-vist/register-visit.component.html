@@ -47,7 +47,7 @@
             <div class="input-group mb-2 mr-sm-2">
               <select class="form-control" id="reason" formControlName="reason"
                 [ngClass]="{'alert-danger' : hasFormError('reason') }" autocomplete="off">
-                <option [value]="reason.uuid" *ngFor="let reason of reasonList">{{reason.name}}</option>
+                <option [value]="reason._links.self.href" *ngFor="let reason of reasonList">{{reason.name}}</option>
               </select>
             </div>
 

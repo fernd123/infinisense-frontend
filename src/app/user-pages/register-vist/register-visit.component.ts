@@ -54,7 +54,7 @@ export class RegisterVisitComponent implements OnInit {
     this.translate.use('es');
 
     this.reasonService.getReasons().subscribe((res: any) => {
-      this.reasonList = res;
+      this.reasonList = res._embedded.reasons;
     });
 
     this.registerForm = this.formBuilder.group({

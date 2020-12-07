@@ -13,14 +13,34 @@ export class VisitService {
     constructor(private http: HttpClient,
         private authService: AuthenticationService) { }
 
-    saveVisit(visit: Visit, user: User) {
+    saveVisit(user: User) {
         let body = new URLSearchParams();
-        body.set('visit', JSON.stringify(visit));
         body.set('user', JSON.stringify(user));
 
         let options = { headers: this.authService.getHeadersTenancyDefault() };
 
         return this.http.post(this.urlEndPoint, body.toString(), options);
+    }
+
+    /*saveVisit(visit: Visit) {
+        let body = new URLSearchParams();
+        body.set('visit', JSON.stringify(visit));
+
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+
+        return this.http.post(this.urlEndPoint, visit, options);
+    }*/
+
+    assignVisitToReason(uuid: string, reasonUrl: string) {
+        let data = reasonUrl;
+        const options = {
+            headers: {
+                'Content-Type': 'text/uri-list',
+                'X-TenantID': this.authService.getTenantId(),
+            },
+            'observe': "response" as 'response', // to display the full response & as 'body' for type cast
+        };
+        return this.http.put(this.urlEndPoint+"/"+uuid+"/reason", data, options);
     }
 
     updateVisit(visit: Visit) {

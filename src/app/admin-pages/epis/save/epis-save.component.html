@@ -14,7 +14,7 @@
       <label for="name"> {{ 'description' | translate }}</label>
       <input type="text" class="form-control" id="description" placeholder=" {{ 'description' | translate }}"
         formControlName="description"
-        [ngClass]="{'alert-danger' : !this.epiForm.get('description').valid &&  !this.epiForm.get('description').touched}">
+        [ngClass]="{'alert-danger' : !this.epiForm.get('description').touched &&  !this.epiForm.get('description').dirty}">
     </div>
 
     <div class="form-check form-check-flat form-check-primary">

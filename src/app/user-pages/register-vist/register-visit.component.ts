@@ -93,7 +93,7 @@ export class RegisterVisitComponent implements OnInit {
 
   hasFormError(formName: string) {
     let element = this.registerForm.get(formName);
-    return element.touched && element.invalid; //&& (element.value == null || element.value == '');
+    return element.touched && element.invalid && (element.value == null || element.value == '');
   }
 
   getUserByDni() {
@@ -110,8 +110,7 @@ export class RegisterVisitComponent implements OnInit {
           this.registerForm.get('lastname').disable();
           this.registerForm.get('email').disable();
           this.registerForm.get('company').disable();
-
-          this.userService.getUserSignature(res.uuid).subscribe((res: any) => {
+          this.userService.getUserSignature(res._links.self.href).subscribe((res: any) => {
             if (res == null) {
               this.loadSignature = true;
               this.signaturePad != undefined ? this.signaturePad.clear() : "";
@@ -146,23 +145,21 @@ export class RegisterVisitComponent implements OnInit {
     user.company = this.registerForm.get('company').value;
     user.roles = "VISITOR";
     user.signature = this.signaturePad != null ? this.signaturePad.toDataURL() : null;
-
+    let reason = this.registerForm.get('reason').value;
     let visit: Visit = new Visit();
-    visit.reason = this.registerForm.get('reason').value;
-    visit.userUuid = "";
 
-    this.visitService.saveVisit(visit, user).subscribe(
+    this.visitService.saveVisit(user).subscribe(
       (res: any) => {
-        this.registerForm.get('dni').setValue(null);
-
-        this.signaturePad != undefined ? this.signaturePad.clear() : "";
-        let options = {
-          autoClose: true,
-          keepAfterRouteChange: false
-        };
-        //this.alertService.success('¡Éxito! Registro registrado correctamente', options);
-        this.openSaveModal(res);
-
+          this.visitService.assignVisitToReason(res.uuid, reason).subscribe(finalres => {
+            this.registerForm.get('dni').setValue(null);
+            this.signaturePad != undefined ? this.signaturePad.clear() : "";
+            let options = {
+              autoClose: true,
+              keepAfterRouteChange: false
+            };
+            //this.alertService.success('¡Éxito! Registro registrado correctamente', options);
+            this.openSaveModal(res);
+          })
       },
       error => {
         this.alertService.error(`Error ${error.error}`);
@@ -175,6 +172,7 @@ export class RegisterVisitComponent implements OnInit {
     this.registerForm.get('lastname').setValue(null);
     this.registerForm.get('company').setValue(null);
     this.registerForm.get('email').setValue(null);
+
     this.registerForm.get('firstname').enable();
     this.registerForm.get('lastname').enable();
     this.registerForm.get('email').enable();

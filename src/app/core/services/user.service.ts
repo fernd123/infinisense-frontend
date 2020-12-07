@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
@@ -20,14 +20,15 @@ export class UserService {
     }
 
     getUserByDni(dni: string) {
-        let headers = { headers: this.authService.getHeadersJsonTenancyDefault() };
-        const loginURL = this.urlEndPoint + "/" + dni;
-        return this.http.get(loginURL, headers);
+        //let headers : any = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        let params = new HttpParams().set('dni', dni);
+        const loginURL = this.urlEndPoint + "/search/findByDniInternal";
+        return this.http.get(loginURL, { params: params, headers : this.authService.getHeadersJsonTenancyDefault() });
     }
 
-    getUserSignature(uuid: any) {
+    getUserSignature(userUrl: any) {
         let headers = this.authService.getHeadersTenancyDefault();
-        const loginURL = this.urlEndPoint + "/" + uuid + "/signature";
+        const loginURL = userUrl + "/signature";
         return this.http.get(loginURL, { headers, responseType: 'blob' }).pipe(mergeMap((res: Blob) => this.createImageFromBlob(res)));
     }
 

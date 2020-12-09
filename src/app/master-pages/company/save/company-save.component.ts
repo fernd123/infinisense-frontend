@@ -19,7 +19,7 @@ export class CompanySaveComponent implements OnInit {
   modalTitle: string = this.translateService.instant('company.savetitle');
   editionMode: boolean = false;
   isLoading: boolean = false;
-  @Input() public companyId;
+  @Input() public companyUrl;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,21 +34,20 @@ export class CompanySaveComponent implements OnInit {
       uuid: [null],
       name: ["", Validators.required],
       description: ["", Validators.required],
-      username: ["admin", Validators.required],
-      password: ["", Validators.required],
-      dni: ["", Validators.required],
-      email: ["", Validators.required],
-      firstname: ["", Validators.required],
-      lastname: ["", Validators.required],
+      username: ["admin", this.editionMode ? Validators.required : null],
+      password: ["", this.editionMode ? Validators.required : null],
+      dni: ["", this.editionMode ? Validators.required : null],
+      email: ["", this.editionMode ? Validators.required : null],
+      firstname: ["", this.editionMode ? Validators.required : null],
+      lastname: ["", this.editionMode ? Validators.required : null],
       aliro: [true],
       ergo: [true],
       active: [true]
     });
-    if (this.companyId != null) {
+    if (this.companyUrl != null) {
       this.editionMode = true;
       this.companyForm.get('name').disable();
-      this.companyService.getCompanyByUuid(this.companyId).subscribe((res: Company) => {
-        this.companyForm.get('uuid').setValue(res.uuid);
+      this.companyService.getData(this.companyUrl).subscribe((res: Company) => {
         this.companyForm.get('name').setValue(res.name);
         this.companyForm.get('description').setValue(res.description);
         this.companyForm.get('aliro').setValue(res.aliro);
@@ -62,7 +61,6 @@ export class CompanySaveComponent implements OnInit {
     this.isLoading = true;
     this.companyForm.disable();
     let company = new Company();
-    company.uuid = this.companyForm.get('uuid').value;
     company.name = this.companyForm.get('name').value;
     company.description = this.companyForm.get('description').value;
     company.aliro = this.companyForm.get('aliro').value;
@@ -99,7 +97,7 @@ export class CompanySaveComponent implements OnInit {
         this.closeModal();*/
       });
     else {
-      this.companyService.saveCompany(company).subscribe(res => {
+      this.companyService.saveCompany(this.companyUrl, company).subscribe(res => {
         this.modalService.dismissAll("success");
         this.alertService.success(`¡Éxito!, Cliente ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
         this.editionMode = false;

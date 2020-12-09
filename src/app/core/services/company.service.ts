@@ -36,21 +36,24 @@ export class CompanyService {
 
     }
 
-    saveCompany(company: Company) {
+    saveCompany(companyUrl, company: Company) {
         let body = new URLSearchParams();
         body.set('name', company.name);
         body.set('description', company.description);
-        body.set('alira', `${company.aliro}`);
+        body.set('aliro', `${company.aliro}`);
         body.set('ergo', `${company.ergo}`);
         body.set('active', `${company.active}`);
-
         let options = { headers: this.authService.getHeadersTenancyDefault() };
+        return this.http.put(companyUrl, body.toString(), options);
+    }
 
-        return this.http.put(this.urlEndPoint + "/" + company.uuid, body.toString(), options);
+    getData(url) {
+        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        return this.http.get(url, options);
     }
 
     getCompany() {
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
     }
 

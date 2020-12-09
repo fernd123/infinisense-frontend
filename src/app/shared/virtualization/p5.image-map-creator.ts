@@ -129,7 +129,8 @@ export class imageMapCreator {
 			transY: 0
 		}
 		this.zoomParams = {
-			min: 0.03,
+			//min: 0.03,
+			min: 0.04,
 			max: 3,
 			sensativity: 0.001
 		}
@@ -212,8 +213,8 @@ export class imageMapCreator {
 		//.addButton("Borrar todo", this.clearAreas.bind(this))
 		//.addButton("Cargar Zonas", () => { this.loadCoordenates(this.externalCoordenates); })
 		//.addButton("Generate Html", () => { this.settings.setValue("Output", this.map.toHtml()) })
-		//.addButton("Generate Svg", () => { this.settings.setValue("Output", this.map.toSvg()) })
-		//.addTextArea("Output")
+		.addButton("Generate Svg", () => { this.settings.setValue("Output", this.map.toSvg()) })
+		.addTextArea("Output")
 		//.addButton("Guardar", this.save.bind(this));
 		//@ts-ignore Fix for oncontextmenu
 		this.p5.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); });
@@ -906,6 +907,10 @@ export class imageMapCreator {
 
 	public setTypeConfig(type) {
 		this.typeConfig = type;
+	}
+
+	public hideTools(){
+		this.settings.hide();
 	}
 
 

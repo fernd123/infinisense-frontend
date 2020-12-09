@@ -21,8 +21,17 @@ import { PlantSensorComponent } from './plant-sensor/plant-sensor.component';
 import { PlantSensorSaveComponent } from './plant-sensor/save/plant-sensor-save.component';
 import { EpiSaveComponent } from './epis/save/epis-save.component';
 import { EpiComponent } from './epis/epis.component';
+import { CompanyCustomerComponent } from './company-customer/company-customer.component';
 
 const routes: Routes = [
+  {
+    path: 'company-customer', component: CompanyCustomerComponent, canActivate: [AuthGuard], data: {
+      permissions: {
+        only: 'ADMIN',
+        redirectTo: '/dashboard'
+      }
+    }
+  },
   {
     path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard], data: {
       permissions: {
@@ -50,6 +59,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
+    CompanyCustomerComponent,
     UserManagementComponent, UserManagementSaveComponent, UserExternalComponent,
     VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
     PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent, PlantSensorComponent, PlantSensorSaveComponent,

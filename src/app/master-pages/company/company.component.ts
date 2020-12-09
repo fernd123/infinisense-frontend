@@ -74,15 +74,15 @@ export class CompanyComponent implements OnInit {
   }
 
   refreshList() {
-    this.companyService.getCompany().subscribe((res: Company[]) => {
-      this.data = res;
+    this.companyService.getCompany().subscribe((res: any) => {
+      this.data = res._embedded.companies;
     });
   }
 
-  public openSaveModal(uuid: string, size?: string): void {
+  public openSaveModal(companyUrl: string, size?: string): void {
     if (!size || size === undefined) { size = 'modal-lg'; }
     const modalRef = this.modalService.open(CompanySaveComponent, { size: 'lg', backdrop: 'static' });
-    modalRef.componentInstance.companyId = uuid;
+    modalRef.componentInstance.companyUrl = companyUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {
@@ -98,10 +98,10 @@ export class CompanyComponent implements OnInit {
   onCustomAction(event) {
     switch (event.action) {
       case 'edit':
-        this.openSaveModal(event.data.uuid);
+        this.openSaveModal(event.data._links.self.href);
         break;
       case 'remove':
-        this.companyService.deleteCompany(event.data.uuid).subscribe(res => {
+        this.companyService.deleteCompany(event.data._links.self.href).subscribe(res => {
           this.refreshList();
         });
         break;

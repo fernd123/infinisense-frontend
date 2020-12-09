@@ -94,6 +94,23 @@
       </div>
     </li>
 
+    <li class="nav-item" [ngClass]="{ 'active': companyCustomerData.isActive || companyCustomer.isActive }"
+      *ngxPermissionsOnly="['ADMIN']">
+      <a class="nav-link" (click)="companyCustomerDataCollapsed = !companyCustomerDataCollapsed"
+        [attr.aria-expanded]="companyCustomerDataCollapsed" aria-controls="ui-basic" routerLinkActive
+        #companyCustomerData="routerLinkActive">
+        <span class="menu-title">{{ 'menu.company' | translate }}</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-domain menu-icon"></i>
+      </a>
+      <div class="collapse" id="ui-basic" [ngbCollapse]="!companyCustomerData">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" routerLink="admin-pages/company-customer" routerLinkActive="active"
+              #companyCustomer="routerLinkActive">{{ 'company.info' | translate }}</a></li>
+        </ul>
+      </div>
+    </li>
+
     <li class="nav-item" *ngxPermissionsOnly="['ADMIN']"
       [ngClass]="{ 'active': masterData.isActive || reasonVisit.isActive || sensorType.isActive || epis.isActive  }">
       <a class="nav-link" (click)="masterDataCollapsed = !masterDataCollapsed"

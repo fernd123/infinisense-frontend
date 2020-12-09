@@ -13,6 +13,11 @@ export class VisitService {
     constructor(private http: HttpClient,
         private authService: AuthenticationService) { }
 
+    getData(url) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(url, options);
+    }
+
     saveVisit(user: User) {
         let body = new URLSearchParams();
         body.set('user', JSON.stringify(user));
@@ -22,14 +27,6 @@ export class VisitService {
         return this.http.post(this.urlEndPoint, body.toString(), options);
     }
 
-    /*saveVisit(visit: Visit) {
-        let body = new URLSearchParams();
-        body.set('visit', JSON.stringify(visit));
-
-        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
-
-        return this.http.post(this.urlEndPoint, visit, options);
-    }*/
 
     assignVisitToReason(uuid: string, reasonUrl: string) {
         let data = reasonUrl;
@@ -40,7 +37,7 @@ export class VisitService {
             },
             'observe': "response" as 'response', // to display the full response & as 'body' for type cast
         };
-        return this.http.put(this.urlEndPoint+"/"+uuid+"/reason", data, options);
+        return this.http.put(this.urlEndPoint + "/" + uuid + "/reason", data, options);
     }
 
     updateVisit(visit: Visit) {
@@ -57,6 +54,11 @@ export class VisitService {
 
         let options = { headers: this.authService.getHeadersTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
+    }
+
+    getVisitReason(uuid: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(this.urlEndPoint + "/" + uuid + "/reason", options);
     }
 
 }

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  APIEndpoint: "http://15.188.47.145:8080"
+  APIEndpoint: "http://3.23.127.199:8080"
   //APIEndpoint: "http://localhost:8080"
 };
 
@@ -16,3 +16,4 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+ 

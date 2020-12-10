@@ -45,6 +45,7 @@
     "configuration": "Configuración de Planta",
     "configuratedzones": "Zonas Configuradas",
     "configuratedsensors": "Sensores Configurados",
+    "configuratedrutes": "Rutas",
     "zonetype": "Tipo de zona",
     "sensortype": "Tipo de sensor",
     "sensorid": "Id del sensor",

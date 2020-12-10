@@ -34,11 +34,23 @@
             <tr *ngFor="let virt of virtualizationList">
               <td (click)="openEditModal(virt)" (mouseover)="searchCoordinates(virt._links.self.href)"
                 (mouseout)="searchCoordinates(null)" style=" cursor: pointer;">{{virt.name}}</td>
-              <!--<td><button type="button" class="btn btn-danger btn-sm" (click)="deleteVirtualZone(virt.uuid)">
-                  <i class="mdi mdi-home-map-marker"></i>
-                  Borrar
-                </button>
-              </td>-->
+            <tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-responsive">
+        <br>
+        <h5>{{ 'plant.configuratedrutes' | translate }}</h5>
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let route of routeList">
+              <td (click)="openEditModal(route)" (mouseover)="searchCoordinates(route._links.self.href)"
+                (mouseout)="searchCoordinates(null)" style=" cursor: pointer;">{{route.name}}</td>
             <tr>
           </tbody>
         </table>

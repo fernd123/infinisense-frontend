@@ -10,6 +10,7 @@ import { ReasonService } from 'src/app/core/services/reason.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
 import { VisitService } from 'src/app/core/services/visit.service';
 import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
+import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { Reason } from 'src/app/shared/models/reason.model';
 import { SensorType } from 'src/app/shared/models/sensorType.model';
 import { Visit } from 'src/app/shared/models/visit.model';
@@ -35,6 +36,11 @@ export class RegisterVisitMessageComponent implements OnInit {
   body: string;
   imcreator: any;
 
+  coordinates = "";
+  plant: any = "";
+  cardbody: any;
+  bodydiv: any;
+
   constructor(
     private modalService: NgbModal,
     private visitService: VisitService,
@@ -48,51 +54,84 @@ export class RegisterVisitMessageComponent implements OnInit {
       this.body = `<div style="color:red"><strong>Por favor diríjase a la zona ${this.visit?.reason?.plantZone?.name}</strong></div>`;
     }
 
-    let bodydiv = document.getElementById('bodydiv');
-    let cardbody = document.getElementById('cardbody');
+    this.bodydiv = document.getElementById('bodydiv');
+    this.cardbody = document.getElementById('cardbody');
 
-    let coordinates = "";
-    let plant:any = "";
-    // COntrolar si no tiene motivo asociado o imagen
+    // Controlar si no tiene motivo asociado o imagen
     this.visitService.getVisitReason(this.visit.uuid).subscribe((res: any) => {
-      this.visitService.getData(res._links.plantCoordinate.href).subscribe((resCoordinate: any) => {
-        coordinates = resCoordinate.coordinates;
+      this.visitService.getData(res._links.plantCoordinate.href).subscribe((resCoordinate: PlantCoordinates) => {
+        this.coordinates = resCoordinate.coordinates;
+        if (resCoordinate.virtualZoneType == ZoneType.ru) {
+          this.getRouteData(resCoordinate);
+        } else {
+          this.getZoneData(resCoordinate);
+        }
+      });
+    });
+  }
+
+
+  getRouteData(resCoordinate) {
+    this.visitService.getData(resCoordinate._links.initCoordinate.href).subscribe((resCoordinateInit: any) => {
+      let coordJson = JSON.parse(resCoordinateInit.coordinates);
+      coordJson.title = 'Ud. Está aquí';
+      this.coordinates += "," + JSON.stringify(coordJson);
+      this.visitService.getData(resCoordinate._links.endCoordinate.href).subscribe((resCoordinateEnd: any) => {
+        this.coordinates += "," + resCoordinateEnd.coordinates;
+        this.setEpis(resCoordinateEnd);
         this.visitService.getData(resCoordinate._links.plant.href).subscribe((resPlant: any) => {
-          plant = resPlant;
+          this.plant = resPlant;
           this.visitService.getData(resPlant._links.plantPlane.href).subscribe((resPlane: any) => {
             this.plantService.getPlantPlanes(resPlane._embedded.plantPlanes[0].name).subscribe((plantImage: any) => {
-              this.image = plantImage;
-              this.height = 800;//cardbody.offsetHeight;
-              this.width = cardbody.offsetWidth - 200;
-              this.imcreator = new imageMapCreator("div-1", this.width, this.height, ZoneType.zv);
-              this.imcreator.setImage(this.image);
-              this.imcreator.hideTools();
-              let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${coordinates}],"name":"${plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;
-              this.imcreator.importMap(mapFake);
-              let self = this;
-              setTimeout(function () { self.imageZoom("myimage", "myresult"); }, 2000);
+              this.setImage(plantImage);
+              //let self = this;
+              //setTimeout(function () { self.imageZoom("myimage", "myresult"); }, 2000);
             });
           });
         });
       });
     });
+  }
 
-    let epis = this.visit?.reason?.plantZone?.epis;
+  getZoneData(resCoordinate) {
+    this.visitService.getData(resCoordinate._links.plant.href).subscribe((resPlant: any) => {
+      this.plant = resPlant;
+      this.setEpis(resCoordinate);
+
+      this.visitService.getData(resPlant._links.plantPlane.href).subscribe((resPlane: any) => {
+        this.plantService.getPlantPlanes(resPlane._embedded.plantPlanes[0].name).subscribe((plantImage: any) => {
+          this.setImage(plantImage);
+          //let self = this;
+          //setTimeout(function () { self.imageZoom("myimage", "myresult"); }, 2000);
+        });
+      });
+    });
+  }
+
+  setImage(plantImage) {
+    this.image = plantImage;
+    this.height = 800;//cardbody.offsetHeight;
+    this.width = this.cardbody.offsetWidth - 200;
+    this.imcreator = new imageMapCreator("div-1", this.width, this.height, ZoneType.zv);
+    this.imcreator.setImage(this.image);
+    this.imcreator.hideTools();
+    this.imcreator.showText = true;
+    let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${this.coordinates}],"name":"${this.plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;
+    this.imcreator.importMap(mapFake);
+  }
+
+  setEpis(coordinate) {
+    let epis = coordinate.epis;
     if (epis != undefined && epis.length > 0) {
       let episList = epis.split(',');
       let bodyPre = "Recuerde utilizar:";
       for (let i = 0; i < episList.length; i++) {
         bodyPre += '<div class="col-sm-6"><i class="mdi mdi mdi-check-circle-outline"></i>' + episList[i] + "</div>";
       }
-      this.body = bodyPre + this.body;
+      this.body = bodyPre;
     }
     if (this.body != undefined)
-      bodydiv.innerHTML = this.body;
-    /*this.reasonService.getZoneReasonByUuid(this.reasonId, "").subscribe((res: PlantVirtualization) => {
-      if (res != undefined) {
-        
-      }
-    });*/
+      this.bodydiv.innerHTML = this.body;
   }
 
   closeModal() {

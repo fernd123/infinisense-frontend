@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { PlantService } from 'src/app/core/services/plant.service';
 import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Plant } from 'src/app/shared/models/plant.model';
@@ -18,6 +19,8 @@ export class PlantManagementComponent implements OnInit {
   titleModal: string;
   zonevirtual: ZoneType = ZoneType.zv;
   sensor: ZoneType = ZoneType.se;
+  aliro: boolean = false;
+  ergo: boolean = false;
 
   /* Table Settings */
   settings = {
@@ -64,10 +67,17 @@ export class PlantManagementComponent implements OnInit {
   constructor(
     private router: Router,
     private translateService: TranslateService,
+    private authService: AuthenticationService,
     private plantService: PlantService,
     private modalService: NgbModal) { }
 
   ngOnInit() {
+    // User data
+    let data: any = this.authService.getTokenInfo();
+    this.aliro = data.aliro;
+    this.ergo = data.ergo;
+    debugger;
+
     this.refreshList();
   }
 

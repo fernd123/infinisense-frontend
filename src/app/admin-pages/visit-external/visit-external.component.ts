@@ -16,7 +16,7 @@ export class VisitExternalComponent implements OnInit {
 
   @ViewChild('optionFilter') optionFilter: any;
   reasonForm: FormGroup;
-  data: Visit[];
+  data: Visit[] = [];
   optionList: any = [
     { name: "Visitas de hoy", value: "t" },
     { name: "Visitas de la semana", value: "w" },
@@ -29,6 +29,7 @@ export class VisitExternalComponent implements OnInit {
     columns: {
       user: {
         title: this.translateService.instant('visit.person'),
+        filter: false,
         valuePrepareFunction: (data) => {
           if (data != null) {
             return `${data?.firstname} ${data?.lastname}`;

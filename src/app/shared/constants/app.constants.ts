@@ -38,6 +38,10 @@ export const statusList: any = [
   { value: "Fuera de Servicio", title: "Fuera de Servicio" }
 ];
 
+export const aliroAccess = ["user-external", "visit-external", "visit-reason", "epis"];
+export const ergoAccess = ["sensor-type", "plant-sensor"];
+export const commonAccess = ["dashboard", "company-customer", "user-management", "plant-management", "plant-plane"];
+
 /* MESSAGES */
 export const SUCCESS = 'Success';
 export const INFO = 'Info';

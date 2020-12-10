@@ -3,4 +3,5 @@ export enum ZoneType {
     zv = "zv", // Zona virtual
     se = "se", // Sensor
     pe = "pe", // Punto de encuentro
+    ru = "ru" // ruta
   }

@@ -95,7 +95,6 @@ export class AuthenticationService {
                     localStorage.setItem('tenantid', tenantId);
                     let info: any = this.getTokenInfo();
                     /* PERMISSION MODULE */
-                    debugger;
                     let authorities = info.authorities;
                     let perm = [];
                     for (let i = 0; i < authorities.length; i++) {

@@ -29,6 +29,7 @@ export class PlantSensorSaveComponent implements OnInit {
     { value: "", name: "Tipo de virtualización" },
     { value: ZoneType.zv, name: "Zona" },
     { value: ZoneType.se, name: "Sensor" },
+    { value: ZoneType.ru, name: "Ruta" },
     { value: ZoneType.pe, name: "Punto encuentro" }
   ];
 

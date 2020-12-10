@@ -33,6 +33,8 @@ export class PlanPlaneComponent implements OnInit {
   height: number = 700;
   width: number = 500;
   virtualizationList: PlantCoordinates[];
+  routeList: PlantCoordinates[];
+
   img: any;
 
   @ViewChild('virtualizationBody') virtualizationBody: any;
@@ -102,6 +104,7 @@ export class PlanPlaneComponent implements OnInit {
   procesaPropagar(data) {
     let dataJson = JSON.parse(data);
     let action = dataJson.action;
+
     if (action == "uploadImage") {
       this.upload();
     }
@@ -126,6 +129,9 @@ export class PlanPlaneComponent implements OnInit {
     modalRef.componentInstance.selection = dataJson.selection;
     modalRef.componentInstance.plantUrl = this.plantUrl;
     modalRef.componentInstance.typeConfig = this.typeConfig;
+    modalRef.componentInstance.initialArea = dataJson?.initialArea?.idCoordenate; // for rutes
+    modalRef.componentInstance.finalArea = dataJson?.finalArea?.idCoordenate; // for rutes
+
 
     this.imageMapCreatorService.getImageMapCreator().editionMode = true;
 
@@ -166,19 +172,27 @@ export class PlanPlaneComponent implements OnInit {
 
   private refreshVirtualZones() {
     this.plantCoordService.getPlantPlaneByPlant(this.plantUrl + "/plantCoordinate", this.typeConfig).subscribe((resPp: any) => {
-      this.virtualizationList = resPp._embedded.plantCoordinateses;
-      this.virtualizationList = this.virtualizationList.filter(f => { return f.virtualZoneType == this.typeConfig });
+      this.virtualizationList = resPp._embedded.plantCoordinateses.filter(f => { return f.virtualZoneType == this.typeConfig });
+      this.routeList = resPp._embedded.plantCoordinateses.filter(f => { return f.virtualZoneType == ZoneType.ru });
       let imageCreator = this.imageMapCreatorService.getImageMapCreator();
       imageCreator.clearAreas();
       let areasStr = "";
+
+      /* Zone virtual and sensors */
       for (let i = 0; i < this.virtualizationList.length; i++) {
-        areasStr += this.virtualizationList[i].coordinates;
-        if (i != this.virtualizationList.length - 1) {
-          areasStr += ", ";
-        }
+        areasStr += this.virtualizationList[i].coordinates + ", ";
       }
 
-      //if (areasStr.length != 0) {
+      /* Routes. Only avaiable with virtual zone */
+      if (this.typeConfig == ZoneType.zv)
+        for (let i = 0; i < this.routeList.length; i++) {
+          areasStr += this.routeList[i].coordinates + ", ";
+        }
+
+      if (areasStr.length != 0) {
+        areasStr = areasStr.substr(0, areasStr.length-2);
+      }
+
       let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${areasStr}],"name":"${this.plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;
       imageCreator.importMap(mapFake);
       //}

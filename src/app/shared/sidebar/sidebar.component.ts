@@ -18,6 +18,9 @@ export class SidebarComponent implements OnInit {
   public companyDataCollapsed = false;
   public companyCustomerDataCollapsed = false;
 
+  public aliro: boolean = false;
+  public ergo: boolean = false;
+
   public name: string = "";
   @ViewChild('profileImage') profileImage: any;
 
@@ -45,6 +48,9 @@ export class SidebarComponent implements OnInit {
 
     // User data
     let data: any = this.authService.getTokenInfo();
+    this.aliro = data.aliro;
+    this.ergo = data.ergo;
+
     if (data != undefined)
       this.userService.getUserByUuid(data.uuid).subscribe((res: User) => {
         if (res != undefined) {
@@ -55,7 +61,10 @@ export class SidebarComponent implements OnInit {
           if (this.name.length > 15) {
             this.name = this.name.substr(0, 15) + ".";
           }
-          document.getElementById('profileImage').innerHTML = initials.toUpperCase();
+          let profileImageElem = document.getElementById('profileImage');
+          if (profileImageElem != undefined) {
+            profileImageElem.innerHTML = initials.toUpperCase();
+          }
         }
       });
   }

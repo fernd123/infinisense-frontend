@@ -13,8 +13,7 @@
     <div class="form-group">
       <label for="name"> {{ 'description' | translate }}</label>
       <input type="text" class="form-control" id="description" placeholder=" {{ 'description' | translate }}"
-        formControlName="description"
-        [ngClass]="{'alert-danger' : !this.epiForm.get('description').touched &&  !this.epiForm.get('description').dirty}">
+        formControlName="description">
     </div>
 
     <div class="form-check form-check-flat form-check-primary">

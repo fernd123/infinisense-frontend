@@ -1,6 +1,6 @@
 import { ImageMap } from "./class.image-map";
 import { BgLayer } from "./p5.bg-layer";
-import { Area, AreaCircle, AreaRect, AreaPoly, AreaEmpty } from "./class.area";
+import { Area, AreaCircle, AreaRect, AreaPoly, AreaEmpty, AreaLine } from "./class.area";
 import { Coord } from "./class.coord";
 import { Selection } from "./class.selection";
 import { openWindow } from "./utils";
@@ -17,7 +17,7 @@ import p5 = require("p5");
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { ZoneType } from '../enums/zoneType.enumeration';
 
-export type Tool = "rectangulo" | "circulo" | "poligono" | "seleccionar" | "eliminar";/* | "test"*/;
+export type Tool = "rectangulo" | "circulo" | "poligono" | "seleccionar" | "linea" | "eliminar";/* | "test"*/;
 export type Image = {
 	data: p5.Image | null,
 	file: p5.File | null,
@@ -92,6 +92,11 @@ export class imageMapCreator {
 	public mouseAction = "";
 	public typeConfig: ZoneType = null; // Para configurar sensores o zonas
 
+	/* For rute/line selection */
+	public initialArea = null;
+	public finalArea = null;
+	public showText = false;
+
 
 
 	/**
@@ -110,7 +115,7 @@ export class imageMapCreator {
 		this.typeConfig = typeConfig;
 		if (this.typeConfig == ZoneType.zv) {
 			this.tool = "rectangulo";
-			this.drawingTools = ["rectangulo", "circulo", "poligono", "seleccionar"];
+			this.drawingTools = ["rectangulo", "circulo", "poligono", "linea", "seleccionar"];
 		} else if (this.typeConfig == ZoneType.se) {
 			this.tool = "seleccionar";
 			this.drawingTools = ["seleccionar"];
@@ -207,14 +212,14 @@ export class imageMapCreator {
 			.setDraggable(false)
 			.addText("Nombre del plano", "", (v: string) => { this.map.setName(v) })
 			.addDropDown("Tipo de selección", this.drawingTools /*["rectangulo", "circulo", "poligono", "seleccionar"]*//*, "eliminar", "test"]*/, (v: ToolLabel) => { this.setTool(v.value) })
-		//.addBoolean("Default Area", this.map.hasDefaultArea, (v: boolean) => { this.setDefaultArea(v) })
-		//.addButton("Deshacer", this.undoManager.undo)
-		//.addButton("Rehacer", this.undoManager.redo)
-		//.addButton("Borrar todo", this.clearAreas.bind(this))
-		//.addButton("Cargar Zonas", () => { this.loadCoordenates(this.externalCoordenates); })
-		//.addButton("Generate Html", () => { this.settings.setValue("Output", this.map.toHtml()) })
-		.addButton("Generate Svg", () => { this.settings.setValue("Output", this.map.toSvg()) })
-		.addTextArea("Output")
+			//.addBoolean("Default Area", this.map.hasDefaultArea, (v: boolean) => { this.setDefaultArea(v) })
+			//.addButton("Deshacer", this.undoManager.undo)
+			//.addButton("Rehacer", this.undoManager.redo)
+			//.addButton("Borrar todo", this.clearAreas.bind(this))
+			//.addButton("Cargar Zonas", () => { this.loadCoordenates(this.externalCoordenates); })
+			//.addButton("Generate Html", () => { this.settings.setValue("Output", this.map.toHtml()) })
+			//.addButton("Generate Svg", () => { this.settings.setValue("Output", this.map.toSvg()) })
+			//.addTextArea("Output")
 		//.addButton("Guardar", this.save.bind(this));
 		//@ts-ignore Fix for oncontextmenu
 		this.p5.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); });
@@ -278,6 +283,36 @@ export class imageMapCreator {
 								}
 								this.tempArea = new AreaEmpty();
 							} else {
+								this.tempArea.addCoord(this.mCoord());
+							}
+							break;
+						case "linea":
+							let areaLinea = this.tempArea as AreaLine;
+							console.log(this.hoveredArea?.getShape());
+							if (areaLinea.isEmpty() && this.hoveredArea !== null) {
+								this.initialArea = this.hoveredArea;
+								this.setTempArea(coord);
+							} else if (!areaLinea.isEmpty() && this.hoveredArea !== null) {
+								this.finalArea = this.hoveredArea;
+								this.selection.addArea(this.hoveredArea);
+								this.selection.resetOrigin(this.mCoord());
+								let allAreas = this.map.getAreas();
+								let area = allAreas.find((a: Area): boolean => {
+									if (this.selection.containsArea(a)) {
+										return true;
+									}
+									if (a.isOver(this.mCoord())) {
+										return true;
+									}
+									return false;
+								});
+								if (area.isValidShape()) {
+									areaLinea.type = ZoneType.ru;
+									this.createArea(areaLinea);
+									this.lastAction = "add";
+								}
+								this.tempArea = new AreaEmpty();
+							} else if (!areaLinea.isEmpty()) {
 								this.tempArea.addCoord(this.mCoord());
 							}
 							break;
@@ -681,7 +716,11 @@ export class imageMapCreator {
 	}*/
 
 	setBackground(): void {
-		this.p5.background(200);
+		if(this.img == null){
+			this.p5.background(20);
+		}else{
+			this.p5.background(255,255,255);
+		}
 
 		if (!this.img.data) {
 			this.p5.noStroke();
@@ -707,9 +746,9 @@ export class imageMapCreator {
 	}
 
 	setAreaStyle(area: Area): void {
-		let color = this.p5.color(19, 236, 226, 178);
+		let color = this.p5.color(19, 236, 226, 178); // azul
 		if (area.getType() == ZoneType.zv) { // zona virtual
-			color = this.p5.color(233, 236, 19, 178);
+			color = this.p5.color(233, 236, 19, 178); // amarillo
 		}
 		if (area.getType() == ZoneType.pe) { // punto encuentro
 			color = this.p5.color(255, 0, 0, 178);
@@ -733,6 +772,18 @@ export class imageMapCreator {
 			this.p5.noFill();
 		}
 
+		if(area.getShape() != "empty" && area.getShape() != "line" && area.getTitle() != null && this.showText){
+			this.p5.fill(255,0,0);
+			this.p5.textSize(60);
+			this.p5.text(area.getTitle(), area.getPosition().x+100, area.getPosition().y-50);
+			this.p5.textAlign(this.p5.CENTER, this.p5.CENTER);
+		}
+
+		if (area.getShape() == 'line') { // linea
+			this.p5.stroke(255, 204, 0, 178);
+			this.p5.strokeWeight(10);
+		}
+
 	}
 
 	setTempArea(coord: Coord): void {
@@ -746,6 +797,10 @@ export class imageMapCreator {
 				break;
 			case "poligono":
 				this.tempArea = new AreaPoly(coords);
+				this.tempArea.addCoord(coord);
+				break;
+			case "linea":
+				this.tempArea = new AreaLine(coords);
 				this.tempArea.addCoord(coord);
 				break;
 		}
@@ -909,10 +964,9 @@ export class imageMapCreator {
 		this.typeConfig = type;
 	}
 
-	public hideTools(){
+	public hideTools() {
 		this.settings.hide();
 	}
-
 
 	/* Busca un área cuando se hace over sobre el listado de zonas configuradas y la ilumina */
 	public searchArea(id) {

@@ -4,7 +4,7 @@ import { ImageMap } from "./class.image-map";
 import * as p5 from "p5";
 import { ZoneType } from '../enums/zoneType.enumeration';
 
-export type Shape = "empty" | "rect" | "circulo" | "poly" | "default";
+export type Shape = "empty" | "rect" | "circulo" | "poly" | "line" | "default";
 
 export abstract class Area {
 
@@ -36,6 +36,9 @@ export abstract class Area {
 			case 'poly':
 				const p = o as AreaPoly
 				return new AreaPoly(p.coords.map(Coord.fromObject), p.href, p.title, p.id, p.idCoordenate, p.type, p.img, p.closed);
+			case 'line':
+				const l = o as AreaLine
+				return new AreaLine(l.coords.map(Coord.fromObject), l.href, l.title, l.id, l.idCoordenate, l.type, l.img, l.closed);
 			case 'default':
 				const d = o as AreaDefault
 				return new AreaDefault(d.iMap, d.href, d.title);
@@ -331,7 +334,6 @@ export class AreaPoly extends Area {
 
 		let polyX = cornersX;
 		let polyY = cornersY;
-
 		for (i = 0; i < cornersX.length; i++) {
 			if ((polyY[i] < y && polyY[j] >= y || polyY[j] < y && polyY[i] >= y) && (polyX[i] <= x || polyX[j] <= x)) {
 				oddNodes ^= (polyX[i] + (y - polyY[i]) / (polyY[j] - polyY[i]) * (polyX[j] - polyX[i]) < x) ? 1 : 0;
@@ -381,6 +383,103 @@ export class AreaPoly extends Area {
 			return c.toStr(0, 'x', scale) + ',' + c.toStr(0, 'y', scale);
 		}).join(' ');
 		return `<polygon points="${points}" />`;
+	}
+}
+
+export class AreaLine extends Area {
+	idCoordenate: string;
+	type: string;
+
+	/**
+	 * @param {Coord[]} coords the list of coordinates
+	 * @param {string} href the link this area is going to point to
+	 * @param {int} id the unique id
+	 */
+	constructor(
+		coords: Coord[] = [],
+		href: string = "",
+		title: string = "",
+		id: number = 0,
+		idCoordenate: string = "",
+		type: string = "",
+		img: string = "",
+		public closed = false
+	) {
+		super("line", coords, href, title, id, idCoordenate, type, img);
+	}
+
+	isDrawable(): boolean {
+		return true;//this.coords.length >= 1;
+	}
+
+	isValidShape(): boolean {
+		return true;
+	}
+
+	isOver(coord: Coord): boolean {
+		/*let x = coord.x;
+		let y = coord.y;
+		let cornersX = this.coords.map(c => { return c.x });
+		let cornersY = this.coords.map(c => { return c.y });
+
+		let i, j = cornersX.length - 1;
+		let oddNodes = 0;
+
+		let polyX = cornersX;
+		let polyY = cornersY;
+
+		for (i = 0; i < cornersX.length; i++) {
+			if ((polyY[i] < y && polyY[j] >= y || polyY[j] < y && polyY[i] >= y) && (polyX[i] <= x || polyX[j] <= x)) {
+				oddNodes ^= (polyX[i] + (y - polyY[i]) / (polyY[j] - polyY[i]) * (polyX[j] - polyX[i]) < x) ? 1 : 0;
+			}
+			j = i;
+		}
+
+		return Boolean(oddNodes);*/
+		return false;
+	}
+
+	isClosable(coord: Coord, tolerance: number): boolean {
+		let dist = Coord.dist(coord, this.firstCoord());
+		return this.coords.length >= 1 && dist < tolerance;
+	}
+
+	drawingCoords(): Coord[] {
+		let coords = super.drawingCoords();
+		if (this.closed) {
+			//coords.push(this.firstCoord());
+		}
+		return coords;
+	}
+
+	close(): this {
+		this.closed = true;
+		this.coords.pop();
+		return this;
+	}
+
+	move(coord: Coord): void {
+		this.coords.map(c => c.add(coord));
+	}
+
+	/**
+	 * draw the area to the given p5 instance
+	 * @param {p5} p5 
+	 */
+	display(p5: p5): void {
+		let coords = this.drawingCoords();
+		for(let i=1; i<coords.length; i++){
+			p5.line(coords[i-1].x, coords[i-1].y, coords[i].x, coords[i].y);
+			p5.strokeWeight(10);
+			p5.stroke(255, 204, 0);
+		}
+	}
+
+	svgArea(scale: number): string {
+		let points = this.drawingCoords().map(c => {
+			return c.toStr(0, 'x', scale) + ',' + c.toStr(0, 'y', scale);
+		}).join(' ');
+		return `<line points="${points}" />`;
 	}
 }
 
@@ -436,8 +535,8 @@ export class AreaRect extends AreaPoly {
 	 * @param {p5} p5 
 	 */
 	display(p5: p5, imgsensor): void {
-		
-		if (this.type == ZoneType.se && imgsensor !=  undefined) {
+
+		if (this.type == ZoneType.se && imgsensor != undefined) {
 			this.displayImg(p5, imgsensor);
 		}
 		p5.beginShape();

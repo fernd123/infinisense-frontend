@@ -2,12 +2,13 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
+import { forkJoin } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { EpiService } from 'src/app/core/services/epi.service';
 import { ImageMapCreatorService } from 'src/app/core/services/imageMapCreator.service';
 import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
 import { SensorTypeService } from 'src/app/core/services/sensorType.service';
-import { statusList } from 'src/app/shared/constants/app.constants';
+import { BASEURL_DEV_PLANTCOORDINATES, statusList } from 'src/app/shared/constants/app.constants';
 import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Epi } from 'src/app/shared/models/epi.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
@@ -27,6 +28,7 @@ export class PlantCoordsSaveComponent implements OnInit {
     { value: "", name: "Tipo de virtualización" },
     { value: ZoneType.zv, name: "Zona" },
     { value: ZoneType.se, name: "Sensor" },
+    { value: ZoneType.ru, name: "Ruta" },
     { value: ZoneType.pe, name: "Punto encuentro" }
   ];
 
@@ -51,6 +53,8 @@ export class PlantCoordsSaveComponent implements OnInit {
   @Input() public coordinates;
   @Input() public sensorTypeId;
   @Input() public typeConfig;
+  @Input() public initialArea;
+  @Input() public finalArea;
   @Input() public selection: boolean = false;
   @Input() public plantCoordinateUrlFromTable: string;
 
@@ -85,22 +89,44 @@ export class PlantCoordsSaveComponent implements OnInit {
       this.epiList = res._embedded.epis;
     });
 
-    /* Type of zone selected by user action in UI */
-    this.plantCoordsForm.get('virtualZoneType').disable();
-    this.plantCoordsForm.get('sensorType').disable();
-    // Al arrastrar el elemento se pone el ID, sino es null (para editar)
-    this.plantCoordsForm.get('sensorType').setValue(this.sensorTypeId);
-    this.plantCoordsForm.get('virtualZoneType').setValue(this.typeConfig);
+    let jsonDataCoords = null;
+    if (this.coordinates != null)
+      jsonDataCoords = JSON.parse(this.coordinates);
+
+    if (jsonDataCoords != null && jsonDataCoords.type != "") {
+      this.typeConfig = jsonDataCoords.type;
+    }
 
     if (this.typeConfig == null) {
       this.typeConfig = this.imageMapCreatorService.getImageMapCreator().typeConfig;
     }
+
+    if (this.typeConfig == ZoneType.ru) {
+      // Get initial area and final area
+      let getInitialArea = this.plantCoordService.getPlantCoordinateByUuid(this.plantUrl, this.initialArea);
+      let getFinalArea = this.plantCoordService.getPlantCoordinateByUuid(this.plantUrl, this.finalArea);
+
+      forkJoin([getInitialArea, getFinalArea]).subscribe((res: any) => {
+        let initialArea = res[0];
+        let finalArea = res[1];
+        this.plantCoordsForm.get('name').setValue(`${initialArea.name} - ${finalArea.name}`);
+      });
+      this.plantCoordsForm.get('name').disable();
+    }
+
     if (this.typeConfig == ZoneType.se)
       this.sensorTypeService.getSensorTypeList().subscribe((res: any) => {
         this.sensorTypeList = res._embedded.sensorTypes;
       });
 
-    /* Selected area in image */
+    this.plantCoordsForm.get('virtualZoneType').setValue(this.typeConfig);
+    /* Type of zone selected by user action in UI */
+    this.plantCoordsForm.get('virtualZoneType').disable();
+    this.plantCoordsForm.get('sensorType').disable();
+    // Al arrastrar el elemento se pone el ID, sino es null (para editar)
+    this.plantCoordsForm.get('sensorType').setValue(this.sensorTypeId);
+
+    /* Selected area in plane */
     if (this.selectedAreaId != null && this.selectedAreaId != "") {
       this.plantCoordService.getPlantCoordinateByUuid(this.plantUrl, this.selectedAreaId).subscribe((res: PlantCoordinates) => {
         this.setFormValues(res);
@@ -159,6 +185,7 @@ export class PlantCoordsSaveComponent implements OnInit {
     plantCoords.status = this.plantCoordsForm.get('status').value;
     plantCoords.coordinates = this.coordinates;
 
+
     let epis = document.getElementsByClassName('form-check-input');
     let selectedEpis = "";
     if (epis != undefined) {
@@ -174,12 +201,26 @@ export class PlantCoordsSaveComponent implements OnInit {
 
     this.plantCoordService.savePlantVirtual(this.plantCoordinateUrl, plantCoords).subscribe((res: any) => {
       this.plantCoordService.associateRelation(this.plantUrl, res._links.plant.href).subscribe((resAssociation: any) => {
+
+        if (this.typeConfig == ZoneType.ru) {
+          let plantInitUrl = BASEURL_DEV_PLANTCOORDINATES + "/" + this.initialArea;
+          let plantFinalUrl = BASEURL_DEV_PLANTCOORDINATES + "/" + this.finalArea;
+
+          this.plantCoordService.associateRelation(plantInitUrl, res._links.initCoordinate.href).subscribe(resAssInit => {
+            this.plantCoordService.associateRelation(plantFinalUrl, res._links.endCoordinate.href).subscribe(resAssEnd => {
+            });
+          });
+
+          /*forkJoin([initCoordinateReq, endCoordinateReq]).subscribe((res: any) => {
+          });*/
+        }
+
         if (this.typeConfig == ZoneType.se) {
           this.plantCoordService.associateRelation(this.plantCoordsForm.get('sensorType').value, res._links.sensorType.href).subscribe((resSensorAssociation: any) => {
           });
         }
         this.modalService.dismissAll("success");
-      })
+      });
     });
   }
 

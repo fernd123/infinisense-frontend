@@ -1,9 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BASEURL_DEV_COMPANY } from 'src/app/shared/constants/app.constants';
-import { Epi } from 'src/app/shared/models/epi.model';
 import { AuthenticationService } from './authentication.service';
-import { Reason } from 'src/app/shared/models/reason.model';
 import { Company } from 'src/app/shared/models/company.model';
 import { User } from '../../shared/models/user.model';
 
@@ -62,9 +60,9 @@ export class CompanyService {
         return this.http.get(this.urlEndPoint + "/" + uuid, options);
     }
 
-    deleteCompany(uuid: string) {
+    deleteCompany(companyUrl: string) {
         let options = { headers: this.authService.getHeadersTenancyDefault() };
-        return this.http.delete(this.urlEndPoint + "/" + uuid, options);
+        return this.http.delete(companyUrl, options);
     }
 
 }

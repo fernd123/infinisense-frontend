@@ -14,4 +14,6 @@ export class PlantCoordinates extends BaseModel implements IPlantVirtualization 
     status: string;
     plant?: Plant;
     epis: string;
+    initCoordinate?: any;
+    endCoordinate?: any;
 }

@@ -53,19 +53,22 @@ export class VirtualizationComponent implements OnInit {
       if (this.imcreator != undefined && this.imcreator.lastAction != null
         && (this.imcreator.lastAction == 'delete' || this.imcreator.lastAction == 'add' || this.imcreator.lastAction == 'openmodal')) {
         let selectedAreaId = "";
-        if (this.imcreator.lastAction == 'add') { // first position
+        if (this.imcreator.lastAction == 'add') { // add new element
           this.areas = this.imcreator.map.getAreas()[0];
           this.areas.img = this.imcreator.itemURL;
           this.areas.id = Math.random();
           this.imcreator.editionMode = true;
-        } else if (this.imcreator.lastAction == 'delete') {
-          //TODO:
-        } else if (this.imcreator.lastAction == 'openmodal') {
+        } else if (this.imcreator.lastAction == 'openmodal') { // edit an existent element
           selectedAreaId = this.imageMapCreatorService.getImageMapCreator().selectedAreaId;
           this.imcreator.editionMode = true;
         }
-        this.propagar.emit(JSON.stringify({ "areas": this.areas, "selectedAreaId": selectedAreaId, "action": this.imcreator.lastAction, "sensorTypeId": this.imcreator.getSensorTypeId() }));
+        this.propagar.emit(JSON.stringify({
+          "areas": this.areas, "selectedAreaId": selectedAreaId, "action": this.imcreator.lastAction, "sensorTypeId": this.imcreator.getSensorTypeId(),
+          "initialArea": this.imcreator.initialArea, "finalArea": this.imcreator.finalArea
+        }));
         this.imcreator.lastAction = null;
+        this.imcreator.initialArea = null;
+        this.imcreator.finalArea = null;
       }// Guardar al arrastrar un elemento
       else if (this.imcreator.lastAction == 'select' && this.imcreator.mouseAction == 'released') { // Si arrastro un elemento y suelto el botón, guardar posición nueva
         let selectedAreaId = this.imageMapCreatorService.getImageMapCreator().selectedAreaId;

@@ -118,8 +118,7 @@ export class CompanySaveComponent implements OnInit {
   }
 
   delete() {
-    let uuid = this.companyForm.get('uuid').value;
-    this.companyService.deleteCompany(uuid).subscribe(res => {
+    this.companyService.deleteCompany(this.companyUrl).subscribe(res => {
       this.modalService.dismissAll("success");
       let options = {
         autoClose: true,

@@ -1,0 +1,90 @@
+<app-modal title="{{modalTitle}}">
+  <form [formGroup]="visitForm" (ngSubmit)="submit()">
+    <!--<div class="form-group">
+      <label for="name"> {{ 'name' | translate }}
+      </label>
+      <input type="text" class="form-control" id="name" placeholder=" {{ 'name' | translate }}" formControlName="name"
+        [ngClass]="{'alert-danger' : !this.visitForm.get('name').valid && (this.visitForm.get('name').touched || this.visitForm.get('name').dirty) }">
+      <div class="invalid-feedback" *ngIf="!this.visitForm.get('name').valid">
+        {{ this.visitForm.get('name').getError('message') }}
+      </div>
+    </div>-->
+
+    <ngb-accordion [closeOthers]="true" (click)="markEpisCheckbox()">
+      <!--activeIds="collapse-1"-->
+      <ngb-panel id="collapse-2" title="{{'visit.associateepis' | translate}}">
+        <ng-template ngbPanelContent>
+          <div class="mt-4">
+            <div class="form-check form-check-flat form-check-primary" *ngFor="let epi of epiList">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" id="{{epi.name}}">
+                {{ epi.name }}
+                <i class="input-helper"></i>
+              </label>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+    <br>
+    <!--<div class="form-check form-check-flat form-check-primary">
+      <label class="form-check-label">
+        <h4>{{ 'visit.authorizevisit' | translate }}</h4><input type="checkbox" class="form-check-input"
+          id="authorizevisit" (click)="authorizevisit = !authorizevisit">
+        <i class="input-helper"></i>
+      </label>
+    </div>-->
+
+    <ngb-accordion [closeOthers]="true">
+      <!--activeIds="collapse-1"-->
+      <ngb-panel id="collapse-1" title="{{'visit.authorizevisit' | translate}}">
+        <ng-template ngbPanelContent>
+
+          <div class="form-group">
+            <label for="dniname">{{ 'user.dni' | translate }}</label>
+            <input type="text" class="form-control" id="dni" placeholder="{{ 'user.dni' | translate }}"
+              formControlName="dni" autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label for="firstname">{{ 'user.firstname' | translate }}</label>
+            <input type="text" class="form-control" id="firstname" placeholder="{{ 'user.firstname' | translate }}"
+              formControlName="firstname" autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label for="lastname">{{ 'user.lastname' | translate }}</label>
+            <input type="text" class="form-control" id="lastname" placeholder="{{ 'user.lastname' | translate }}"
+              formControlName="lastname" autocomplete="off">
+          </div>
+
+
+          <label for="lastname">{{ 'user.signature' | translate }}</label>
+          <div style="border-style: dashed; border-color: #f2edf3;" #signatureDiv *ngIf="loadSignature">
+            <signature-pad #signaturePadC [options]="signaturePadOptions"></signature-pad>
+          </div>
+
+          <div *ngIf="!loadSignature">
+            <img [src]="userSignature.src" [height]="userSignature.height" width="userSignature.width">
+          </div>
+
+          <button type="button" class="btn btn-lg btn-light btn-icon-text" (click)="clearSignature()"
+            *ngIf="loadSignature">
+            <i class="mdi mdi-reload btn-icon-prepend"></i>
+            {{ 'user.removesignature' | translate }}
+          </button>
+
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.visitForm.invalid">
+      {{ 'save' | translate }}</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">
+      {{ 'cancel' | translate }}</button>
+  </div>
+
+</app-modal>

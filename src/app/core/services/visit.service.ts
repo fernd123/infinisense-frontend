@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
-import { BASEURL_DEV_VISIT } from 'src/app/shared/constants/app.constants';
+import { BASEURL_DEV_USER, BASEURL_DEV_VISIT } from 'src/app/shared/constants/app.constants';
 import { AuthenticationService } from './authentication.service';
+import { UserService } from './user.service';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class VisitService {
     urlEndPoint: string = BASEURL_DEV_VISIT;
 
     constructor(private http: HttpClient,
-        private authService: AuthenticationService) { }
+        private authService: AuthenticationService,
+        private userService: UserService) { }
 
     getData(url) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
@@ -41,11 +44,8 @@ export class VisitService {
     }
 
     updateVisit(visit: Visit) {
-        let body = new URLSearchParams();
-        body.set('uuid', visit.uuid);
-        let options = { headers: this.authService.getHeadersTenancyDefault() };
-        //TODO REVISAR
-        return this.http.put(this.urlEndPoint, body.toString(), options);
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.put(this.urlEndPoint, visit, options);
     }
 
     getVisits(filter: string) {
@@ -56,9 +56,38 @@ export class VisitService {
         return this.http.get(this.urlEndPoint, options);
     }
 
+    getVisit(uuid: string) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.get(this.urlEndPoint + "/" + uuid, options);
+    }
+
     getVisitReason(uuid: string) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(this.urlEndPoint + "/" + uuid + "/reason", options);
+    }
+
+    getAuthorizationSignature(url: any) {
+        let headers = this.authService.getHeadersTenancyDefault();
+        const signatureUrl = url + "/signature";
+        return this.http.get(signatureUrl, { headers, responseType: 'blob' }).pipe(mergeMap((res: Blob) => this.createImageFromBlob(res)));
+    }
+    
+    createImageFromBlob(image: Blob): Observable<string | ArrayBuffer> {
+        const imageObservable = new Observable<string | ArrayBuffer>(observer => {
+            if (image) {
+                let reader = new FileReader();
+                reader.addEventListener("load", () => {
+                    observer.next(reader.result);
+                    observer.complete();
+                }, false);
+                reader.readAsDataURL(image);
+            } else {
+                console.log(image);
+                observer.next(null)
+                observer.complete();
+            }
+        });
+        return imageObservable;
     }
 
 }

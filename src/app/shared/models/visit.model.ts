@@ -8,4 +8,10 @@ export class Visit extends BaseModel implements IVisit {
     userUuid: string;
     startDate: Date;
     endDate: Date;
+    epis: string;
+    // Authorization fields
+    firstname: string;
+    lastname: string;
+    dni: string;
+    signature: any;
 }

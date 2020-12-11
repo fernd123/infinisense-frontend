@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { VisitService } from 'src/app/core/services/visit.service';
 import { Visit } from 'src/app/shared/models/visit.model';
+import { VisitEpisComponent } from './epis/visit-epis.component';
 
 @Component({
   selector: 'infini-visit-external',
@@ -67,7 +68,8 @@ export class VisitExternalComponent implements OnInit {
       edit: false,
       delete: false,
       custom: [
-        { name: 'update', title: '<i class="mdi mdi-exit-to-app"></i>' },
+        { name: 'setEndDate', title: '<i class="mdi mdi-exit-to-app"></i>' },
+        { name: 'epis', title: '<i class="mdi mdi-briefcase"></i>' },
       ],
       position: 'right'
     },
@@ -87,7 +89,8 @@ export class VisitExternalComponent implements OnInit {
     private visitService: VisitService,
     private alertService: AlertService,
     private datePipe: DatePipe,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit() {
@@ -140,7 +143,8 @@ export class VisitExternalComponent implements OnInit {
     return [start, end];
   }
 
-  updateVisit(visit: any) {
+  setEndDate(visit: any) {
+    visit.endDate = new Date().getTime();
     this.visitService.updateVisit(visit).subscribe((res: any) => {
       let options = {
         autoClose: true,
@@ -151,10 +155,23 @@ export class VisitExternalComponent implements OnInit {
     });
   }
 
+  public openModalEpis(visitUuid: any): void {
+    const modalRef = this.modalService.open(VisitEpisComponent);
+    modalRef.componentInstance.visitUuid = visitUuid;
+
+    modalRef.result.then(() => { console.log('When user closes'); },
+      (res) => {
+        this.refreshList();
+      });
+  }
+
   onCustomAction(event) {
     switch (event.action) {
-      case 'update':
-        this.updateVisit(event.data);
+      case 'setEndDate':
+        this.setEndDate(event.data);
+        break;
+      case 'epis':
+        this.openModalEpis(event.data.uuid);
         break;
     }
   }

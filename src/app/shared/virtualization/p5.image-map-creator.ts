@@ -17,7 +17,7 @@ import p5 = require("p5");
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { ZoneType } from '../enums/zoneType.enumeration';
 
-export type Tool = "rectangulo" | "circulo" | "poligono" | "seleccionar" | "linea" | "eliminar";/* | "test"*/;
+export type Tool = "rectangulo" | "circulo" | "poligono" | "seleccionar" | "linea" | "eliminar" | "";/* | "test"*/;
 export type Image = {
 	data: p5.Image | null,
 	file: p5.File | null,
@@ -190,7 +190,8 @@ export class imageMapCreator {
 		let dragableitems = document.getElementById('drag-items');
 		switch (this.typeConfig) {
 			case ZoneType.se:
-				dragableitems.hidden = false;
+				if (dragableitems != null)
+					dragableitems.hidden = false;
 				this.tool = "seleccionar";
 				let self = this;
 				dragableitems.addEventListener('dragstart', function (e: any) {
@@ -199,7 +200,8 @@ export class imageMapCreator {
 				});
 				break;
 			case ZoneType.zv:
-				dragableitems.hidden = true;
+				if (dragableitems != null)
+					dragableitems.hidden = true;
 				break;
 		}
 	}
@@ -212,14 +214,14 @@ export class imageMapCreator {
 			.setDraggable(false)
 			.addText("Nombre del plano", "", (v: string) => { this.map.setName(v) })
 			.addDropDown("Tipo de selección", this.drawingTools /*["rectangulo", "circulo", "poligono", "seleccionar"]*//*, "eliminar", "test"]*/, (v: ToolLabel) => { this.setTool(v.value) })
-			//.addBoolean("Default Area", this.map.hasDefaultArea, (v: boolean) => { this.setDefaultArea(v) })
-			//.addButton("Deshacer", this.undoManager.undo)
-			//.addButton("Rehacer", this.undoManager.redo)
-			//.addButton("Borrar todo", this.clearAreas.bind(this))
-			//.addButton("Cargar Zonas", () => { this.loadCoordenates(this.externalCoordenates); })
-			//.addButton("Generate Html", () => { this.settings.setValue("Output", this.map.toHtml()) })
-			//.addButton("Generate Svg", () => { this.settings.setValue("Output", this.map.toSvg()) })
-			//.addTextArea("Output")
+		//.addBoolean("Default Area", this.map.hasDefaultArea, (v: boolean) => { this.setDefaultArea(v) })
+		//.addButton("Deshacer", this.undoManager.undo)
+		//.addButton("Rehacer", this.undoManager.redo)
+		//.addButton("Borrar todo", this.clearAreas.bind(this))
+		//.addButton("Cargar Zonas", () => { this.loadCoordenates(this.externalCoordenates); })
+		//.addButton("Generate Html", () => { this.settings.setValue("Output", this.map.toHtml()) })
+		//.addButton("Generate Svg", () => { this.settings.setValue("Output", this.map.toSvg()) })
+		//.addTextArea("Output")
 		//.addButton("Guardar", this.save.bind(this));
 		//@ts-ignore Fix for oncontextmenu
 		this.p5.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); });
@@ -716,10 +718,10 @@ export class imageMapCreator {
 	}*/
 
 	setBackground(): void {
-		if(this.img == null){
+		if (this.img == null) {
 			this.p5.background(20);
-		}else{
-			this.p5.background(255,255,255);
+		} else {
+			this.p5.background(255, 255, 255);
 		}
 
 		if (!this.img.data) {
@@ -772,10 +774,10 @@ export class imageMapCreator {
 			this.p5.noFill();
 		}
 
-		if(area.getShape() != "empty" && area.getShape() != "line" && area.getTitle() != null && this.showText){
-			this.p5.fill(255,0,0);
+		if (area.getShape() != "empty" && area.getShape() != "line" && area.getTitle() != null && this.showText) {
+			this.p5.fill(255, 0, 0);
 			this.p5.textSize(60);
-			this.p5.text(area.getTitle(), area.getPosition().x+100, area.getPosition().y-50);
+			this.p5.text(area.getTitle(), area.getPosition().x + 100, area.getPosition().y - 50);
 			this.p5.textAlign(this.p5.CENTER, this.p5.CENTER);
 		}
 
@@ -965,7 +967,12 @@ export class imageMapCreator {
 	}
 
 	public hideTools() {
-		this.settings.hide();
+		if (this.settings != null)
+			this.settings.hide();
+	}
+
+	public clearTool() {
+		this.tool = "";
 	}
 
 	/* Busca un área cuando se hace over sobre el listado de zonas configuradas y la ilumina */

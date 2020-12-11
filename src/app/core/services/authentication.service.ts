@@ -16,7 +16,6 @@ export class AuthenticationService {
     urlEndPoint: string = BASEURL_DEV_LOGIN;
 
     constructor(private http: HttpClient,
-        private permissionsService: NgxPermissionsService,
         private rolesService: NgxRolesService,
         private router: Router) {
         this.currentUserSubject = new BehaviorSubject<any>(localStorage.getItem('token'));
@@ -95,7 +94,7 @@ export class AuthenticationService {
                     localStorage.setItem('tenantid', tenantId);
                     let info: any = this.getTokenInfo();
                     /* PERMISSION MODULE */
-                    let authorities = info.authorities;
+                    /*let authorities = info.authorities;
                     let perm = [];
                     for (let i = 0; i < authorities.length; i++) {
                         perm.push(authorities[i].authority);
@@ -103,13 +102,13 @@ export class AuthenticationService {
                     let alira = info.alira;
                     let ergo = info.ergo;
 
-                    if (alira)
+                   /* if (alira)
                         perm.push("ALIRA");
 
                     if (ergo)
                         perm.push("ERGO");
-
-                    this.permissionsService.loadPermissions(perm);
+                    
+                    this.permissionsService.loadPermissions(perm);*/
 
                 }
             }));

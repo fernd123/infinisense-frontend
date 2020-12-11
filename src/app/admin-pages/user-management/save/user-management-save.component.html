@@ -63,7 +63,7 @@
   </form>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="false">
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.userForm.invalid">
       {{ 'save' | translate }}</button>
     <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">
       {{ 'cancel' | translate }}</button>

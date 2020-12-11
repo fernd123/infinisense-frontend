@@ -114,6 +114,7 @@ export class RegisterVisitMessageComponent implements OnInit {
     this.width = this.cardbody.offsetWidth - 200;
     this.imcreator = new imageMapCreator("div-1", this.width, this.height, ZoneType.zv);
     this.imcreator.setImage(this.image);
+    this.imcreator.clearTool();
     this.imcreator.hideTools();
     this.imcreator.showText = true;
     let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${this.coordinates}],"name":"${this.plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;

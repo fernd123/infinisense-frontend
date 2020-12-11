@@ -22,6 +22,8 @@ import { PlantSensorSaveComponent } from './plant-sensor/save/plant-sensor-save.
 import { EpiSaveComponent } from './epis/save/epis-save.component';
 import { EpiComponent } from './epis/epis.component';
 import { CompanyCustomerComponent } from './company-customer/company-customer.component';
+import { VisitEpisComponent } from './visit-external/epis/visit-epis.component';
+import { SignaturePadModule } from 'angular2-signaturepad';
 
 const routes: Routes = [
   {
@@ -61,13 +63,14 @@ const routes: Routes = [
   declarations: [
     CompanyCustomerComponent,
     UserManagementComponent, UserManagementSaveComponent, UserExternalComponent,
-    VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent,
+    VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent, VisitEpisComponent,
     PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent, PlantSensorComponent, PlantSensorSaveComponent,
     SensorTypeComponent, SensorTypeSaveComponent,
     EpiSaveComponent, EpiComponent],
   imports: [
     SharedModule,
     CommonModule,
+    SignaturePadModule,
     ReactiveFormsModule,
     AlertModule,
     RouterModule.forChild(routes)

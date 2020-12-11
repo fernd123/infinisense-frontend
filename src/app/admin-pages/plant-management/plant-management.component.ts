@@ -76,8 +76,6 @@ export class PlantManagementComponent implements OnInit {
     let data: any = this.authService.getTokenInfo();
     this.aliro = data.aliro;
     this.ergo = data.ergo;
-    debugger;
-
     this.refreshList();
   }
 

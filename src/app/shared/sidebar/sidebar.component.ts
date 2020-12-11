@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgxPermissionsService } from 'ngx-permissions';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { User } from '../models/user.model';
@@ -26,7 +27,8 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private permissionsService: NgxPermissionsService
   ) { }
 
   ngOnInit() {
@@ -50,6 +52,23 @@ export class SidebarComponent implements OnInit {
     let data: any = this.authService.getTokenInfo();
     this.aliro = data.aliro;
     this.ergo = data.ergo;
+
+
+    /* PERMISSION MODULE */
+    let authorities = data.authorities;
+    let perm = [];
+    for (let i = 0; i < authorities.length; i++) {
+      perm.push(authorities[i].authority);
+    }
+    this.permissionsService.loadPermissions(perm);
+ 
+
+    /* if (alira)
+         perm.push("ALIRA");
+ 
+     if (ergo)
+         perm.push("ERGO");
+     */
 
     if (data != undefined)
       this.userService.getUserByUuid(data.uuid).subscribe((res: User) => {

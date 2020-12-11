@@ -18,7 +18,7 @@ export class UserManagementSaveComponent implements OnInit {
   modalTitle: string = this.translateService.instant('user.saveusertitle');
   editionMode: boolean = false;
   roleList: any[] = [
-    { value: "ADMIN" }, { value: "USER" }, { value: "MASTER" }
+    { value: "ADMIN" }, { value: "USER" }
   ];
 
   @Input() public userUrl;
@@ -43,7 +43,7 @@ export class UserManagementSaveComponent implements OnInit {
       password: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
       dni: ["", Validators.required],
-      roles: [""],
+      roles: ["", Validators.required],
       active: ["true"]
     });
     if (this.userUrl != null) {
@@ -55,20 +55,23 @@ export class UserManagementSaveComponent implements OnInit {
           this.userForm.get('firstname').setValue(res.firstname);
           this.userForm.get('lastname').setValue(res.lastname);
           this.userForm.get('active').setValue(res.active);
-          this.userForm.get('roles').setValue(res.roles);
           this.userForm.get('email').setValue(res.email);
           this.userForm.get('dni').setValue(res.dni);
-          this.updateSelectList();
+          this.updateSelectList(res.roles);
         }
       });
     }
   }
 
-  updateSelectList() {
+  updateSelectList(roles) {
     let options = this.selectElRef.nativeElement.options;
+    let roleForm = [];
     for (let i = 0; i < options.length; i++) {
-      options[i].selected = this.userForm.get('roles').value.includes(options[i].id);
+      let selectRole: boolean = roles.includes(options[i].id);
+      options[i].selected = selectRole;
+      if (selectRole) roleForm.push(options[i].id);
     }
+    this.userForm.get('roles').setValue(roleForm);
   }
 
   submit() {

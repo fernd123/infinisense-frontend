@@ -18,6 +18,10 @@ export class CompanyService {
         let body = new URLSearchParams();
         body.set('name', company.name);
         body.set('description', company.description);
+        body.set('email', company.email);
+        body.set('server', company.server);
+        body.set('port', company.port);
+
         body.set('alira', `${company.aliro}`);
         body.set('ergo', `${company.ergo}`);
         body.set('active', `${company.active}`);
@@ -38,6 +42,9 @@ export class CompanyService {
         let body = new URLSearchParams();
         body.set('name', company.name);
         body.set('description', company.description);
+        body.set('email', company.email);
+        body.set('server', company.server);
+        body.set('port', company.port);
         body.set('aliro', `${company.aliro}`);
         body.set('ergo', `${company.ergo}`);
         body.set('active', `${company.active}`);

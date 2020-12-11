@@ -34,6 +34,9 @@ export class CompanyCustomerComponent implements OnInit {
       uuid: [null],
       name: [""],
       description: [""],
+      email: [""],
+      server: [""],
+      port: [""],
       username: [""]
     });
     this.companyForm.disable();
@@ -44,6 +47,10 @@ export class CompanyCustomerComponent implements OnInit {
         this.editionMode = true;
         this.companyForm.get('name').setValue(this.data[0].name);
         this.companyForm.get('description').setValue(this.data[0].description);
+        this.companyForm.get('email').setValue(this.data[0].email);
+        this.companyForm.get('server').setValue(this.data[0].server);
+        this.companyForm.get('port').setValue(this.data[0].port);
+
         this.aliro = this.data[0].aliro;
         this.ergo = this.data[0].ergo;
 

@@ -28,12 +28,32 @@
         formControlName="description">
     </div>
 
-    <div class="form-check form-check-flat form-check-primary">
-      <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" formControlName="active">
-        {{ 'active' | translate }}
-        <i class="input-helper"></i>
-      </label>
+    <div class="form-row">
+      <div class="col-md-6 mb-3">
+        <label for="name"> {{ 'user.email' | translate }}</label>
+        <input type="text" class="form-control" id="email" placeholder=" {{ 'user.email' | translate }}"
+          formControlName="email">
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="name"> {{ 'server' | translate }}</label>
+        <input type="text" class="form-control" id="server" placeholder=" {{ 'server' | translate }}"
+          formControlName="server">
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="name"> {{ 'port' | translate }}</label>
+        <input type="text" class="form-control" id="port" placeholder=" {{ 'port' | translate }}"
+          formControlName="port">
+      </div>
+
+      <div class="form-check form-check-flat form-check-primary">
+        <label class="form-check-label">
+          <input type="checkbox" class="form-check-input" formControlName="active">
+          {{ 'active' | translate }}
+          <i class="input-helper"></i>
+        </label>
+      </div>
     </div>
 
     <div *ngIf="!this.editionMode">
@@ -84,7 +104,7 @@
           <label for="email"> {{ 'user.email' | translate }}
           </label>
           <input type="text" class="form-control" id="email" placeholder=" {{ 'user.email' | translate }}"
-            formControlName="email">
+            formControlName="emailuser">
         </div>
       </div>
     </div>

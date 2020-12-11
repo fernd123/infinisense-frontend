@@ -9,5 +9,8 @@ export class Company extends BaseModel implements ICompany {
     aliro: boolean;
     ergo: boolean;
     active: boolean;
+    email: string;
+    server: string; 
+    port: string;
     user: User;
 }

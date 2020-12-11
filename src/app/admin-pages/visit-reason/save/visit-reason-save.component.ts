@@ -49,13 +49,16 @@ export class VisitReasonSaveComponent implements OnInit {
       active: [true],
       plant: [null],
       plantCoordinate: [null],
+      isproject: [false]
     });
+
     if (this.reasonUrl != null) {
       this.editionMode = true;
       this.reasonService.getReasonByUuid(this.reasonUrl).subscribe((res: Reason) => {
         this.reasonForm.get('name').setValue(res.name);
         this.reasonForm.get('description').setValue(res.description);
         this.reasonForm.get('active').setValue(res.active);
+        this.reasonForm.get('isproject').setValue(res.isproject);
 
         let plantCoordinate = res._links.plantCoordinate.href;
         this.reasonService.getReasonByUuid(plantCoordinate).subscribe((resPlantCoord: any) => {
@@ -93,6 +96,7 @@ export class VisitReasonSaveComponent implements OnInit {
     reason.name = this.reasonForm.get('name').value;
     reason.description = this.reasonForm.get('description').value;
     reason.active = this.reasonForm.get('active').value;
+    reason.isproject = this.reasonForm.get('isproject').value;
     reason.plantCoordinate = this.reasonForm.get('plantCoordinate').value;
 
     let options = {

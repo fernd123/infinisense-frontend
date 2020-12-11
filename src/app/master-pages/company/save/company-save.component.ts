@@ -34,10 +34,13 @@ export class CompanySaveComponent implements OnInit {
       uuid: [null],
       name: ["", Validators.required],
       description: ["", Validators.required],
+      email: ["", Validators.required],
+      server: ["", Validators.required],
+      port: ["", Validators.required],
       username: ["admin", this.editionMode ? Validators.required : null],
       password: ["", this.editionMode ? Validators.required : null],
       dni: ["", this.editionMode ? Validators.required : null],
-      email: ["", this.editionMode ? Validators.required : null],
+      emailuser: ["", this.editionMode ? Validators.required : null],
       firstname: ["", this.editionMode ? Validators.required : null],
       lastname: ["", this.editionMode ? Validators.required : null],
       aliro: [true],
@@ -50,6 +53,9 @@ export class CompanySaveComponent implements OnInit {
       this.companyService.getData(this.companyUrl).subscribe((res: Company) => {
         this.companyForm.get('name').setValue(res.name);
         this.companyForm.get('description').setValue(res.description);
+        this.companyForm.get('email').setValue(res.email);
+        this.companyForm.get('server').setValue(res.server);
+        this.companyForm.get('port').setValue(res.port);
         this.companyForm.get('aliro').setValue(res.aliro);
         this.companyForm.get('ergo').setValue(res.ergo);
         this.companyForm.get('active').setValue(res.active);
@@ -63,6 +69,9 @@ export class CompanySaveComponent implements OnInit {
     let company = new Company();
     company.name = this.companyForm.get('name').value;
     company.description = this.companyForm.get('description').value;
+    company.email = this.companyForm.get('email').value;
+    company.server = this.companyForm.get('server').value;
+    company.port = this.companyForm.get('port').value;
     company.aliro = this.companyForm.get('aliro').value;
     company.ergo = this.companyForm.get('ergo').value;
     company.active = this.companyForm.get('active').value;
@@ -70,7 +79,7 @@ export class CompanySaveComponent implements OnInit {
     let user = new User();
     user.username = this.companyForm.get('username').value;
     user.password = this.companyForm.get('password').value;
-    user.email = this.companyForm.get('email').value;
+    user.email = this.companyForm.get('emailuser').value;
     user.firstname = this.companyForm.get('firstname').value;
     user.lastname = this.companyForm.get('lastname').value;
     user.dni = this.companyForm.get('dni').value;

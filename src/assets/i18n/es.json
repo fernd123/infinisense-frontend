@@ -20,6 +20,9 @@
   "status": "Estado",
   "image": "Imagen",
   "license": "Licencia",
+  "port": "Puerto",
+  "server": "Servidor",
+  "project": "Proyecto",
   "menu": {
     "customer": "Clientes",
     "company": "Empresas",
@@ -101,6 +104,7 @@
   },
   "reason": {
     "reasonlisttitle": "Motivos de visita",
+    "projectaccess": "Acceso al proyecto",
     "reason": "Motivo",
     "relatedto": "Asociado con",
     "associatetozone": "Asociar un motivo de visita a una zona"

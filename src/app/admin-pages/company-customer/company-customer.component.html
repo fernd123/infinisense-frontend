@@ -22,6 +22,26 @@
             formControlName="description">
         </div>
 
+        <div class="form-row">
+          <div class="col-md-6 mb-3">
+            <label for="name"> {{ 'user.email' | translate }}</label>
+            <input type="text" class="form-control" id="email" placeholder=" {{ 'user.email' | translate }}"
+              formControlName="email">
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label for="name"> {{ 'server' | translate }}</label>
+            <input type="text" class="form-control" id="server" placeholder=" {{ 'server' | translate }}"
+              formControlName="server">
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label for="name"> {{ 'port' | translate }}</label>
+            <input type="text" class="form-control" id="port" placeholder=" {{ 'port' | translate }}"
+              formControlName="port">
+          </div>
+        </div>
+
         <div>
           <h4 class="card-title">{{'user.default' | translate }}</h4>
         </div>
@@ -29,7 +49,7 @@
           <input type="text" class="form-control" id="username" placeholder=" {{ 'user.username' | translate }}"
             formControlName="username">
         </div>
-        
+
         <br>
         <div>
           <h4 class="card-title">{{'company.access' | translate }}</h4>

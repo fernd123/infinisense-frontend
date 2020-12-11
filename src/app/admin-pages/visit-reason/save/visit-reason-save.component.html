@@ -16,12 +16,35 @@
         formControlName="description">
     </div>
 
-    <div class="form-check form-check-flat form-check-primary">
+    <div class="form-check form-check-flat form-check-primary" *ngIf="this.reasonUrl != null">
       <label class="form-check-label">
         <input type="checkbox" class="form-check-input" formControlName="active">
         {{ 'active' | translate }}
         <i class="input-helper"></i>
       </label>
+    </div>
+
+    <div class="form-check form-check-flat form-check-primary">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" formControlName="isproject">
+        {{ 'project' | translate }}
+        <i class="input-helper"></i>
+      </label>
+    </div>
+
+    <div class="mt-4" *ngIf="this.reasonForm.get('isproject').value">
+      <ngb-accordion [closeOthers]="true">
+        <!--activeIds="collapse-1"-->
+        <ngb-panel id="collapse-project" title="{{ 'reason.projectaccess' | translate }}">
+          <ng-template ngbPanelContent>
+            <div class="form-group">
+              <label for="email"> {{ 'user.email' | translate }}</label>
+              <input type="text" class="form-control" id="companymail" placeholder=" {{ 'user.email' | translate }}"
+                formControlName="companymail">
+            </div>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
     </div>
 
     <div class="mt-4">

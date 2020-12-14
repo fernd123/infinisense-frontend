@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BASEURL_DEV_REASON } from 'src/app/shared/constants/app.constants';
 import { Reason } from 'src/app/shared/models/reason.model';
 import { AuthenticationService } from './authentication.service';
@@ -29,6 +29,11 @@ export class ReasonService {
         } else {
             return this.http.put(reasonUrl, reason, options);
         }
+    }
+
+    createProject(reasonUrl: string, mailList: any) {
+        let params = new HttpParams().set('emaillist', mailList.toString());
+        return this.http.post(reasonUrl+"/project", { params: params, headers : this.authService.getHeadersJsonTenancyDefault() });
     }
 
     assignCoordinateToReason(reasonUrl: string, coordinateUrl: string) {

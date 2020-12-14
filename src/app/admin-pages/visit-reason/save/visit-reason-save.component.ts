@@ -27,6 +27,7 @@ export class VisitReasonSaveComponent implements OnInit {
 
   plantList: Plant[];
   plantZoneList: PlantCoordinates[];
+  emailList: string[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,7 +50,8 @@ export class VisitReasonSaveComponent implements OnInit {
       active: [true],
       plant: [null],
       plantCoordinate: [null],
-      isproject: [false]
+      isproject: [false],
+      email: ["", Validators.email]
     });
 
     if (this.reasonUrl != null) {
@@ -71,6 +73,16 @@ export class VisitReasonSaveComponent implements OnInit {
         }, (error => {
 
         }));
+
+        this.reasonService.getReasonByUuid(res._links.reasonProjectEmail.href).subscribe((resEmails: any) => {
+          debugger;
+          this.emailList = resEmails._embedded.reasonProjectEmails;
+          if(this.emailList.length == 1){
+
+          }else if(this.emailList.length >1){
+            this.addNewMail();
+          }
+        });
       });
     }
   }
@@ -92,18 +104,39 @@ export class VisitReasonSaveComponent implements OnInit {
   }
 
   submit() {
+    let defaultEmail = this.reasonForm.get('email');
+    let isProject = this.reasonForm.get('isproject').value;
+    if (isProject && (defaultEmail.value == null || defaultEmail.value == '')) {
+      defaultEmail.setErrors({ incorrect: true, message: "Inserte al menos un correo" });
+      return;
+    }
     let reason = new Reason();
     reason.name = this.reasonForm.get('name').value;
     reason.description = this.reasonForm.get('description').value;
     reason.active = this.reasonForm.get('active').value;
-    reason.isproject = this.reasonForm.get('isproject').value;
+    reason.isproject = isProject;
     reason.plantCoordinate = this.reasonForm.get('plantCoordinate').value;
+
+    let newMailElement = document.getElementById('newMailId');
+    let newMailChilds = newMailElement.children;
+    let mailList = [defaultEmail.value.trim()];
+    for (let i = 0; i < newMailChilds.length; i++) {
+      let input: any = newMailChilds[i].children[0];
+      mailList.push(input.value?.trim());
+    }
 
     let options = {
       autoClose: true,
       keepAfterRouteChange: true
     };
     this.reasonService.saveReason(this.reasonUrl, reason).subscribe((res: any) => {
+      debugger;
+      if (isProject) {
+        this.reasonService.createProject(res._links.self.href, mailList).subscribe((resProject: any) => {
+          debugger;
+        })
+      }
+
       if (reason.plantCoordinate != null) {
         this.reasonService.assignCoordinateToReason(res._links.plantCoordinate.href, reason.plantCoordinate).subscribe(res => {
           this.modalService.dismissAll("success");
@@ -139,6 +172,26 @@ export class VisitReasonSaveComponent implements OnInit {
 
   closeModal() {
     this.modalService.dismissAll("exit");
+  }
+
+
+  addNewMail() {
+    let newMailDiv = document.getElementById('newMailId');
+    let divElem = document.createElement("div");
+    divElem.classList.add("input-group");
+    divElem.classList.add("mb-3");
+    /*let labelElem = document.createElement("label");
+    divElem.appendChild(labelElem);
+    labelElem.innerText = "Email";
+    labelElem.setAttribute("for", "email"+newMailDiv.children.length+1);*/
+    let inputElem = document.createElement("input");
+    inputElem.type = "email";
+    inputElem.classList.add("form-control");
+    inputElem.id = "companymail" + newMailDiv.children.length + 1;
+    inputElem.placeholder = this.translateService.instant('user.email');
+
+    divElem.appendChild(inputElem);
+    newMailDiv.appendChild(divElem);
   }
 }
 

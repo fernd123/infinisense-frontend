@@ -147,4 +147,22 @@ export class AuthenticationService {
     public getTenantId() {
         return localStorage.getItem('tenantid');
     }
+
+    isTokenExpired(token?: string): boolean {
+        if (!token) return true;
+
+        const date = this.getTokenExpirationDate(token);
+        if (date === undefined) return false;
+        return !(date.valueOf() > new Date().valueOf());
+    }
+
+    getTokenExpirationDate(token: string): Date {
+        const decoded: any = jwt_decode(token);
+
+        if (decoded.exp === undefined) return null;
+
+        const date = new Date(0);
+        date.setUTCSeconds(decoded.exp);
+        return date;
+    }
 }

@@ -18,6 +18,9 @@ export const BASEURL_DEV_LOGIN = BASEURL_PROXY + '/api/user/authenticate';
 export const BASEURL_DEV_USER = BASEURL_PROXY + '/api/user';
 export const BASEURL_DEV_VISIT = BASEURL_PROXY + '/api/visit';
 export const BASEURL_DEV_REASON = BASEURL_PROXY + '/api/reason';
+export const BASEURL_DEV_REASON_PROJECT_PARTICIPANT = BASEURL_PROXY + '/api/reasonprojectparticipant';
+export const BASEURL_DEV_REASON_PROJECT_TOKEN = BASEURL_PROXY + '/api/reasonprojecttoken';
+
 export const BASEURL_DEV_PLANT = BASEURL_PROXY + '/api/plant';
 export const BASEURL_DEV_PLANTCOORDINATES = BASEURL_PROXY + '/api/plantCoordinate';
 export const BASEURL_DEV_SENSORTYPE = BASEURL_PROXY + '/api/sensortype';

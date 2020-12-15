@@ -32,8 +32,15 @@ export class ReasonService {
     }
 
     createProject(reasonUrl: string, mailList: any) {
-        let params = new HttpParams().set('emaillist', mailList.toString());
-        return this.http.post(reasonUrl+"/project", { params: params, headers : this.authService.getHeadersJsonTenancyDefault() });
+        let emailStr = "";
+        for(let i=0; i<mailList.length; i++){
+            emailStr += mailList[i] + ",";
+        }
+        emailStr = emailStr.substr(0, emailStr.length-1);
+
+        let params = new HttpParams({fromString: `emaillist=${emailStr}`});
+        let headersReq = this.authService.getHeadersJsonTenancyDefault();
+        return this.http.post(reasonUrl+"/project", null, { params: params, headers : headersReq });
     }
 
     assignCoordinateToReason(reasonUrl: string, coordinateUrl: string) {

@@ -133,6 +133,8 @@
     }
   },
   "error": {
-    "must.be.unique": "Ya existe un registro con el mismo valor"
+    "must.be.unique": "Ya existe un registro con el mismo valor",
+    "duplicated.email": "Email duplicado",
+    "invalid.email": "Email inválido"
   }
 }

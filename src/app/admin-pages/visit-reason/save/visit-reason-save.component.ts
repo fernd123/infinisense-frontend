@@ -11,6 +11,8 @@ import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
 import { Plant } from 'src/app/shared/models/plant.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
 import { Reason } from 'src/app/shared/models/reason.model';
+import { ReasonProjectEmail } from 'src/app/shared/models/reasonProjectEmail.model';
+import { validateEmail, validateEmailByValue } from 'src/app/shared/form-validators/email.validator';
 
 
 @Component({
@@ -24,10 +26,11 @@ export class VisitReasonSaveComponent implements OnInit {
   editionMode: boolean = false;
   @Input() public reasonUrl;
   associationtitle: string = this.translateService.instant('reason.associatetozone');
+  projectInDb: boolean = false;
 
   plantList: Plant[];
   plantZoneList: PlantCoordinates[];
-  emailList: string[];
+  emailList: ReasonProjectEmail[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,7 +54,7 @@ export class VisitReasonSaveComponent implements OnInit {
       plant: [null],
       plantCoordinate: [null],
       isproject: [false],
-      email: ["", Validators.email]
+      email: ["", validateEmail]
     });
 
     if (this.reasonUrl != null) {
@@ -75,12 +78,14 @@ export class VisitReasonSaveComponent implements OnInit {
         }));
 
         this.reasonService.getReasonByUuid(res._links.reasonProjectEmail.href).subscribe((resEmails: any) => {
-          debugger;
+          this.reasonForm.get('email').disable();
+          this.reasonForm.get('isproject').disable();
           this.emailList = resEmails._embedded.reasonProjectEmails;
-          if(this.emailList.length == 1){
-
-          }else if(this.emailList.length >1){
-            this.addNewMail();
+          this.projectInDb = true;
+          if (this.emailList.length >= 1) {
+            this.reasonForm.get('email').setValue(this.emailList[0].email);
+            for (let i = 1; i < this.emailList.length; i++)
+              this.addNewMail(this.emailList[i].email);
           }
         });
       });
@@ -105,6 +110,7 @@ export class VisitReasonSaveComponent implements OnInit {
 
   submit() {
     let defaultEmail = this.reasonForm.get('email');
+    let mailList = [];
     let isProject = this.reasonForm.get('isproject').value;
     if (isProject && (defaultEmail.value == null || defaultEmail.value == '')) {
       defaultEmail.setErrors({ incorrect: true, message: "Inserte al menos un correo" });
@@ -117,12 +123,48 @@ export class VisitReasonSaveComponent implements OnInit {
     reason.isproject = isProject;
     reason.plantCoordinate = this.reasonForm.get('plantCoordinate').value;
 
-    let newMailElement = document.getElementById('newMailId');
-    let newMailChilds = newMailElement.children;
-    let mailList = [defaultEmail.value.trim()];
-    for (let i = 0; i < newMailChilds.length; i++) {
-      let input: any = newMailChilds[i].children[0];
-      mailList.push(input.value?.trim());
+    if (isProject) {
+      mailList = [defaultEmail.value.trim()];
+      let newMailElement = document.getElementById('newMailId');
+      if (newMailElement != undefined) {
+        let newMailChilds = newMailElement.children;
+        for (let i = 0; i < newMailChilds.length; i++) {
+          let input: any = newMailChilds[i].children[0];
+          let value = input.value?.trim();
+          if (value != "") {
+            if (!validateEmailByValue(value)) {
+              console.log("no vlido");
+              if (input.parentElement.children.length > 1) // delete validations message
+                input.parentElement.children[1].innerHTML = null;
+              input.classList.add("alert-danger");
+              let divElem = document.createElement("div");
+              divElem.classList.add("invalid-feedback");
+              divElem.innerText = this.translateService.instant('error.invalid.email');
+              input.parentElement.insertBefore(divElem, input.nextSibling);
+              return;
+            } else {
+              input.classList.remove("alert-danger");
+            }
+
+            for (let i = 0; i < mailList.length; i++) {
+              if (mailList[i] == value) {
+                console.log(mailList, "duplicado");
+                if (input.parentElement.children.length > 1)
+                  input.parentElement.children[1].innerHTML = null;
+                input.classList.add("alert-danger");
+                let divElem = document.createElement("div");
+                divElem.classList.add("invalid-feedback");
+                divElem.innerText = this.translateService.instant('error.duplicated.email');
+                input.parentElement.insertBefore(divElem, input.nextSibling);
+                return;
+              } else {
+                input.classList.remove("alert-danger");
+              }
+            }
+            mailList.push(value);
+          }
+        }
+      }
     }
 
     let options = {
@@ -131,7 +173,7 @@ export class VisitReasonSaveComponent implements OnInit {
     };
     this.reasonService.saveReason(this.reasonUrl, reason).subscribe((res: any) => {
       debugger;
-      if (isProject) {
+      if (isProject && this.reasonUrl == null) { // only create the project for new reasons, not update
         this.reasonService.createProject(res._links.self.href, mailList).subscribe((resProject: any) => {
           debugger;
         })
@@ -155,7 +197,11 @@ export class VisitReasonSaveComponent implements OnInit {
           this.editionMode = false;
         })
       }
-    })
+    },
+      (error: any) => {
+        let message = this.translateService.instant(`error.${error.error.message}`);
+        this.reasonForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
+      })
   }
 
   delete() {
@@ -175,7 +221,7 @@ export class VisitReasonSaveComponent implements OnInit {
   }
 
 
-  addNewMail() {
+  addNewMail(value = null) {
     let newMailDiv = document.getElementById('newMailId');
     let divElem = document.createElement("div");
     divElem.classList.add("input-group");
@@ -189,6 +235,10 @@ export class VisitReasonSaveComponent implements OnInit {
     inputElem.classList.add("form-control");
     inputElem.id = "companymail" + newMailDiv.children.length + 1;
     inputElem.placeholder = this.translateService.instant('user.email');
+    if (value != null) {
+      inputElem.value = value;
+      inputElem.disabled = true;
+    }
 
     divElem.appendChild(inputElem);
     newMailDiv.appendChild(divElem);

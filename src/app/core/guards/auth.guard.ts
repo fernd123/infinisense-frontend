@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
             let token = localStorage.getItem('token');
             let tokenInfo: any = this.authService.getTokenInfo();
             // token expired
-            if (this.isTokenExpired(token)) {
+            if (this.authService.isTokenExpired(token)) {
                 localStorage.clear();
                 this.router.navigate(['/admin']);
                 return false;
@@ -55,21 +55,5 @@ export class AuthGuard implements CanActivate {
     }
 
 
-    isTokenExpired(token?: string): boolean {
-        if (!token) return true;
-
-        const date = this.getTokenExpirationDate(token);
-        if (date === undefined) return false;
-        return !(date.valueOf() > new Date().valueOf());
-    }
-
-    getTokenExpirationDate(token: string): Date {
-        const decoded: any = jwt_decode(token);
-
-        if (decoded.exp === undefined) return null;
-
-        const date = new Date(0);
-        date.setUTCSeconds(decoded.exp);
-        return date;
-    }
+    
 }

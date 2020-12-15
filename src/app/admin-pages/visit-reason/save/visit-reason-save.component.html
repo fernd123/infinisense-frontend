@@ -39,8 +39,8 @@
           <input type="text" class="form-control" placeholder="Email" aria-label="Recipient's username"
             aria-describedby="basic-addon2" formControlName="email"
             [ngClass]="{'alert-danger' : !this.reasonForm.get('email').valid && (this.reasonForm.get('email').touched || this.reasonForm.get('email').dirty) }">
-          <div class="input-group-append">
-            <button type="button" class="btn btn-outline-primary btn-sm" (click)="addNewMail()">
+          <div class="input-group-append" *ngIf="!projectInDb">
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="addNewMail()" >
               <i class="mdi mdi-plus ml-1"></i></button>
           </div>
           <div class="invalid-feedback" *ngIf="!this.reasonForm.get('email').valid">

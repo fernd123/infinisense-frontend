@@ -14,8 +14,10 @@ import { HttpLoaderFactory } from '../app.module';
 import { HttpClient } from '@angular/common/http';
 import { SharedModule } from '../shared/shared.module';
 import { RegisterVisitMessageComponent } from './register-vist/message/register-visit-message..component';
+import { UpdateProjectComponent } from './update-project/update-project.component';
 
 const routes: Routes = [
+  { path: 'update-project', component: UpdateProjectComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'register-visit', component: RegisterVisitComponent, canActivate: [AuthGuard] },
@@ -23,7 +25,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, RegisterVisitComponent, RegisterVisitMessageComponent],
+  declarations: [LoginComponent, RegisterComponent, RegisterVisitComponent, RegisterVisitMessageComponent, UpdateProjectComponent],
   imports: [
     CommonModule,
     SharedModule,

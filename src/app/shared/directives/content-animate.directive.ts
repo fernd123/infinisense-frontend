@@ -52,8 +52,10 @@ export class ContentAnimateDirective implements OnInit, OnDestroy {
 	 * On destroy
 	 */
 	ngOnDestroy(): void {
-		this.events.unsubscribe();
-		this.player.destroy();
+		if (this.events != undefined) {
+			this.events.unsubscribe();
+			this.player.destroy();
+		}
 	}
 
 	/**
@@ -68,12 +70,12 @@ export class ContentAnimateDirective implements OnInit, OnDestroy {
 				style({
 					transform: 'translateY(-1%)',
 					opacity: 0,
-          position: 'static',
-          height: '100%'
+					position: 'static',
+					height: '100%'
 				}),
 				animate(
 					'0.5s ease-in-out',
-					style({transform: 'translateY(0%)', opacity: 1})
+					style({ transform: 'translateY(0%)', opacity: 1 })
 				)
 			])
 			.create(this.el.nativeElement);

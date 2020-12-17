@@ -11,48 +11,68 @@
           <p class="card-description">
             {{ 'registervisit.description' | translate }}
           </p>
-          <form class="form-inline" [formGroup]="registerForm" (ngSubmit)="submit()">
-            <label class="sr-only" for="dniname">{{ 'user.dni' | translate }}</label>
-            <input type="text" class="form-control mb-2 mr-sm-2" id="dni" placeholder="{{ 'user.dni' | translate }}"
-              formControlName="dni" (change)="getUserByDni()" [ngClass]="{'alert-danger' : hasFormError('dni') }"
-              autocomplete="off">
+          <form [formGroup]="registerForm" (ngSubmit)="submit()">
 
-            <label class="sr-only" for="firstname">{{ 'user.firstname' | translate }}</label>
-            <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control" id="firstname" placeholder="{{ 'user.firstname' | translate }}"
-                formControlName="firstname" [ngClass]="{'alert-danger' : hasFormError('firstname') }"
-                autocomplete="off">
+            <div class="form-row">
+              <div class="col-md-2 mb-2">
+                <label for="dniname">{{ 'user.dni' | translate }}</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="dni" placeholder="{{ 'user.dni' | translate }}"
+                  formControlName="dni" (change)="getUserByDni()" [ngClass]="{'alert-danger' : hasFormError('dni') }"
+                  autocomplete="off">
+              </div>
+
+              <div class="col-md-3 mb-3">
+                <label for="firstname">{{ 'user.firstname' | translate }}</label>
+                <input type="text" class="form-control" id="firstname" placeholder="{{ 'user.firstname' | translate }}"
+                  formControlName="firstname" [ngClass]="{'alert-danger' : hasFormError('firstname') }"
+                  autocomplete="off">
+              </div>
+
+              <div class="col-md-3 mb-3">
+                <label for="lastname">{{ 'user.lastname' | translate }}</label>
+                <input type="text" class="form-control" id="lastname" placeholder="{{ 'user.lastname' | translate }}"
+                  formControlName="lastname" [ngClass]="{'alert-danger' : hasFormError('lastname') }"
+                  autocomplete="off">
+              </div>
+
+              <div class="col-md-2 mb-2">
+                <label for="email">{{ 'user.email' | translate }}</label>
+                <input type="text" class="form-control" id="email" placeholder="{{ 'user.email' | translate }}"
+                  formControlName="email" [ngClass]="{'alert-danger' : hasFormError('email') }" autocomplete="off">
+              </div>
+
+              <div class="col-md-2 mb-2">
+                <label for="company">{{ 'user.company' | translate }}</label>
+                <input type="text" class="form-control has-danger" id="company"
+                  placeholder="{{ 'user.company' | translate }}" formControlName="company"
+                  [ngClass]="{'alert-danger' : hasFormError('company') }" autocomplete="off">
+              </div>
             </div>
 
-            <label class="sr-only" for="lastname">{{ 'user.lastname' | translate }}</label>
-            <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control" id="lastname" placeholder="{{ 'user.lastname' | translate }}"
-                formControlName="lastname" [ngClass]="{'alert-danger' : hasFormError('lastname') }" autocomplete="off">
+            <div class="form-row">
+
+              <div class="col-md-6 mb-3" *ngIf="hasProjects">
+                <label for="reason">{{ 'visit.project' | translate }}</label>
+                <select class="form-control" id="reason" formControlName="project"
+                  (change)="this.registerForm.get('reason').setValue(null)"
+                  [ngClass]="{'alert-danger' : hasFormError('project') }" autocomplete="off">
+                  <option [value]="project._links.self.href" *ngFor="let project of projectList">{{project.name}}
+                  </option>
+                </select>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="reason">{{ 'visit.reason' | translate }}</label>
+                <select class="form-control" id="reason" formControlName="reason"
+                  (change)="this.registerForm.get('project').setValue(null)"
+                  [ngClass]="{'alert-danger' : hasFormError('reason') }" autocomplete="off">
+                  <option [value]="reason._links.self.href" *ngFor="let reason of reasonList">{{reason.name}}</option>
+                </select>
+              </div>
             </div>
 
-            <label class="sr-only" for="email">{{ 'user.email' | translate }}</label>
-            <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control" id="email" placeholder="{{ 'user.email' | translate }}"
-                formControlName="email" [ngClass]="{'alert-danger' : hasFormError('email') }" autocomplete="off">
-            </div>
-
-            <label class="sr-only" for="company">{{ 'user.company' | translate }}</label>
-            <div class="input-group mb-2 mr-sm-2">
-              <input type="text" class="form-control has-danger" id="company"
-                placeholder="{{ 'user.company' | translate }}" formControlName="company"
-                [ngClass]="{'alert-danger' : hasFormError('company') }" autocomplete="off">
-            </div>
-
-            <label class="sr-only" for="reason">{{ 'visit.reason' | translate }}</label>
-            <div class="input-group mb-2 mr-sm-2">
-              <select class="form-control" id="reason" formControlName="reason"
-                [ngClass]="{'alert-danger' : hasFormError('reason') }" autocomplete="off">
-                <option [value]="reason._links.self.href" *ngFor="let reason of reasonList">{{reason.name}}</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn btn-gradient-primary mb-2"
-              [disabled]="!registerForm.valid">{{ 'register' | translate }}</button>
+            <button type="submit" class="btn btn-gradient-primary mb-6" #registerButton
+              [disabled]="!registerForm.valid && (this.registerForm.get('project').value == null && this.registerForm.get('project').value == null)">{{ buttonTitle }}</button>
           </form>
         </div>
 

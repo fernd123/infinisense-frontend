@@ -38,6 +38,13 @@ export class AuthenticationService {
         return null;
     }
 
+    getTokenInfoByToken(token: string) {
+        if (token) {
+            return jwt_decode(token);
+        }
+        return null;
+    }
+
     login(username: string, password: string, tenantId: string) {
         return this.doLogin(this.urlEndPoint, username, password, tenantId);
     }
@@ -75,8 +82,7 @@ export class AuthenticationService {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
-            'X-TenantID': tenantId,
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+            'X-TenantID': tenantId
         });
         let body = new URLSearchParams();
         body.set('grant_type', 'password');
@@ -129,7 +135,7 @@ export class AuthenticationService {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json',
             'X-TenantID': this.getTenantId(),
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+            'X-Secret': 'YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
         return headers;
     }
@@ -139,7 +145,7 @@ export class AuthenticationService {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'X-TenantID': this.getTenantId(),
-            'Authorization': 'Basic YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
+            'X-Secret': 'YW5ndWxhcjphbmd1bGFy' // Basic angular - angular
         });
         return headers;
     }

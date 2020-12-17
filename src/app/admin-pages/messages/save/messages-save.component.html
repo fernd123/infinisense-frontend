@@ -1,0 +1,33 @@
+<app-modal title="{{modalTitle}}">
+  <div class="alert-danger" role="alert" *ngIf="messageerror != null">
+    <span [innerHTML]="messageerror"></span>
+  </div>
+  <form [formGroup]="messageForm">
+    <div class="form-group">
+      <label for="name"> {{ 'message.message' | translate }}
+      </label>
+      <textarea class="form-control" rows="4" cols="50" formControlName="name"
+        [ngClass]="{'alert-danger' : !this.messageForm.get('name').valid &&  (this.messageForm.get('name').touched || this.messageForm.get('name').dirty) }"></textarea>
+      <div class="invalid-feedback" *ngIf="!this.messageForm.get('name').valid">
+        {{ this.messageForm.get('name').getError('message') }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="name"> {{ 'type' | translate }}</label>
+      <select class="form-control" id="type" formControlName="type">
+        <option [value]="enum.key" *ngFor="let enum of MessageType | keyvalue">
+          {{ enum.value | translate }}</option>
+      </select>
+    </div>
+
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.messageForm.invalid">
+      {{ 'save' | translate }}</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">
+      {{ 'cancel' | translate }}</button>
+  </div>
+
+</app-modal>

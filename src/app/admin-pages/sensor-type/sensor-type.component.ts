@@ -71,7 +71,7 @@ export class SensorTypeComponent implements OnInit {
   }
 
   public openSaveModal(sensorUrl: any): void {
-    const modalRef = this.modalService.open(SensorTypeSaveComponent);
+    const modalRef = this.modalService.open(SensorTypeSaveComponent, { size: 'md', backdrop: 'static' });
     modalRef.componentInstance.sensorUrl = sensorUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },

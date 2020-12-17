@@ -86,7 +86,7 @@ export class PlantManagementComponent implements OnInit {
   }
 
   public openSaveModal(plantUrl: any): void {
-    const modalRef = this.modalService.open(PlantManagementSaveComponent);
+    const modalRef = this.modalService.open(PlantManagementSaveComponent, { size: 'md', backdrop: 'static' });
     modalRef.componentInstance.plantUrl = plantUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },

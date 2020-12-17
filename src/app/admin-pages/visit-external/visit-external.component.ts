@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { VisitService } from 'src/app/core/services/visit.service';
 import { Visit } from 'src/app/shared/models/visit.model';
+import { VisitCancelComponent } from './cancel/visit-cancel.component';
 import { VisitEpisComponent } from './epis/visit-epis.component';
 
 @Component({
@@ -60,7 +61,18 @@ export class VisitExternalComponent implements OnInit {
             return this.datePipe.transform(data, 'dd/MM/yyyy HH:mm');
           }
         }
-      }
+      },
+      canceled: {
+        title: this.translateService.instant('visit.canceled'),
+        width: '5%',
+        filter: false,
+        valuePrepareFunction: (data) => {
+          if (data == null || !data) {
+            return 'No';
+          }
+          return 'Sí';
+        }
+      },
     },
     actions: {
       columnTitle: this.translateService.instant('actions'),
@@ -70,6 +82,7 @@ export class VisitExternalComponent implements OnInit {
       custom: [
         { name: 'setEndDate', title: '<i class="mdi mdi-exit-to-app"></i>' },
         { name: 'epis', title: '<i class="mdi mdi-briefcase"></i>' },
+        { name: 'cancel', title: '<i class="mdi mdi-calendar-remove"></i>' },
       ],
       position: 'right'
     },
@@ -156,7 +169,17 @@ export class VisitExternalComponent implements OnInit {
   }
 
   public openModalEpis(visitUuid: any): void {
-    const modalRef = this.modalService.open(VisitEpisComponent);
+    const modalRef = this.modalService.open(VisitEpisComponent, { size: 'md', backdrop: 'static' });
+    modalRef.componentInstance.visitUuid = visitUuid;
+
+    modalRef.result.then(() => { console.log('When user closes'); },
+      (res) => {
+        this.refreshList();
+      });
+  }
+
+  public openModalCancel(visitUuid: any): void {
+    const modalRef = this.modalService.open(VisitCancelComponent, { size: 'md', backdrop: 'static' });
     modalRef.componentInstance.visitUuid = visitUuid;
 
     modalRef.result.then(() => { console.log('When user closes'); },
@@ -172,6 +195,9 @@ export class VisitExternalComponent implements OnInit {
         break;
       case 'epis':
         this.openModalEpis(event.data.uuid);
+        break;
+      case 'cancel':
+        this.openModalCancel(event.data.uuid);
         break;
     }
   }

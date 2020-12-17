@@ -104,7 +104,7 @@ export class VisitReasonComponent implements OnInit {
 
   public openSaveModal(reasonUrl: string, size?: string): void {
     if (!size || size === undefined) { size = 'modal-lg'; }
-    const modalRef = this.modalService.open(VisitReasonSaveComponent);
+    const modalRef = this.modalService.open(VisitReasonSaveComponent, { size: 'md', backdrop: 'static' });
     modalRef.componentInstance.reasonUrl = reasonUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },

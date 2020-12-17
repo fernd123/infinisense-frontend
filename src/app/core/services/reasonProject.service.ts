@@ -5,6 +5,7 @@ import { Reason } from 'src/app/shared/models/reason.model';
 import { AuthenticationService } from './authentication.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { ReasonProjectEmail } from 'src/app/shared/models/reasonProjectEmail.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReasonProjectService {
@@ -18,19 +19,19 @@ export class ReasonProjectService {
     getData(url: string) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(url, options).pipe(
-            catchError(err => of(err.status)),
+            catchError(err => of(err.status))
         );
     }
 
     createProjectParticipant(userUrl: string, reasonUrl: string) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
-        let projectParticipant : any = {};
+        let projectParticipant: any = {};
         projectParticipant.user = userUrl;
         projectParticipant.reason = reasonUrl;
         projectParticipant.active = true;
         return this.http.post(this.urlEndPoint, projectParticipant, options);
     }
-    
+
     deleteCoordinateReason(reasonUrl: String) {
         const options = {
             headers: {
@@ -47,10 +48,15 @@ export class ReasonProjectService {
         return this.http.get(this.urlEndPoint, options);
     }
 
-    getProjectToken(tokenUuid:string){
+    getProjectToken(tokenUuid: string) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(`${this.urlEndPointToken}/${tokenUuid}`, options).pipe(
             catchError(err => of(err.status))
         );
+    }
+
+    updateProjectEmailAnswer(reasonProjectEmailUrl: string, reasonProjectEmail: ReasonProjectEmail) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.put(reasonProjectEmailUrl, reasonProjectEmail, options);
     }
 }

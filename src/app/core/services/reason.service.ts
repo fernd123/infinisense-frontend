@@ -17,7 +17,7 @@ export class ReasonService {
     getData(url: string) {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(url, options).pipe(
-            catchError(err => of(err.status)),
+            catchError(err => of(err.status))
         );
     }
 
@@ -31,16 +31,16 @@ export class ReasonService {
         }
     }
 
-    createProject(reasonUrl: string, mailList: any) {
+    createProject(reasonUrl: string, mailList: any, companyList: any) {
         let emailStr = "";
-        for(let i=0; i<mailList.length; i++){
+        for (let i = 0; i < mailList.length; i++) {
             emailStr += mailList[i] + ",";
         }
-        emailStr = emailStr.substr(0, emailStr.length-1);
+        emailStr = emailStr.substr(0, emailStr.length - 1);
 
-        let params = new HttpParams({fromString: `emaillist=${emailStr}`});
+        let params = new HttpParams({ fromString: `emaillist=${emailStr}&companylist=${companyList}` });
         let headersReq = this.authService.getHeadersJsonTenancyDefault();
-        return this.http.post(reasonUrl+"/project", null, { params: params, headers : headersReq });
+        return this.http.post(reasonUrl + "/project", null, { params: params, headers: headersReq });
     }
 
     assignCoordinateToReason(reasonUrl: string, coordinateUrl: string) {
@@ -69,6 +69,12 @@ export class ReasonService {
     getReasons() {
         let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
         return this.http.get(this.urlEndPoint, options);
+    }
+
+    getReasonsByType(isProject: boolean) {
+        let headersReq = this.authService.getHeadersJsonTenancyDefault();
+        let params = new HttpParams({ fromString: `isproject=${isProject}` });
+        return this.http.get(this.urlEndPoint + "/search/findByIsproject", { params: params, headers: headersReq });
     }
 
     getReasonByUuid(reasonUrl: string) {

@@ -1,0 +1,23 @@
+<app-modal title="{{modalTitle}}">
+  <form [formGroup]="cancelForm" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="cancel"> {{ 'visit.canceledreason' | translate }}
+      </label>
+      <textarea rows="4" cols="50" class="form-control" id="cancel"
+        placeholder=" {{ 'visit.canceledreason' | translate }}" formControlName="canceledreason"
+        [ngClass]="{'alert-danger' : !this.cancelForm.get('canceledreason').valid && (this.cancelForm.get('canceledreason').touched || this.cancelForm.get('canceledreason').dirty) }"></textarea>
+      <div class="invalid-feedback" *ngIf="!this.cancelForm.get('canceledreason').valid">
+        {{ this.cancelForm.get('canceledreason').getError('message') }}
+      </div>
+    </div>
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success btn-sm" (click)="submit()" [disabled]="this.cancelForm.invalid"
+      *ngIf="!iscanceled">
+      {{ 'save' | translate }}</button>
+    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal" (click)="closeModal()">
+      {{ 'cancel' | translate }}</button>
+  </div>
+
+</app-modal>

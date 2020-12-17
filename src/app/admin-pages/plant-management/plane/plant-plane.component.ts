@@ -122,7 +122,7 @@ export class PlanPlaneComponent implements OnInit {
     // Service callback function to create the modal with an object passed as a parameter
     //const initialState = this.getSaveModalParameters(selectedObject);
     if (!size || size === undefined) { size = 'modal-lg'; }
-    const modalRef = this.modalService.open(PlantCoordsSaveComponent);
+    const modalRef = this.modalService.open(PlantCoordsSaveComponent, { size: 'md', backdrop: 'static' });
     modalRef.componentInstance.coordinates = JSON.stringify(dataJson.areas);
     modalRef.componentInstance.selectedAreaId = dataJson.selectedAreaId;
     modalRef.componentInstance.sensorTypeId = dataJson.sensorTypeId;
@@ -152,7 +152,7 @@ export class PlanPlaneComponent implements OnInit {
   }
 
   public openEditModal(plantCoordinate: any) {
-    const modalRef = this.modalService.open(PlantCoordsSaveComponent);
+    const modalRef = this.modalService.open(PlantCoordsSaveComponent, { size: 'md', backdrop: 'static' });
     modalRef.componentInstance.plantCoordinateUrlFromTable = plantCoordinate._links.self.href;
     modalRef.componentInstance.plantUrl = this.plantUrl;
     modalRef.componentInstance.sensorTypeId = plantCoordinate._links.sensorType.href;
@@ -190,7 +190,7 @@ export class PlanPlaneComponent implements OnInit {
         }
 
       if (areasStr.length != 0) {
-        areasStr = areasStr.substr(0, areasStr.length-2);
+        areasStr = areasStr.substr(0, areasStr.length - 2);
       }
 
       let mapFake = `{"version":"1","map":{"width":1373,"height":576,"areas":[${areasStr}],"name":"${this.plant.name}","hasDefaultArea":false,"dArea":{"shape":"default","coords":[],"href":"","title":"","id":0,"iMap":"nubenet.PNG","isDefault":true},"lastId":1}}`;

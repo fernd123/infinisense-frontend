@@ -1,21 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EpiService } from 'src/app/core/services/epi.service';
-import { Epi } from 'src/app/shared/models/epi.model';
-import { EpiSaveComponent } from './save/epis-save.component';
 import { TranslateService } from '@ngx-translate/core';
+import { MessagesSaveComponent } from './save/messages-save.component';
+import { MessageService } from 'src/app/core/services/message.service';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Component({
-  selector: 'infini-epis',
-  templateUrl: './epis.component.html',
-  styleUrls: ['./epis.component.scss']
+  selector: 'infini-messages',
+  templateUrl: './messages.component.html',
+  styleUrls: ['./messages.component.scss']
 })
-export class EpiComponent implements OnInit {
+export class MessagesComponent implements OnInit {
 
   @ViewChild('modalWindow') modalWindow: any;
-  data: Epi[];
-  reasonForm: FormGroup;
+  data: Message[];
   editionMode: boolean = false;
   titleModal: string;
 
@@ -23,11 +21,23 @@ export class EpiComponent implements OnInit {
   settings = {
     columns: {
       name: {
-        title: this.translateService.instant('name'),
-        width: '20%'
+        title: this.translateService.instant('name')
       },
-      description: {
-        title: this.translateService.instant('description'),
+      type: {
+        title: this.translateService.instant('type'),
+        filter: false,
+        valuePrepareFunction: (data) => {
+          switch (data) {
+            case "REGISTERINIT":
+              return "Visita bienvenida";
+            case "REGISTEREND":
+              return "Visita salida";
+            case "RETURNEPIS":
+              return "Devolución epis";
+            case "PROJECTINVITATION":
+              return "Participación proyecto";
+          }
+        }
       }
     },
     actions: {
@@ -36,8 +46,7 @@ export class EpiComponent implements OnInit {
       edit: false,
       delete: false,
       custom: [
-        { name: 'edit', title: '<i class="mdi mdi-grease-pencil btn-icon-append"></i>' },
-        { name: 'remove', title: '<i class="mdi mdi-delete"></i>' }
+        { name: 'edit', title: '<i class="mdi mdi-grease-pencil btn-icon-append"></i>' }
       ],
       position: 'right'
     },
@@ -57,7 +66,7 @@ export class EpiComponent implements OnInit {
   };
 
   constructor(
-    private epiService: EpiService,
+    private messageService: MessageService,
     private translateService: TranslateService,
     private modalService: NgbModal) { }
 
@@ -66,15 +75,15 @@ export class EpiComponent implements OnInit {
   }
 
   refreshList() {
-    this.epiService.getEpis().subscribe((res: any) => {
-      this.data = res._embedded.epis;
+    this.messageService.getMessages().subscribe((res: any) => {
+      this.data = res._embedded.messages;
     });
   }
 
-  public openSaveModal(epiUrl: string, size?: string): void {
+  public openSaveModal(messageUrl: string, size?: string): void {
     if (!size || size === undefined) { size = 'modal-lg'; }
-    const modalRef = this.modalService.open(EpiSaveComponent, { size: 'md', backdrop: 'static' });
-    modalRef.componentInstance.epiUrl = epiUrl;
+    const modalRef = this.modalService.open(MessagesSaveComponent, { size: 'md', backdrop: 'static' });
+    modalRef.componentInstance.messageUrl = messageUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },
       (res) => {
@@ -84,7 +93,6 @@ export class EpiComponent implements OnInit {
 
   closeModal() {
     this.modalService.dismissAll();
-    this.reasonForm.reset();
   }
 
   onCustomAction(event) {
@@ -93,7 +101,7 @@ export class EpiComponent implements OnInit {
         this.openSaveModal(event.data._links.self.href);
         break;
       case 'remove':
-        this.epiService.deleteEpi(event.data._links.self.href).subscribe(res => {
+        this.messageService.deleteMessage(event.data._links.self.href).subscribe(res => {
           this.refreshList();
         });
         break;

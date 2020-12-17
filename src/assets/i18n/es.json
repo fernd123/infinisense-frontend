@@ -23,6 +23,13 @@
   "port": "Puerto",
   "server": "Servidor",
   "project": "Proyecto",
+  "confirm": "Confirmar",
+  "type": "Tipo",
+  "finished": "Terminado",
+  "REGISTERINIT": "Visita bienvenida",
+  "REGISTEREND": "Visita salida",
+  "RETURNEPIS": "Devolución epis",
+  "PROJECTINVITATION": "Participación proyecto",
   "menu": {
     "customer": "Clientes",
     "company": "Empresas",
@@ -41,7 +48,8 @@
     "functionalities": "Funcionalidades",
     "loginadmin": "Login admin",
     "visitorsregister": "Registro externo",
-    "graphics": "Gráficas"
+    "graphics": "Gráficas",
+    "messages": "Mensajes"
   },
   "plant": {
     "title": "Planta",
@@ -93,25 +101,35 @@
     "visitlisttitle": "Visitas",
     "associateepis": "Entregar Epis",
     "authorizevisit": "Autorizar visita",
-    "editvisittitle": "Editar visita", 
+    "editvisittitle": "Editar visita",
+    "project": "Proyectos",
     "person": "Persona",
     "reason": "Motivo",
     "startdate": "Hora Entrada",
     "enddate": "Hora Salida",
     "checkexit": "Marcar Salida",
     "plant": "Planta",
-    "zone": "Zona"
+    "zone": "Zona",
+    "markexit": "Marcar Salida",
+    "canceled": "Visita Cancelada",
+    "canceledreason": "Motivo Cancelación"
   },
   "reason": {
     "reasonlisttitle": "Motivos de visita",
     "projectaccess": "Acceso al proyecto",
     "reason": "Motivo",
+    "project": "Proyecto",
     "relatedto": "Asociado con",
-    "associatetozone": "Asociar un motivo de visita a una zona"
+    "associatetozone": "Asociar a una zona"
   },
   "epi": {
     "epititle": "EPIs",
     "savetitle": "Guardar EPI"
+  },
+  "message": {
+    "messagetitle": "Mensajes del sistema",
+    "savetitle": "Guardar Mensaje",
+    "message": "Mensaje"
   },
   "company": {
     "companytitle": "Clientes",
@@ -135,6 +153,7 @@
   "error": {
     "must.be.unique": "Ya existe un registro con el mismo valor",
     "duplicated.email": "Email duplicado",
-    "invalid.email": "Email inválido"
+    "invalid.email": "Email inválido",
+    "empty.value": "Valor vacío"
   }
 }

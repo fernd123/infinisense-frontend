@@ -59,9 +59,9 @@ export class VisitEpisComponent implements OnInit {
     });
 
     this.visitForm = this.formBuilder.group({
-      dni: [null, Validators.required],
-      firstname: [null, Validators.required],
-      lastname: [null, Validators.required]
+      dni: [null],
+      firstname: [null],
+      lastname: [null]
     });
 
     if (this.visitUuid != null) {
@@ -75,7 +75,7 @@ export class VisitEpisComponent implements OnInit {
           if (res.dni != null) this.visitForm.get('dni').disable();
           if (res.firstname != null) this.visitForm.get('firstname').disable();
           if (res.lastname != null) this.visitForm.get('lastname').disable();
-          if(res.signature != null){
+          if (res.signature != null) {
             this.visitService.getAuthorizationSignature(res._links.self.href).subscribe((res: any) => {
               if (res == null) {
                 this.loadSignature = true;

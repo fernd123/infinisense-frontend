@@ -24,10 +24,22 @@ import { EpiComponent } from './epis/epis.component';
 import { CompanyCustomerComponent } from './company-customer/company-customer.component';
 import { VisitEpisComponent } from './visit-external/epis/visit-epis.component';
 import { SignaturePadModule } from 'angular2-signaturepad';
+import { NgxPermissionsGuard, NgxPermissionsModule } from 'ngx-permissions';
+import { MessagesComponent } from './messages/messages.component';
+import { MessagesSaveComponent } from './messages/save/messages-save.component';
+import { VisitCancelComponent } from './visit-external/cancel/visit-cancel.component';
 
 const routes: Routes = [
   {
-    path: 'company-customer', component: CompanyCustomerComponent, canActivate: [AuthGuard], data: {
+    path: 'company-customer', component: CompanyCustomerComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
+      permissions: {
+        only: ['ADMIN', 'USER'],
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
       permissions: {
         only: 'ADMIN',
         redirectTo: '/dashboard'
@@ -35,7 +47,40 @@ const routes: Routes = [
     }
   },
   {
-    path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard], data: {
+    path: 'user-external', component: UserExternalComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
+      permissions: {
+        only: ['ADMIN', 'USER'],
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'visit-reason', component: VisitReasonComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
+      permissions: {
+        only: ['ADMIN'],
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'visit-external', component: VisitExternalComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
+      permissions: {
+        only: ['ADMIN', 'USER'],
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'plant-management', component: PlantManagementComponent, canActivate: [AuthGuard, NgxPermissionsGuard],
+    data: {
+      permissions: {
+        only: ['ADMIN'],
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'plant-plane', component: PlanPlaneComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
       permissions: {
         only: 'ADMIN',
         redirectTo: '/dashboard'
@@ -43,27 +88,45 @@ const routes: Routes = [
     }
   },
   {
-    path: 'user-external', component: UserExternalComponent, canActivate: [AuthGuard], data: {
+    path: 'plant-sensor', component: PlantSensorComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
       permissions: {
         only: 'ADMIN',
         redirectTo: '/dashboard'
       }
     }
   },
-  { path: 'visit-reason', component: VisitReasonComponent, canActivate: [AuthGuard] },
-  { path: 'visit-external', component: VisitExternalComponent, canActivate: [AuthGuard] },
-  { path: 'plant-management', component: PlantManagementComponent, canActivate: [AuthGuard] },
-  { path: 'plant-plane', component: PlanPlaneComponent, canActivate: [AuthGuard] },
-  { path: 'plant-sensor', component: PlantSensorComponent, canActivate: [AuthGuard] },
-  { path: 'sensor-type', component: SensorTypeComponent, canActivate: [AuthGuard] },
-  { path: 'epis', component: EpiComponent, canActivate: [AuthGuard] }
+  {
+    path: 'sensor-type', component: SensorTypeComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
+      permissions: {
+        only: 'ADMIN',
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'epis', component: EpiComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
+      permissions: {
+        only: 'ADMIN',
+        redirectTo: '/dashboard'
+      }
+    }
+  },
+  {
+    path: 'messages', component: MessagesComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
+      permissions: {
+        only: 'ADMIN',
+        redirectTo: '/dashboard'
+      }
+    }
+  }
 ]
 
 @NgModule({
   declarations: [
     CompanyCustomerComponent,
+    MessagesComponent, MessagesSaveComponent,
     UserManagementComponent, UserManagementSaveComponent, UserExternalComponent,
-    VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent, VisitEpisComponent,
+    VisitReasonComponent, VisitReasonSaveComponent, VisitExternalComponent, VisitEpisComponent, VisitCancelComponent,
     PlantManagementComponent, PlanPlaneComponent, PlantManagementSaveComponent, PlantCoordsSaveComponent, PlantSensorComponent, PlantSensorSaveComponent,
     SensorTypeComponent, SensorTypeSaveComponent,
     EpiSaveComponent, EpiComponent],
@@ -73,6 +136,7 @@ const routes: Routes = [
     SignaturePadModule,
     ReactiveFormsModule,
     AlertModule,
+    NgxPermissionsModule.forChild(),
     RouterModule.forChild(routes)
   ],
   providers: [AuthGuard]

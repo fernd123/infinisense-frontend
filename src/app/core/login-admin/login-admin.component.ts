@@ -47,7 +47,17 @@ export class LoginAdminComponent {
       (res: any) => {
         this.loading = false;
         this.loggedIn = true;
-        if (this.redirectURL) {
+        let tokenInfo: any = this.authService.getTokenInfo();
+        let roles = tokenInfo.authorities;
+        let isExternal: boolean = false;
+        for (const element in roles) {
+          if (roles[element].authority == 'EXTERNAL')
+            isExternal = true;
+        };
+
+        if (isExternal) {
+          this.router.navigate(['/user-pages/register-visit']);
+        } else if (this.redirectURL) {
           this.router.navigateByUrl(this.redirectURL);
         } else {
           this.router.navigate(['/dashboard']);
@@ -57,5 +67,5 @@ export class LoginAdminComponent {
         this.error = true;
       })
   }
-  resetPassword(){}
+  resetPassword() { }
 }

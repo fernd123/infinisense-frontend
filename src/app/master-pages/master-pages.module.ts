@@ -7,10 +7,17 @@ import { AuthGuard } from '../core/guards/auth.guard';
 import { SharedModule } from '../shared/shared.module';
 import { CompanyComponent } from './company/company.component';
 import { CompanySaveComponent } from './company/save/company-save.component';
-import { SpinnerComponent } from '../shared/spinner/spinner.component';
+import { NgxPermissionsGuard, NgxPermissionsModule } from 'ngx-permissions';
 
 const routes: Routes = [
-  { path: 'company', component: CompanyComponent, canActivate: [AuthGuard] }
+  {
+    path: 'company', component: CompanyComponent, canActivate: [AuthGuard, NgxPermissionsGuard], data: {
+      permissions: {
+        only: 'MASTER',
+        redirectTo: '/'
+      }
+    }
+  }
 ]
 
 @NgModule({
@@ -21,6 +28,7 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     AlertModule,
+    NgxPermissionsModule.forChild(),
     RouterModule.forChild(routes)
   ],
   providers: [AuthGuard]

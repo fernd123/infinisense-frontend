@@ -29,10 +29,10 @@ export class AuthGuard implements CanActivate {
             let ergoPlatform = ergoAccess.find(f => { if (f == component) return component });
 
             /* Si tengo acceso a ambas plataformas, true */
-            if(aliro && ergo){
+            if (aliro && ergo) {
                 return true;
             }
-            
+
             /* Si el componente forma parte de aliro y no tengo acceso, reedireccionar a dashboard */
             if (!aliro && aliroPlatform != undefined) {
                 this.router.navigate(['/dashboard']);
@@ -55,5 +55,5 @@ export class AuthGuard implements CanActivate {
     }
 
 
-    
+
 }

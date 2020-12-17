@@ -13,8 +13,10 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpLoaderFactory } from '../app.module';
 import { HttpClient } from '@angular/common/http';
 import { SharedModule } from '../shared/shared.module';
-import { RegisterVisitMessageComponent } from './register-vist/message/register-visit-message..component';
+import { RegisterVisitMessageComponent } from './register-vist/message/register-visit-message.component';
 import { UpdateProjectComponent } from './update-project/update-project.component';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import { RegisterVisitConfirmationComponent } from './register-vist/confirmation/register-visit-confirmation.component';
 
 const routes: Routes = [
   { path: 'update-project', component: UpdateProjectComponent },
@@ -25,12 +27,13 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, RegisterVisitComponent, RegisterVisitMessageComponent, UpdateProjectComponent],
+  declarations: [LoginComponent, RegisterComponent, RegisterVisitComponent, RegisterVisitMessageComponent, RegisterVisitConfirmationComponent, UpdateProjectComponent],
   imports: [
     CommonModule,
     SharedModule,
     AlertModule,
     SignaturePadModule,
+    NgxPermissionsModule.forChild(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

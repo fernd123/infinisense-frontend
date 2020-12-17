@@ -8,4 +8,5 @@ export class Reason extends BaseModel implements IReason {
     active: boolean;
     plantCoordinate?: any;
     isproject: boolean;
+    finished: boolean;
 }

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
 import { BASEURL_DEV_USER } from 'src/app/shared/constants/app.constants';
 import { User } from 'src/app/shared/models/user.model';
 import { AuthenticationService } from './authentication.service';
@@ -23,7 +23,8 @@ export class UserService {
         //let headers : any = { headers: this.authService.getHeadersJsonTenancyDefault() };
         let params = new HttpParams().set('dni', dni);
         const loginURL = this.urlEndPoint + "/search/findByDniInternal";
-        return this.http.get(loginURL, { params: params, headers : this.authService.getHeadersJsonTenancyDefault() });
+        return this.http.get(loginURL, { params: params, headers: this.authService.getHeadersJsonTenancyDefault() }).pipe(
+            catchError(err => of(err.status)));
     }
 
     getUserSignature(userUrl: any) {

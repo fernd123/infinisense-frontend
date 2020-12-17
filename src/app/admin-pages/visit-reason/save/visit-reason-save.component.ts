@@ -51,9 +51,11 @@ export class VisitReasonSaveComponent implements OnInit {
       name: ["", Validators.required],
       description: [""],
       active: [true],
+      finished: [],
       plant: [null],
       plantCoordinate: [null],
       isproject: [false],
+      company: [""],
       email: ["", validateEmail]
     });
 
@@ -64,6 +66,8 @@ export class VisitReasonSaveComponent implements OnInit {
         this.reasonForm.get('description').setValue(res.description);
         this.reasonForm.get('active').setValue(res.active);
         this.reasonForm.get('isproject').setValue(res.isproject);
+        this.reasonForm.get('finished').setValue(res.finished);
+        //this.reasonForm.get('finished').disable();
 
         let plantCoordinate = res._links.plantCoordinate.href;
         this.reasonService.getReasonByUuid(plantCoordinate).subscribe((resPlantCoord: any) => {
@@ -78,14 +82,16 @@ export class VisitReasonSaveComponent implements OnInit {
         }));
 
         this.reasonService.getReasonByUuid(res._links.reasonProjectEmail.href).subscribe((resEmails: any) => {
+          this.reasonForm.get('company').disable();
           this.reasonForm.get('email').disable();
           this.reasonForm.get('isproject').disable();
           this.emailList = resEmails._embedded.reasonProjectEmails;
           this.projectInDb = true;
           if (this.emailList.length >= 1) {
+            this.reasonForm.get('company').setValue(this.emailList[0].company);
             this.reasonForm.get('email').setValue(this.emailList[0].email);
             for (let i = 1; i < this.emailList.length; i++)
-              this.addNewMail(this.emailList[i].email);
+              this.addNewMail(this.emailList[i]);
           }
         });
       });
@@ -110,58 +116,84 @@ export class VisitReasonSaveComponent implements OnInit {
 
   submit() {
     let defaultEmail = this.reasonForm.get('email');
+    let defaultCompany = this.reasonForm.get('company');
+
     let mailList = [];
+    let companyList = [];
+
     let isProject = this.reasonForm.get('isproject').value;
+    if (isProject && (defaultCompany.value == null || defaultCompany.value == '')) {
+      defaultCompany.setErrors({ incorrect: true, message: "Inserte al menos una empresa" });
+      return;
+    }
+
     if (isProject && (defaultEmail.value == null || defaultEmail.value == '')) {
       defaultEmail.setErrors({ incorrect: true, message: "Inserte al menos un correo" });
       return;
     }
+
     let reason = new Reason();
     reason.name = this.reasonForm.get('name').value;
     reason.description = this.reasonForm.get('description').value;
     reason.active = this.reasonForm.get('active').value;
+    reason.finished = this.reasonForm.get('finished').value;
     reason.isproject = isProject;
     reason.plantCoordinate = this.reasonForm.get('plantCoordinate').value;
 
     if (isProject) {
-      mailList = [defaultEmail.value.trim()];
+      mailList = [defaultEmail.value.trim()]; // default mail
+      companyList = [defaultCompany.value.trim()]; // default mail
+
       let newMailElement = document.getElementById('newMailId');
       if (newMailElement != undefined) {
         let newMailChilds = newMailElement.children;
         for (let i = 0; i < newMailChilds.length; i++) {
-          let input: any = newMailChilds[i].children[0];
-          let value = input.value?.trim();
-          if (value != "") {
-            if (!validateEmailByValue(value)) {
-              console.log("no vlido");
-              if (input.parentElement.children.length > 1) // delete validations message
-                input.parentElement.children[1].innerHTML = null;
-              input.classList.add("alert-danger");
+          let inputCompany: any = newMailChilds[i].children[0].children[1];
+          let inputEmail: any = newMailChilds[i].children[1].children[1];
+          let valueCompany = inputCompany.value?.trim();
+          let valueEmail = inputEmail.value?.trim();
+
+          // Clear class error
+          inputCompany.classList.remove("alert-danger");
+          inputEmail.classList.remove("alert-danger");
+
+          // Delete errors if exists
+          inputCompany.parentElement.children.length == 3 ?
+            inputCompany.parentElement.children[2].remove() : null;
+          inputEmail.parentElement.children.length == 3 ?
+            inputEmail.parentElement.children[2].remove() : null;
+
+          // Company check
+          if (valueCompany == "") {
+            this.createDivError(inputEmail, this.translateService.instant('error.empty.value'));
+            return;
+          }
+
+          if (valueEmail != "") {
+            if (!validateEmailByValue(valueEmail)) { // If email is not valid format
+              this.createDivError(inputCompany, this.translateService.instant('error.empty.value'));
+              return;
+              /*inputEmail.classList.add("alert-danger");
               let divElem = document.createElement("div");
               divElem.classList.add("invalid-feedback");
               divElem.innerText = this.translateService.instant('error.invalid.email');
-              input.parentElement.insertBefore(divElem, input.nextSibling);
-              return;
-            } else {
-              input.classList.remove("alert-danger");
+              inputEmail.parentElement.insertBefore(divElem, inputEmail.nextSibling);
+              return;*/
             }
 
             for (let i = 0; i < mailList.length; i++) {
-              if (mailList[i] == value) {
-                console.log(mailList, "duplicado");
-                if (input.parentElement.children.length > 1)
-                  input.parentElement.children[1].innerHTML = null;
-                input.classList.add("alert-danger");
-                let divElem = document.createElement("div");
-                divElem.classList.add("invalid-feedback");
-                divElem.innerText = this.translateService.instant('error.duplicated.email');
-                input.parentElement.insertBefore(divElem, input.nextSibling);
+              if (mailList[i] == valueEmail) { // If email extists in list
+                this.createDivError(inputEmail, this.translateService.instant('error.duplicated.email'));
                 return;
               } else {
-                input.classList.remove("alert-danger");
+                inputEmail.classList.remove("alert-danger");
               }
             }
-            mailList.push(value);
+            companyList.push(valueCompany);
+            mailList.push(valueEmail);
+          } else { // empty value
+            this.createDivError(inputEmail, this.translateService.instant('error.empty.value'));
+            return;
           }
         }
       }
@@ -172,10 +204,9 @@ export class VisitReasonSaveComponent implements OnInit {
       keepAfterRouteChange: true
     };
     this.reasonService.saveReason(this.reasonUrl, reason).subscribe((res: any) => {
-      debugger;
       if (isProject && this.reasonUrl == null) { // only create the project for new reasons, not update
-        this.reasonService.createProject(res._links.self.href, mailList).subscribe((resProject: any) => {
-          debugger;
+        this.reasonService.createProject(res._links.self.href, mailList, companyList).subscribe((resProject: any) => {
+
         })
       }
 
@@ -221,27 +252,68 @@ export class VisitReasonSaveComponent implements OnInit {
   }
 
 
-  addNewMail(value = null) {
+  addNewMail(reasonProjectEmail = null) {
     let newMailDiv = document.getElementById('newMailId');
-    let divElem = document.createElement("div");
-    divElem.classList.add("input-group");
-    divElem.classList.add("mb-3");
-    /*let labelElem = document.createElement("label");
-    divElem.appendChild(labelElem);
-    labelElem.innerText = "Email";
-    labelElem.setAttribute("for", "email"+newMailDiv.children.length+1);*/
-    let inputElem = document.createElement("input");
-    inputElem.type = "email";
-    inputElem.classList.add("form-control");
-    inputElem.id = "companymail" + newMailDiv.children.length + 1;
-    inputElem.placeholder = this.translateService.instant('user.email');
-    if (value != null) {
-      inputElem.value = value;
-      inputElem.disabled = true;
-    }
 
-    divElem.appendChild(inputElem);
+    // Form row
+    let divElem = document.createElement("div");
+    divElem.classList.add("form-row");
+
+    // col-md-3 mb-3
+    let inputDivElem = document.createElement('div');
+    inputDivElem.classList.add('col-md-6');
+    inputDivElem.classList.add("mb-3");
+    divElem.appendChild(inputDivElem);
+
+    // label company
+    let labelElem = document.createElement("label");
+    labelElem.innerText = "Empresa";
+    labelElem.setAttribute("for", "company" + newMailDiv.children.length + 1);
+    inputDivElem.appendChild(labelElem);
+
+    // Company input
+    let inputCompanyElem = document.createElement("input");
+    inputCompanyElem.type = "text";
+    inputCompanyElem.classList.add("form-control");
+    inputCompanyElem.id = "company" + newMailDiv.children.length + 1;
+    inputCompanyElem.placeholder = this.translateService.instant('user.company');
+    if (reasonProjectEmail != null) {
+      inputCompanyElem.value = reasonProjectEmail.company;
+      inputCompanyElem.disabled = true;
+    }
+    inputDivElem.appendChild(inputCompanyElem);
+    // col-md-3 mb-3
+    let inputDivEmailElem = document.createElement('div');
+    inputDivEmailElem.classList.add('col-md-6');
+    inputDivEmailElem.classList.add("mb-3");
+    divElem.appendChild(inputDivEmailElem);
+
+    // label email
+    let labelEmailElem = document.createElement("label");
+    labelEmailElem.innerText = "Email";
+    labelEmailElem.setAttribute("for", "email" + newMailDiv.children.length + 1);
+    inputDivEmailElem.appendChild(labelEmailElem);
+
+    let inputEmailElem = document.createElement("input");
+    inputEmailElem.type = "email";
+    inputEmailElem.classList.add("form-control");
+    inputEmailElem.id = "companymail" + newMailDiv.children.length + 1;
+    inputEmailElem.placeholder = this.translateService.instant('user.email');
+    if (reasonProjectEmail != null) {
+      inputEmailElem.value = reasonProjectEmail.email;
+      inputEmailElem.disabled = true;
+    }
+    inputDivEmailElem.appendChild(inputEmailElem);
+
     newMailDiv.appendChild(divElem);
+  }
+
+  createDivError(element, message) {
+    element.classList.add("alert-danger");
+    let divElem = document.createElement("div");
+    divElem.classList.add("invalid-feedback");
+    divElem.innerText = message;
+    element.parentElement.insertBefore(divElem, element.nextSibling);
   }
 }
 

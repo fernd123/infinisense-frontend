@@ -20,6 +20,8 @@ export const BASEURL_DEV_VISIT = BASEURL_PROXY + '/api/visit';
 export const BASEURL_DEV_REASON = BASEURL_PROXY + '/api/reason';
 export const BASEURL_DEV_REASON_PROJECT_PARTICIPANT = BASEURL_PROXY + '/api/reasonprojectparticipant';
 export const BASEURL_DEV_REASON_PROJECT_TOKEN = BASEURL_PROXY + '/api/reasonprojecttoken';
+export const BASEURL_DEV_REASON_PROJECT_EMAIL = BASEURL_PROXY + '/api/reasonprojectemail';
+export const BASEURL_DEV_MESSAGE = BASEURL_PROXY + '/api/message';
 
 export const BASEURL_DEV_PLANT = BASEURL_PROXY + '/api/plant';
 export const BASEURL_DEV_PLANTCOORDINATES = BASEURL_PROXY + '/api/plantCoordinate';

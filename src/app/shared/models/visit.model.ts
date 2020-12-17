@@ -14,4 +14,6 @@ export class Visit extends BaseModel implements IVisit {
     lastname: string;
     dni: string;
     signature: any;
+    canceled: boolean;
+    canceledreason: string;
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -28,6 +29,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthenticationService,
+    private router: Router,
     private permissionsService: NgxPermissionsService
   ) { }
 
@@ -50,42 +52,45 @@ export class SidebarComponent implements OnInit {
 
     // User data
     let data: any = this.authService.getTokenInfo();
+    if (data == null) return;
     this.aliro = data.aliro;
     this.ergo = data.ergo;
 
-
     /* PERMISSION MODULE */
     let authorities = data.authorities;
-    let perm = [];
-    for (let i = 0; i < authorities.length; i++) {
-      perm.push(authorities[i].authority);
+    if (authorities != null) {
+      let perm = [];
+      for (let i = 0; i < authorities.length; i++) {
+        perm.push(authorities[i].authority);
+      }
+      this.permissionsService.loadPermissions(perm);
+
+      /* if (alira)
+           perm.push("ALIRA");
+   
+       if (ergo)
+           perm.push("ERGO");
+       */
+
+      if (data != undefined)
+        this.userService.getUserByUuid(data.uuid).subscribe((res: User) => {
+          if (res != undefined) {
+            let firstName = res.firstname;
+            let lastName = res.lastname;
+            let initials = firstName.charAt(0) + lastName.charAt(0);
+            this.name = firstName + " " + lastName;
+            if (this.name.length > 15) {
+              this.name = this.name.substr(0, 15) + ".";
+            }
+            let profileImageElem = document.getElementById('profileImage');
+            if (profileImageElem != undefined) {
+              profileImageElem.innerHTML = initials.toUpperCase();
+            }
+          }
+        });
+    } else {
+      this.router.navigate(['admin']);
     }
-    this.permissionsService.loadPermissions(perm);
- 
-
-    /* if (alira)
-         perm.push("ALIRA");
- 
-     if (ergo)
-         perm.push("ERGO");
-     */
-
-    if (data != undefined)
-      this.userService.getUserByUuid(data.uuid).subscribe((res: User) => {
-        if (res != undefined) {
-          let firstName = res.firstname;
-          let lastName = res.lastname;
-          let initials = firstName.charAt(0) + lastName.charAt(0);
-          this.name = firstName + " " + lastName;
-          if (this.name.length > 15) {
-            this.name = this.name.substr(0, 15) + ".";
-          }
-          let profileImageElem = document.getElementById('profileImage');
-          if (profileImageElem != undefined) {
-            profileImageElem.innerHTML = initials.toUpperCase();
-          }
-        }
-      });
   }
 
 }

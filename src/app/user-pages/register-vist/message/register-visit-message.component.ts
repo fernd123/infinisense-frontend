@@ -1,19 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AlertService } from 'src/app/core/services/alert.service';
-import { ImageMapCreatorService } from 'src/app/core/services/imageMapCreator.service';
+import { MessageService } from 'src/app/core/services/message.service';
 import { PlantService } from 'src/app/core/services/plant.service';
-import { PlantCoordsService } from 'src/app/core/services/plantCoordinates.service';
-import { ReasonService } from 'src/app/core/services/reason.service';
-import { SensorTypeService } from 'src/app/core/services/sensorType.service';
 import { VisitService } from 'src/app/core/services/visit.service';
+import { MessageType } from 'src/app/shared/enums/messageType.enumeration';
 import { ZoneType } from 'src/app/shared/enums/zoneType.enumeration';
+import { Message } from 'src/app/shared/models/message.model';
 import { PlantCoordinates } from 'src/app/shared/models/plantcoordinates.model';
-import { Reason } from 'src/app/shared/models/reason.model';
-import { SensorType } from 'src/app/shared/models/sensorType.model';
-import { Visit } from 'src/app/shared/models/visit.model';
 import { imageMapCreator } from 'src/app/shared/virtualization/p5.image-map-creator';
 
 
@@ -44,28 +38,39 @@ export class RegisterVisitMessageComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private visitService: VisitService,
+    private messageService: MessageService,
     private plantService: PlantService
   ) { }
 
   // mdi mdi-check-circle-outline
   ngOnInit() {
     this.title = `Bienvenido ${this.name}`;
-    if (this.visit?.reason?.plantZone != undefined) {
-      this.body = `<div style="color:red"><strong>Por favor diríjase a la zona ${this.visit?.reason?.plantZone?.name}</strong></div>`;
-    }
 
     this.bodydiv = document.getElementById('bodydiv');
     this.cardbody = document.getElementById('cardbody');
 
-    // Controlar si no tiene motivo asociado o imagen
-    this.visitService.getVisitReason(this.visit.uuid).subscribe((res: any) => {
-      this.visitService.getData(res._links.plantCoordinate.href).subscribe((resCoordinate: PlantCoordinates) => {
-        this.coordinates = resCoordinate.coordinates;
-        if (resCoordinate.virtualZoneType == ZoneType.ru) {
-          this.getRouteData(resCoordinate);
-        } else {
-          this.getZoneData(resCoordinate);
-        }
+    this.messageService.getMessageByType(MessageType.REGISTERINIT).subscribe((resInitMsg: Message) => {
+      let message = resInitMsg.name;
+      message = message.replace('$name', this.name);
+      this.body = message;
+      this.bodydiv.innerHTML = this.body;
+
+
+      /*if (this.visit?.reason?.plantZone != undefined) {
+        this.body = `<div style="color:red"><strong>Por favor diríjase a la zona ${this.visit?.reason?.plantZone?.name}</strong></div>`;
+      }*/
+
+
+      // Controlar si no tiene motivo asociado o imagen
+      this.visitService.getVisitReason(this.visit.uuid).subscribe((res: any) => {
+        this.visitService.getData(res._links.plantCoordinate.href).subscribe((resCoordinate: PlantCoordinates) => {
+          this.coordinates = resCoordinate.coordinates;
+          if (resCoordinate.virtualZoneType == ZoneType.ru) {
+            this.getRouteData(resCoordinate);
+          } else {
+            this.getZoneData(resCoordinate);
+          }
+        });
       });
     });
   }
@@ -125,11 +130,11 @@ export class RegisterVisitMessageComponent implements OnInit {
     let epis = coordinate.epis;
     if (epis != undefined && epis.length > 0) {
       let episList = epis.split(',');
-      let bodyPre = "Recuerde utilizar:";
+      let bodyPre = "<br>Recuerde utilizar:";
       for (let i = 0; i < episList.length; i++) {
         bodyPre += '<div class="col-sm-6"><i class="mdi mdi mdi-check-circle-outline"></i>' + episList[i] + "</div>";
       }
-      this.body = bodyPre;
+      this.body = this.body + bodyPre;
     }
     if (this.body != undefined)
       this.bodydiv.innerHTML = this.body;

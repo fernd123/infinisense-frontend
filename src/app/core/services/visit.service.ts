@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, mergeMap } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { User } from 'src/app/shared/models/user.model';
 import { Visit } from 'src/app/shared/models/visit.model';
 import { BASEURL_DEV_USER, BASEURL_DEV_VISIT } from 'src/app/shared/constants/app.constants';
 import { AuthenticationService } from './authentication.service';
 import { UserService } from './user.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class VisitService {
+
     urlEndPoint: string = BASEURL_DEV_VISIT;
 
     constructor(private http: HttpClient,
@@ -48,6 +49,11 @@ export class VisitService {
         return this.http.put(this.urlEndPoint, visit, options);
     }
 
+    updateVisitEndHour(url, visit: Visit) {
+        let options = { headers: this.authService.getHeadersJsonTenancyDefault() };
+        return this.http.put(url, visit, options);
+    }
+
     getVisits(filter: string) {
         let body = new URLSearchParams();
         body.set("filter", filter);
@@ -71,7 +77,14 @@ export class VisitService {
         const signatureUrl = url + "/signature";
         return this.http.get(signatureUrl, { headers, responseType: 'blob' }).pipe(mergeMap((res: Blob) => this.createImageFromBlob(res)));
     }
-    
+
+    getCurrentVisitUser(dni: string) {
+        let params = new HttpParams({ fromString: `dniparam=${dni}` });
+        let headersReq = this.authService.getHeadersJsonTenancyDefault();
+        return this.http.get(this.urlEndPoint + "/search/searchCurrentVisitUser", { params: params, headers: headersReq }).pipe(
+            catchError(err => of(err.status)));
+    }
+
     createImageFromBlob(image: Blob): Observable<string | ArrayBuffer> {
         const imageObservable = new Observable<string | ArrayBuffer>(observer => {
             if (image) {

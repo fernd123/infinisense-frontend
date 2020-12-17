@@ -20,6 +20,7 @@ export class CompanySaveComponent implements OnInit {
   editionMode: boolean = false;
   isLoading: boolean = false;
   @Input() public companyUrl;
+  currentFile: File;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,6 +35,7 @@ export class CompanySaveComponent implements OnInit {
       uuid: [null],
       name: ["", Validators.required],
       description: ["", Validators.required],
+      image: [null, Validators.required],
       email: ["", Validators.required],
       server: ["", Validators.required],
       port: ["", Validators.required],
@@ -59,6 +61,12 @@ export class CompanySaveComponent implements OnInit {
         this.companyForm.get('aliro').setValue(res.aliro);
         this.companyForm.get('ergo').setValue(res.ergo);
         this.companyForm.get('active').setValue(res.active);
+
+        if (res.image != undefined)
+          this.companyService.getCompanyImage(res.image, res.name).subscribe((res: any) => {
+            this.companyForm.get('image').setValue(res);
+          });
+
       });
     }
   }
@@ -89,12 +97,27 @@ export class CompanySaveComponent implements OnInit {
       keepAfterRouteChange: true
     };
     if (!this.editionMode)
-      this.companyService.createCompany(company, user).subscribe(res => {
-        this.modalService.dismissAll("success");
-        this.alertService.success(`¡Éxito!, Cliente ${this.editionMode ? 'creado' : 'creado'} correctamente`, options);
+      this.companyService.createCompany(company, user).subscribe((res: any) => {
+        //this.modalService.dismissAll("success");
+        //this.alertService.success(`¡Éxito!, Cliente ${this.editionMode ? 'creado' : 'creado'} correctamente`, options);
         this.editionMode = false;
         this.isLoading = false;
         this.companyForm.enable();
+
+        // Upload Image 
+        if (res != undefined && this.currentFile != undefined) {
+          this.companyService.upload(this.currentFile, `${this.companyService.urlEndPoint}/${res.uuid}`).subscribe(resimg => {
+            this.currentFile = undefined;
+            this.showSuccessAlert();
+          },
+            (error: any) => {
+              let message = this.translateService.instant(`error.${error.error.message}`);
+              this.companyForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
+            })
+        } else {
+          this.showSuccessAlert();
+        }
+
       }, error => {
         this.isLoading = false;
         //let message = this.translateService.instant(`error.${error.error.message}`);
@@ -106,17 +129,32 @@ export class CompanySaveComponent implements OnInit {
         this.closeModal();*/
       });
     else {
-      this.companyService.saveCompany(this.companyUrl, company).subscribe(res => {
+      this.companyService.saveCompany(this.companyUrl, company).subscribe((res: any) => {
         this.modalService.dismissAll("success");
         this.alertService.success(`¡Éxito!, Cliente ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
         this.editionMode = false;
         this.isLoading = false;
         this.companyForm.enable();
+
+        // Upload Image 
+        if (res != undefined && this.currentFile != undefined) {
+          this.companyService.upload(this.currentFile, `${this.companyService.urlEndPoint}/${res.uuid}`).subscribe(resimg => {
+            this.currentFile = undefined;
+            this.showSuccessAlert();
+          },
+            (error: any) => {
+              let message = this.translateService.instant(`error.${error.error.message}`);
+              this.companyForm.get(error.error.fieldName).setErrors({ 'incorrect': true, 'message': message });
+            })
+        } else {
+          this.showSuccessAlert();
+        }
+
       },
         (error: any) => {
           this.isLoading = false;
           //let message = this.translateService.instant(`error.${error.error.message}`);
-          this.companyForm.get("name").setErrors({ 'incorrect': true, 'message': 'Ya existe un cliente con el nombre introducido' });
+          //this.companyForm.get("name").setErrors({ 'incorrect': true, 'message': 'Ya existe un cliente con el nombre introducido' });
           /*this.alertService.error(`Error, Cliente no creado. ${error}`, options);
           this.editionMode = false;
           this.isLoading = false;
@@ -136,6 +174,32 @@ export class CompanySaveComponent implements OnInit {
       this.alertService.success(`¡Éxito!, Motivo de visita eliminado correctamente`, options);
       this.editionMode = false;
     });
+  }
+
+  readURL(input) {
+    let self = this;
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      self.currentFile = input.files[0];
+
+      reader.onload = function (e) {
+        self.companyForm.get('image').setValue(e.target.result);
+        //$('#blah').attr('src', e.target.result);
+      }
+
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+
+  private showSuccessAlert() {
+    this.modalService.dismissAll("success");
+    let options = {
+      autoClose: true,
+      keepAfterRouteChange: true
+    };
+    this.alertService.success(`¡Éxito!, Cliente ${this.editionMode ? 'actualizado' : 'guardado'} correctamente`, options);
+    this.editionMode = false;
   }
 
   closeModal() {

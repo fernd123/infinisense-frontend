@@ -81,7 +81,7 @@ export class UserManagementComponent implements OnInit {
 
   public openSaveModal(userUrl: string, size?: string): void {
     //if (!size || size === undefined) { size = 'modal-lg'; }
-    const modalRef = this.modalService.open(UserManagementSaveComponent);
+    const modalRef = this.modalService.open(UserManagementSaveComponent, { size: 'md', backdrop: 'static' });
     modalRef.componentInstance.userUrl = userUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },

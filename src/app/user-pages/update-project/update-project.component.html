@@ -1,18 +1,19 @@
 <div class="d-flex align-items-center auth px-0">
   <div class="row w-100 mx-0">
     <div class="col-lg-12 mx-auto">
-      <div class="auth-form-light text-left py-5 px-4 px-sm-5" *ngIf="!success">
+      <div class="auth-form-light text-left py-5 px-4 px-sm-5" id="formdiv">
         <div class="brand-logo">
           <img src="assets/images/masingenieroslogo.png" alt="logo">
         </div>
-        <h4>{{ 'project.projecttitle' | translate }} {{ reason?.name }}</h4>
+        <h4>{{ 'reason.project' | translate }} {{ reason?.name }}</h4>
         <h6 class="font-weight-light">Por favor, rellene los datos para acceder al proyecto asignado</h6>
         <div class="form-group">
           <label for="company">Empresa</label>
-          <input type="text" class="form-control" id="company" placeholder="Company">
+          <input type="text" class="form-control" id="company" placeholder="Company"
+            [value]="reasonProjectEmail?.company" readonly>
         </div>
 
-        <button type="button" class="btn btn-outline-primary btn-sm" (click)="createFormGroup()" >
+        <button type="button" class="btn btn-outline-primary btn-sm" (click)="createFormGroup()">
           <i class="mdi mdi-plus ml-1"></i>Añadir empleado</button>
 
         <div id="parentDiv" style="margin-top: 10px;">
@@ -27,12 +28,13 @@
           </div>
         </div>
         <div class="mt-3">
-          <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" (click)="submit()">SIGN
-            UP</a>
+          <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+            (click)="submit()">{{'confirm' | translate }}</a>
         </div>
       </div>
 
       <div class="auth-form-light text-left py-5 px-4 px-sm-5" *ngIf="success">
+        <h1>Proyecto actualizado con éxito. Los empleados introducidos tienen acceso al proyecto {{reason?.name}}</h1>
       </div>
     </div>
   </div>

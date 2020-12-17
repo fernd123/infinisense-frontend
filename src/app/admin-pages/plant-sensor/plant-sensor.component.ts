@@ -145,7 +145,7 @@ export class PlantSensorComponent implements OnInit {
   }
 
   public openSaveModal(plantCoordUrl: any): void {
-    const modalRef = this.modalService.open(PlantSensorSaveComponent);
+    const modalRef = this.modalService.open(PlantSensorSaveComponent, { size: 'md', backdrop: 'static' });
     modalRef.componentInstance.plantCoordUrl = plantCoordUrl;
 
     modalRef.result.then(() => { console.log('When user closes'); },

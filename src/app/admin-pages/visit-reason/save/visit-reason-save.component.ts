@@ -51,7 +51,7 @@ export class VisitReasonSaveComponent implements OnInit {
       name: ["", Validators.required],
       description: [""],
       active: [true],
-      finished: [],
+      finished: [false],
       plant: [null],
       plantCoordinate: [null],
       isproject: [false],
